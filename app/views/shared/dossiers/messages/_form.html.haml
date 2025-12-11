@@ -26,22 +26,15 @@
         - if local_assigns[:connected_user]&.is_a?(Instructeur)
           - has_pending_response = local_assigns[:dossier]&.pending_response?
           - if has_pending_response
-            = button_tag t('views.shared.dossiers.messages.form.send_message'), type: 'submit', class: 'fr-btn', data: { disable: true }, name: 'mark_as_pending_response', value: 'false'
+            %li
+              = button_tag t('views.shared.dossiers.messages.form.send_message'), type: 'submit', class: 'fr-btn', data: { disable: true }, name: 'mark_as_pending_response', value: 'false'
           - else
-            - menu_id = dom_id(commentaire, :send_message_menu)
-            - menu_button_id = dom_id(commentaire, :send_message_toggle)
-            .split-button-wrapper{ data: { controller: 'toggle' } }
-              .fr-hidden.split-button-menu{ id: menu_id, data: { toggle_target: 'content' } }
-                %ul.fr-menu.relative.fr-p-2v.fr-m-0{ role: 'menu', aria: { labelledby: menu_button_id } }
-                  %li{ role: 'none' }
-                    %button.fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-m-0{ type: 'submit', name: 'mark_as_pending_response', value: 'true', role: 'menuitem', tabindex: '-1', data: { disable: true } }
-                      %span.fr-icon-draft-line{ "aria-hidden" => "true" }
-                      = t('views.shared.dossiers.messages.form.send_message_and_mark')
-                      %span.fr-badge.fr-badge--sm.fr-ml-1w= t('views.shared.dossiers.messages.form.pending_response_badge')
-
-              .fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--split
-                = button_tag t('views.shared.dossiers.messages.form.send_message'), type: 'submit', class: 'fr-btn fr-mr-0', data: { disable: true }, name: 'mark_as_pending_response', value: 'false'
-                %button.fr-btn.fr-icon-arrow-down-s-line.fr-m-0.split-button-toggle{ id: menu_button_id, type: 'button', aria: { label: t('views.shared.dossiers.messages.form.more_options'), haspopup: 'menu', expanded: 'false', controls: menu_id }, data: { action: 'click->toggle#toggle', toggle_target: 'button' } }
-                  %span.fr-icon-arrow-down-s-line{ "aria-hidden" => "true" }
+            %li.split-button-wrapper
+              = button_tag t('views.shared.dossiers.messages.form.send_message'), type: 'submit', class: 'fr-btn fr-mr-0', data: { disable: true }, name: 'mark_as_pending_response', value: 'false'
+              = render Dropdown::MenuComponent.new(wrapper: :div, button_options: { class: "fr-ml-0 split-button-toggle" }, menu_options: { class: "split-button-dropdown fr-mb-1v" }) do |menu|
+                - menu.with_item(class: "fr-px-0 fr-py-0") do
+                  = button_tag type: 'submit', class: 'fr-btn fr-btn--tertiary-no-outline fr-mx-0 fr-my-0 fr-py-1w', data: { disable: true }, name: 'mark_as_pending_response', value: 'true' do
+                    = t('views.shared.dossiers.messages.form.send_message_and_mark')
+                    %span.fr-badge.fr-badge--sm.fr-ml-1w= t('views.shared.dossiers.messages.form.pending_response_badge')
         - else
           = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'fr-btn', data: { disable: true }

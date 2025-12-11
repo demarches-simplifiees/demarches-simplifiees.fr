@@ -393,7 +393,6 @@ en:
           form:
             send_message: "Send message"
             send_message_and_mark: "Send and mark file as WAITING FOR RESPONSE"
-            more_options: "More options"
             pending_response_badge: "WAITING FOR RESPONSE"
             message_label_mandatory: "Your message (mandatory)"
             write_message_placeholder: "Write your message here"
