@@ -86,6 +86,8 @@ class APIGeoService
     end
 
     def communes(departement_code)
+      return [] if departement_code.blank? || departement_code == '99'
+
       get_from_api_geo("communes-#{departement_code}").sort_by { I18n.transliterate([_1[:name], _1[:postal_code]].join(' ')) }
     end
 
