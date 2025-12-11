@@ -57,7 +57,7 @@ RSpec.describe Procedure::Card::AiComponent, type: :component do
       end
 
       context 'when last rule is done' do
-        let(:rule) { 'improve_structure' }
+        let(:rule) { 'cleaner' }
         let(:state) { :accepted }
 
         it do

@@ -16,26 +16,17 @@ RSpec.describe LLM::StepperComponent, type: :component do
   context 'with the label improvement rule' do
     let(:rule) { LLMRuleSuggestion.rules.fetch('improve_label') }
     it 'shows the first step and the correct next step' do
-      expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 1 sur 3')
+      expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 1 sur 4')
       expect(rendered_component.css('.fr-stepper__title').text).to include("Amélioration des libellés")
       expect(rendered_component.css('.fr-stepper__details').text).to include("Amélioration de la structure")
     end
   end
 
-  context 'with the structure rule' do
-    let(:rule) { LLMRuleSuggestion.rules.fetch('improve_structure') }
-    it 'shows the second step and the correct next step' do
-      expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 2 sur 3')
-      expect(rendered_component.css('.fr-stepper__title').text).to include("Amélioration de la structure")
-      expect(rendered_component.css('.fr-stepper__details').text).to include("Consolidation des types de champs")
-    end
-  end
-
-  context 'with the types consolidation rule' do
-    let(:rule) { 'consolidate_types' }
-    it 'marks the third step and shows no further step' do
-      expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 3 sur 3')
-      expect(rendered_component.css('.fr-stepper__title').text).to include("Consolidation des types de champs")
+  context 'with the last rule' do
+    let(:rule) { LLMRuleSuggestion.rules.fetch('cleaner') }
+    it 'marks the fourth step and shows no further step' do
+      expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 4 sur 4')
+      expect(rendered_component.css('.fr-stepper__title').text).to include("Nettoyage des champs redondants")
     end
   end
 end

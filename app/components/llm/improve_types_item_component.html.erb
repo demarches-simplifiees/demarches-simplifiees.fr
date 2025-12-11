@@ -1,0 +1,14 @@
+<div class="fr-fieldset__element">
+  <div class="fr-checkbox-group fr-my-1v">
+    <%= checkbox do %>
+      <span class="fr-badge fr-badge--sm"><%= original_type_champ_label %></span>
+      <span class="fr-icon-arrow-right-line fr-icon--sm fr-mx-1v" aria-hidden="true"></span>
+      <span class="fr-badge fr-badge--sm fr-badge--green-emeraude fr-mr-1w"><%= new_type_champ_label %></span>
+      <%= original_tdc.libelle %>
+
+      <% if item.justification.present? %>
+        <span class="fr-hint-text fr-mt-1w"><%= item.justification %></span>
+      <% end %>
+    <% end %>
+  </div>
+</div>

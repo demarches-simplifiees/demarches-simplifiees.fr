@@ -2,16 +2,15 @@
 
 require 'rails_helper'
 
-RSpec.describe LLM::TypesConsolidator do
+RSpec.describe LLM::TypesImprover do
   let(:schema) do
     [
       { 'stable_id' => 1, 'type' => 'text', 'libelle' => 'Adresse email du contact' },
       { 'stable_id' => 2, 'type' => 'text', 'libelle' => 'Numéro de téléphone' },
       { 'stable_id' => 3, 'type' => 'text', 'libelle' => 'Adresse postale' },
-      { 'stable_id' => 4, 'type' => 'communes', 'libelle' => 'Commune' },
     ]
   end
-  let(:rule) { 'consolidate_types' }
+  let(:rule) { 'improve_types' }
   let(:usage) { double() }
   let(:procedure) { double('procedure', libelle: 'Test Procedure', description: 'Test description', for_individual: false) }
   let(:types_de_champ) do
@@ -19,7 +18,6 @@ RSpec.describe LLM::TypesConsolidator do
       double('tdc1', stable_id: 1, type_champ: 'text'),
       double('tdc2', stable_id: 2, type_champ: 'text'),
       double('tdc3', stable_id: 3, type_champ: 'text'),
-      double('tdc4', stable_id: 4, type_champ: 'communes'),
     ]
   end
   let(:revision) { double('revision', schema_to_llm: schema, procedure_id: 1, types_de_champ:, procedure:) }
@@ -63,36 +61,6 @@ RSpec.describe LLM::TypesConsolidator do
       expect(tool_calls.first[:payload]).to include('type_champ' => 'email')
       expect(tool_calls.second).to include(op_kind: 'update', stable_id: 2)
       expect(tool_calls.second[:payload]).to include('type_champ' => 'phone')
-    end
-
-    it 'normalises destroy tool calls for redundant fields' do
-      calls = [
-        {
-          name: rule,
-          arguments: {
-            'update' => { 'stable_id' => 3, 'type_champ' => 'address' },
-            'justification' => 'Utiliser le type address pour auto-complétion',
-          },
-        },
-        {
-          name: rule,
-          arguments: {
-            'destroy' => { 'stable_id' => 4 },
-            'justification' => 'Le champ commune devient redondant avec address',
-          },
-        },
-      ]
-
-      runner = double()
-      allow(runner).to receive(:call).with(anything).and_return([calls, usage])
-      service = described_class.new(runner:)
-
-      tool_calls, _token_usage = service.generate_for(suggestion)
-
-      expect(tool_calls.size).to eq(2)
-      expect(tool_calls.first).to include(op_kind: 'update', stable_id: 3)
-      expect(tool_calls.first[:payload]).to include('type_champ' => 'address')
-      expect(tool_calls.second).to include(op_kind: 'destroy', stable_id: 4)
     end
 
     it 'filters update when type_champ unchanged' do
@@ -147,19 +115,6 @@ RSpec.describe LLM::TypesConsolidator do
       tool_calls, _token_usage = service.generate_for(suggestion)
 
       expect(tool_calls).to be_empty
-    end
-  end
-
-  describe 'TOOL_DEFINITION' do
-    it 'has the correct tool name' do
-      expect(described_class::TOOL_DEFINITION.dig(:function, :name)).to eq('consolidate_types')
-    end
-
-    it 'defines update and destroy operations' do
-      properties = described_class::TOOL_DEFINITION.dig(:function, :parameters, :properties)
-      expect(properties).to have_key(:update)
-      expect(properties).to have_key(:destroy)
-      expect(properties).to have_key(:justification)
     end
   end
 end

@@ -1307,12 +1307,12 @@ describe ProcedureRevision do
       end
     end
 
-    context 'from LLM::TypesConsolidator' do
+    context 'from LLM::TypesImprover' do
       context 'with type_champ update' do
         let(:types_de_champ_public) { [{ type: :text, libelle: "Email du contact", stable_id: 10 }] }
 
         it "can update type_champ from text to email" do
-          llm_rule_suggestion = create(:llm_rule_suggestion, procedure_revision: revision, rule: 'consolidate_types', schema_hash:)
+          llm_rule_suggestion = create(:llm_rule_suggestion, procedure_revision: revision, rule: 'improve_types', schema_hash:)
           create(:llm_rule_suggestion_item, llm_rule_suggestion:, verify_status: 'accepted', stable_id: 10, op_kind: 'update', payload: { 'stable_id' => 10, 'type_champ' => 'email' })
 
           revision.apply_llm_rule_suggestion_items(llm_rule_suggestion.changes_to_apply)
@@ -1323,7 +1323,9 @@ describe ProcedureRevision do
           expect(tdc.libelle).to eq("Email du contact")
         end
       end
+    end
 
+    context 'from LLM::CleanerImprover' do
       context 'with destroy operation' do
         let(:types_de_champ_public) do
           [
@@ -1333,7 +1335,7 @@ describe ProcedureRevision do
         end
 
         it "can destroy a redundant field" do
-          llm_rule_suggestion = create(:llm_rule_suggestion, procedure_revision: revision, rule: 'consolidate_types', schema_hash:)
+          llm_rule_suggestion = create(:llm_rule_suggestion, procedure_revision: revision, rule: 'cleaner', schema_hash:)
           create(:llm_rule_suggestion_item, llm_rule_suggestion:, verify_status: 'accepted', stable_id: 21, op_kind: 'destroy', payload: { 'stable_id' => 21 })
 
           expect(revision.types_de_champ_public.map(&:stable_id)).to include(21)
