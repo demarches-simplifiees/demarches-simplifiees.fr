@@ -475,6 +475,8 @@ class TypeDeChamp < ApplicationRecord
       Champs::YesNoChamp.options
     elsif checkbox?
       Champs::CheckboxChamp.options
+    elsif civilite?
+      Champs::CiviliteChamp.options
     end
   end
 
@@ -551,7 +553,7 @@ class TypeDeChamp < ApplicationRecord
       :decimal
     when type_champs.fetch(:multiple_drop_down_list)
       :enums
-    when type_champs.fetch(:drop_down_list), type_champs.fetch(:departements), type_champs.fetch(:regions)
+    when type_champs.fetch(:drop_down_list), type_champs.fetch(:departements), type_champs.fetch(:regions), type_champs.fetch(:civilite)
       :enum
     when type_champs.fetch(:checkbox), type_champs.fetch(:yes_no)
       :boolean

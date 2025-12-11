@@ -39,8 +39,8 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   def column_filter_options
     options = column.options_for_select
 
-    if tdc_type == "yes_no" && !column.mandatory
-      options.unshift(Column.not_filled_option)
+    if tdc_type.in?([TypeDeChamp.type_champs.fetch(:yes_no), TypeDeChamp.type_champs.fetch(:civilite)]) && !column.mandatory
+      options << Column.not_filled_option
     end
 
     if column.column == 'notification_type'
@@ -87,8 +87,8 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
     column&.type&.in?([:enum, :enums])
   end
 
-  def boolean?
-    column&.type&.in?([:boolean])
+  def radio_buttons?
+    column&.type&.in?([:boolean]) || tdc_type == TypeDeChamp.type_champs.fetch(:civilite) || (column.respond_to?(:table) && column.table == "individual" && column.column == "gender")
   end
 
   def react_props

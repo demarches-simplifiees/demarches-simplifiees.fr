@@ -1,7 +1,7 @@
 <div class="flex column" id="<%= id %>">
   <%= operator_hidden_field %>
 
-  <% if boolean? %>
+  <% if radio_buttons? %>
     <%= render Dsfr::RadioButtonListComponent.new(form:,
       target: "filter[filter][value][]",
       buttons: radio_button_options,

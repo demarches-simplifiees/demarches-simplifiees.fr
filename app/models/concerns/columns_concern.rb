@@ -200,7 +200,18 @@ module ColumnsConcern
     end
 
     def individual_columns
-      ['gender', 'nom', 'prenom'].map { |column| dossier_col(table: 'individual', column:) }
+      gender_column = dossier_col(
+        table: 'individual',
+        column: 'gender',
+        type: :enum,
+        options_for_select: [
+          [Individual::GENDER_FEMALE, Individual::GENDER_FEMALE],
+          [Individual::GENDER_MALE, Individual::GENDER_MALE],
+        ]
+      )
+
+      [gender_column]
+        .concat ['nom', 'prenom'].map { |column| dossier_col(table: 'individual', column:) }
         .concat ['mandataire_last_name', 'mandataire_first_name'].map { |column| dossier_col(table: 'self', column:) }
         .concat ['for_tiers'].map { |column| dossier_col(table: 'self', column:, type: :boolean) }
     end
