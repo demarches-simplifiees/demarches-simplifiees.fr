@@ -230,6 +230,8 @@ class Procedure < ApplicationRecord
   validates :lien_site_web, presence: true, if: :publiee?
   validates :lien_notice, url: { no_local: true, allow_blank: true }
   validates :lien_dpo, url: { no_local: true, allow_blank: true, accept_email: true }
+  validates :cadre_juridique, url: { no_local: true, allow_blank: true }, on: [:create, :publication]
+  validate :validates_cadre_juridique_or_deliberation, on: [:create, :publication]
 
   validates :draft_types_de_champ_public,
     'types_de_champ/condition': true,
@@ -250,8 +252,6 @@ class Procedure < ApplicationRecord
     'types_de_champ/referentiel_ready': true,
     'types_de_champ/libelle': true,
     on: [:types_de_champ_private_editor, :publication]
-
-  validate :check_juridique, on: [:create, :publication]
 
   validates :replaced_by_procedure_id, presence: true, if: :closing_reason_internal_procedure?
 
@@ -314,7 +314,6 @@ class Procedure < ApplicationRecord
   validates :api_particulier_token, format: { with: /\A[A-Za-z0-9\-_=.]{15,}\z/ }, allow_blank: true
   validate :validate_auto_archive_on_in_the_future, if: :will_save_change_to_auto_archive_on?
 
-  before_save :update_juridique_required
   after_save :extend_conservation_for_dossiers
 
   after_create :ensure_defaut_groupe_instructeur
@@ -698,17 +697,6 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def update_juridique_required
-    self.juridique_required ||= (cadre_juridique.present? || deliberation.attached?)
-    true
-  end
-
-  def check_juridique
-    if juridique_required? && (cadre_juridique.blank? && !deliberation.attached?)
-      errors.add(:cadre_juridique, " : veuillez remplir le texte de loi ou la délibération")
-    end
-  end
-
   def extend_conservation_for_dossiers
     return if !previous_changes.include?(:duree_conservation_dossiers_dans_ds)
     before, after = duree_conservation_dossiers_dans_ds_previous_change
@@ -847,6 +835,12 @@ class Procedure < ApplicationRecord
           relation.order(:private, :position, 'revision_types_de_champ.revision_id': :desc)
         end
       end
+  end
+
+  def validates_cadre_juridique_or_deliberation
+    if cadre_juridique.blank? && !deliberation.attached?
+      errors.add(:cadre_juridique, "doit être rempli ou importez un fichier contenant la délibération")
+    end
   end
 
   def validates_associated_draft_revision_with_context
