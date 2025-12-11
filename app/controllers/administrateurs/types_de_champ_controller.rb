@@ -181,7 +181,6 @@ module Administrateurs
     def simplify
       @llm_rule_suggestion = llm_rule_suggestion_scope
         .includes(:llm_rule_suggestion_items)
-        .where(rule: rule)
         .order(created_at: :desc)
         .first
 
@@ -232,7 +231,7 @@ module Administrateurs
       if next_rule
         redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: next_rule), notice: "Parfait, continuons"
       else
-        redirect_to admin_procedure_path(@procedure), notice: "Toutes les suggestions ont été examinées"
+        redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: @llm_rule_suggestion.rule), notice: "Toutes les suggestions ont été examinées"
       end
     end
 

@@ -1,8 +1,7 @@
-<% if llm_rule_suggestion.state == 'completed' %>
-  <h2 class="fr-h3 mt-4"><%= step_title %></h2>
-  <%= render Dsfr::CalloutComponent.new(title: "À quoi sert cette règle ?", theme: :neutral) do |callout| %>
-    <% callout.with_body do %>
-      <p><%= step_summary %></p>
+<% if llm_rule_suggestion.completed? %>
+  <%= render Dsfr::CalloutComponent.new(title: t('.summary.title'), theme: :info) do |callout| %>
+    <% callout.with_html_body do %>
+      <%= t(".summary.#{rule}_html") %>
     <% end %>
   <% end %>
   <% if suggestions_count.zero? %>
@@ -25,9 +24,13 @@
     <% end %>
   <% else %>
     <div class="border-background-contrast-grey fr-p-2w">
-      <p class="fr-badge fr-badge--info fr-mb-3w">
-        <%= suggestions_count %>
-        <%= 'suggestion'.pluralize(suggestions_count) %>
+      <p class="fr-mb-3w flex align-center">
+        <span class="fr-badge fr-badge--info fr-mr-1w">
+          <%= suggestions_count %>
+          <%= 'suggestion'.pluralize(suggestions_count) %>
+        </span>
+
+        <span class="fr-hint-text">Ces suggestions utilisent l’IA. Vérifiez toujours ce qui est proposé.</span>
       </p>
 
       <%= form_for llm_rule_suggestion,
@@ -38,6 +41,7 @@
           class="fr-fieldset"
           data-action="click->enable-submit-if-checked#click"
         >
+          <legend class="fr-fieldset__legend">Sélectionnez les suggestions que vous souhaitez appliquer pour améliorer votre formulaire :</legend>
           <% ordered_llm_rule_suggestion_items.each do |llm_rule_suggestion_item| %>
             <%= form.fields_for :llm_rule_suggestion_items, llm_rule_suggestion_item do |ff| %>
               <%= render item_component.new(form_builder: ff) %>
@@ -71,7 +75,7 @@
       </p>
 
       <p class="fr-mt-1w">
-        <%= link_to("Revenir à l'écran de gestion", back_link, class: "fr-btn") %>
+        <%= link_to("Revenir à l’écran de gestion", back_link, class: "fr-btn") %>
       </p>
     <% end %>
   <% end %>

@@ -8,25 +8,36 @@ RSpec.describe LLM::HeaderComponent, type: :component do
       procedure_revision: procedure.draft_revision,
       rule: LLMRuleSuggestion.rules.fetch('improve_label'),
       schema_hash: 'schema-hash',
-      state: 'completed').tap { _1.update!(created_at: last_refresh) }
+      state:).tap { _1.update!(created_at: last_refresh) }
   end
 
   let(:component) { described_class.new(llm_rule_suggestion:) }
   subject(:rendered_component) { render_inline(component) }
 
-  describe '#last_suggestion_created_at_tag' do
-    context 'when llm_rule_suggestion is persisted' do
-      it 'returns a tag with timestamp' do
-        expect(rendered_component).to have_content(I18n.t('llm.stepper_component.last_refresh', timestamp: I18n.l(llm_rule_suggestion.created_at, format: :llm_stepper_last_refresh)))
-      end
+  context 'when state is pending' do
+    let(:state) { :pending }
+
+    it 'does not show status' do
+      expect(rendered_component).not_to have_selector('.fr-icon-time-line')
+      expect(rendered_component).to have_text('Comment fonctionne ce module')
     end
+  end
 
-    context 'when llm_rule_suggestion is not persisted' do
-      let(:llm_rule_suggestion) { build(:llm_rule_suggestion) }
+  context 'when state is queued' do
+    let(:state) { :queued }
 
-      it 'returns a tag with no suggestion message' do
-        expect(rendered_component).to have_content(I18n.t('llm.stepper_component.no_suggestion_yet'))
-      end
+    it 'shows queued status' do
+      expect(rendered_component).to have_content('Analyse en cours…')
+      expect(rendered_component).to have_text('Comment fonctionne ce module')
+    end
+  end
+
+  context 'when state is completed' do
+    let(:state) { :completed }
+    it 'shows last refresh with timestamp' do
+      expect(rendered_component).to have_content('Dernière recherche')
+      expect(rendered_component).to have_content('lundi 13 octobre')
+      expect(rendered_component).to have_text('Comment fonctionne ce module')
     end
   end
 end

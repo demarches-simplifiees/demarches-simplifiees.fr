@@ -22,22 +22,6 @@ RSpec.describe LLMRuleSuggestion, type: :model do
     let(:procedure) { create(:procedure) }
     let(:procedure_revision) { procedure.draft_revision }
 
-    context 'with multiple suggestions with different states' do
-      let!(:accepted_suggestion) { create(:llm_rule_suggestion, procedure_revision:, state: 'accepted', rule: 'improve_label') }
-      let!(:skipped_suggestion) { create(:llm_rule_suggestion, procedure_revision:, state: 'skipped', rule: 'improve_label') }
-      let!(:completed_suggestion) { create(:llm_rule_suggestion, procedure_revision:, state: 'completed', rule: 'improve_label') }
-      let!(:running_suggestion) { create(:llm_rule_suggestion, procedure_revision:, state: 'running', rule: 'improve_label') }
-      let!(:queued_suggestion) { create(:llm_rule_suggestion, procedure_revision:, state: 'queued', rule: 'improve_label') }
-
-      it 'orders suggestions with accepted first, then skipped, then completed, then others by id desc' do
-        result = procedure_revision.llm_rule_suggestions.last_for_procedure_revision
-
-        expect(result.first).to eq(accepted_suggestion)
-        expect(result.second).to eq(skipped_suggestion)
-        expect(result.third).to eq(completed_suggestion)
-      end
-    end
-
     context 'with suggestions from different procedure revisions' do
       let(:other_procedure) { create(:procedure) }
       let(:other_procedure_revision) { other_procedure.draft_revision }
@@ -47,8 +31,7 @@ RSpec.describe LLMRuleSuggestion, type: :model do
       it 'only returns suggestions for the specified procedure revision' do
         result = procedure_revision.llm_rule_suggestions.last_for_procedure_revision
 
-        expect(result).to include(suggestion1)
-        expect(result).not_to include(suggestion2)
+        expect(result).to eq(suggestion1)
       end
     end
   end

@@ -12,7 +12,7 @@ module LLM
 
     def back_link
       helpers.link_to(
-        "Revenir à l'écran de gestion",
+        "Revenir à l’écran de gestion",
         helpers.admin_procedure_path(procedure),
         class: 'fr-link fr-icon-arrow-left-line fr-link--icon--left fr-icon--sm'
       )

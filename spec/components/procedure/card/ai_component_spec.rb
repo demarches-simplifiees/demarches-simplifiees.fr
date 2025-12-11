@@ -8,66 +8,73 @@ RSpec.describe Procedure::Card::AiComponent, type: :component do
 
   subject { described_class.new(procedure:) }
 
-  describe '#rule' do
-    context 'when there is a last LLM rule suggestion' do
-      let!(:suggestion) { create(:llm_rule_suggestion, procedure_revision: draft_revision, rule: 'improve_label') }
-
-      it 'returns the rule of the last suggestion' do
-        expect(subject.rule).to eq('improve_label')
-      end
-    end
-
-    context 'when there is no LLM rule suggestion' do
-      it 'returns the default rule' do
-        expect(subject.rule).to eq('improve_label')
-      end
-    end
-  end
-
   describe '#render?' do
     context 'when LLM feature is enabled' do
       before { Flipper.enable_actor(:llm_nightly_improve_procedure, procedure) }
-
       it 'returns true' do
         expect(subject.render?).to be true
       end
     end
 
     context 'when LLM feature is disabled' do
-      before { Flipper.disable_actor(:llm_nightly_improve_procedure, procedure) }
-
       it 'returns false' do
         expect(subject.render?).to be false
       end
     end
   end
 
-  describe '#last_llm_rule_suggestion' do
-    let!(:accepted_suggestion) { create(:llm_rule_suggestion, procedure_revision: draft_revision, rule: 'improve_label', state: 'accepted') }
-    let!(:completed_suggestion) { create(:llm_rule_suggestion, procedure_revision: draft_revision, rule: 'improve_label', state: 'completed') }
-
-    it 'returns the last suggestion according to the priority order' do
-      # Accepted should come first
-      expect(subject.send(:last_llm_rule_suggestion)).to eq(accepted_suggestion)
-    end
-  end
-
   describe 'rendered component' do
     before { Flipper.enable_actor(:llm_nightly_improve_procedure, procedure) }
 
-    context 'avec amélioration' do
+    context 'avec suggestions' do
+      let(:schema_hash) { Digest::SHA256.hexdigest(draft_revision.schema_to_llm.to_json) }
       before do
-        draft_revision.update!(updated_at: 2.days.ago)
-      end
-
-      it 'affiche le badge Amélioré' do
         create(:llm_rule_suggestion,
                procedure_revision: draft_revision,
-               state: :accepted,
-               updated_at: 1.day.ago)
+               schema_hash:,
+               state:,
+               rule:)
+      end
 
-        render_inline(subject)
-        expect(page).to have_css('.fr-badge--success', text: 'Amélioré')
+      context 'when last rule is not started' do
+        let(:rule) { 'improve_label' }
+        let(:state) { :accepted }
+
+        it do
+          render_inline(subject)
+          expect(page).to have_css('.fr-badge--warning', text: 'À faire')
+        end
+      end
+
+      context 'when last rule is not finished' do
+        let(:rule) { 'improve_structure' }
+        let(:state) { :completed }
+
+        it do
+          render_inline(subject)
+          expect(page).to have_css('.fr-badge--warning', text: 'À faire')
+        end
+      end
+
+      context 'when last rule is done' do
+        let(:rule) { 'improve_structure' }
+        let(:state) { :accepted }
+
+        it do
+          render_inline(subject)
+          expect(page).to have_css('.fr-badge--success', text: 'Amélioré')
+        end
+      end
+
+      context 'when schema changed' do
+        let(:rule) { 'improve_structure' }
+        let(:state) { :accepted }
+        let(:schema_hash) { "something-else" }
+
+        it do
+          render_inline(subject)
+          expect(page).to have_css('.fr-badge--warning', text: 'À faire')
+        end
       end
     end
 

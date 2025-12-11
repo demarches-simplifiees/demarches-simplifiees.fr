@@ -1,0 +1,5 @@
+---
+fr:
+  last_refresh: Dernière recherche d’améliorations effectuée le %{searched_at}
+  queued: Analyse en cours…
+  how_it_works: Comment fonctionne ce module d'amélioration ?

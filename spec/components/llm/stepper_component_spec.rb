@@ -27,7 +27,6 @@ RSpec.describe LLM::StepperComponent, type: :component do
     it 'marks the second step and shows no further step' do
       expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 2 sur 2')
       expect(rendered_component.css('.fr-stepper__title').text).to include("Amélioration de la structure")
-      expect(rendered_component.css('.fr-stepper__details').text).to include("À venir...")
     end
   end
 end
