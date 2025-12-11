@@ -459,10 +459,6 @@ class Procedure < ApplicationRecord
     self.dossiers.state_not_brouillon.size
   end
 
-  def procedure_overview(start_date, groups)
-    ProcedureOverview.new(self, start_date, groups)
-  end
-
   def passer_en_construction_email_template
     initiated_mail || Mails::InitiatedMail.default_for_procedure(self)
   end

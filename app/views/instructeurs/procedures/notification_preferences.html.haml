@@ -38,7 +38,7 @@
       "aria-labelledby": "tab-mail",
       tabindex: "0"
     }
-      = render partial: 'instructeurs/procedures/email_preferences', locals: { procedure: @procedure, assign_to: @assign_to }
+      = render partial: 'instructeurs/procedures/email_preferences', locals: { procedure: @procedure, instructeur_procedure: @instructeur_procedure }
 
     #tab-badge-panel.fr-tabs__panel{
       role: "tabpanel",
