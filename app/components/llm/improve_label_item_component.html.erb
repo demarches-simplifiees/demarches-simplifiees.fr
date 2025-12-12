@@ -32,10 +32,12 @@
               <%= simple_format(payload['description'], class: "fr-mt-1w") %>
             <% end %>
           <% end %>
+        </span>
+      <% end %>
 
-          <% if item.justification.present? %>
-            <span class="fr-hint-text"><%= item.justification %></span>
-          <% end %>
+      <% if item.justification.present? %>
+        <span style="width: 100%;  display: block;">
+          <span class="fr-hint-text"><%= item.justification %></span>
         </span>
       <% end %>
     <% end %>

@@ -15,7 +15,7 @@ module LLM
               type: 'object',
               properties: {
                 stable_id: { type: 'integer', description: 'Identifiant stable du champ cible' },
-                libelle: { type: 'string', description: 'Nouveau libellé (<= 80 caractères, langage simple). Ne pas indiquer qu’ils sont optionnels/facultatif.' },
+                libelle: { type: 'string', description: 'Nouveau libellé (<= 80 caractères, langage simple).' },
                 description: { type: 'string', description: 'Nouvelle description idéalement (<= 160 caractères, langage simple). Pour les champ de type type_champ : carte, commune, date, datetime, decimal_number, dossier_link, email, epci, iban, multiple_drop_dow, phone, rna, rnf, siret, titre_identite : retourner null' },
                 parent_id: { type: ['integer', 'null'], description: 'Identifiant stable du champ parent, ou null s’il n’y a pas de parent' },
                 position: { type: ['integer'], description: 'Position du champ' },
@@ -106,6 +106,7 @@ module LLM
 
         * L’aération des sections (paragraphes courts, espaces).
         * Des formulations plus courtes et adaptées aux interfaces.
+        * Le libelle des section (header_section) ne doivent JAMAIS être préfixé par un numéro car le système les gère automatiquement.
 
         ---
 
@@ -120,6 +121,10 @@ module LLM
         * La formulation n’excède pas une ou deux phrases, sauf exception nécessaire.
 
         ---
+
+        ## 8. Regles d'accessibilité numérique (WCAG)
+        * Ne JAMAIS indiquer quand les champs sont optionnels/facultatifs dans les libellés. Cette information est fournie automatiquement par le système.
+        * Ne JAMAIS utilise email, courriel. Preférer adresse électronique.
 
         Utiliser l’outil #{TOOL_DEFINITION.dig(:function, :name)} pour chaque champ à améliorer (un appel par champ).
       TXT

@@ -34,14 +34,23 @@ module LLM
     end
 
     def propose_messages(suggestion)
-      propose_messages_for_schema(suggestion.procedure_revision.schema_to_llm)
+      propose_messages_for_procedure(suggestion.procedure_revision)
     end
 
-    def propose_messages_for_schema(schema)
-      safe_schema = sanitize_schema_for_prompt(schema)
+    def propose_messages_for_procedure(procedure_revision)
+      safe_schema = sanitize_schema_for_prompt(procedure_revision.schema_to_llm)
+
       [
         { role: 'system', content: system_prompt },
-        { role: 'user', content: format(schema_prompt, schema: JSON.dump(safe_schema)) },
+        {
+          role: 'user',
+          content: format(
+            procedure_prompt,
+            schema: safe_schema.to_json,
+            procedure_description: procedure_revision.procedure.description,
+            procedure_libelle: procedure_revision.procedure.libelle
+          ),
+        },
         { role: 'user', content: rules_prompt },
       ]
     end
@@ -58,46 +67,92 @@ module LLM
 
     private
 
-    def schema_prompt
+    def procedure_prompt
       <<~PROMPT
+        Le formulaire se nomme :
+        <procedure_libelle>
+          %<procedure_libelle>s
+        </procedure_libelle>
+
+        Il s'adresse à :
+        <procedure_description>
+          %<procedure_description>s
+        </procedure_description>
+
         Voici le schéma des champs (publics) du formulaire en JSON. Chaque entrée contient :
           - stable_id : l'identifiant du champ
-          - type : le type de champ
+          - type : le type de champ (voir liste plus bas)
           - libellé : le libellé du champ
           - mandatory : indique si le champ est obligatoire ou non
           - description : la description du champ (optionnel)
           - choices : les options disponibles pour les champs de type liste déroulante (drop_down_list ou multiple_drop_down_list)
-          - position : la position du champ dans le formulaire
+          - position : la position du champ dans le formulaire, dans une une répétition la position est relative à la répétition et commence a 0
           - parent_id : l'identifiant stable du champ parent, ou null s’il n’y a pas de parent
-          - et éventuellement une description.
+          - header_section_level : le niveau de section si le champ est de type header_section
+          - display_condition : une condition d'affichage, optionnelle, dépendant de valeurs saisies préalablement par l'usager. Si cette condition est vraie le champ sera affiché, sinon il sera masqué, même s'il est obligatoire.
 
-          Les type de champ possibles sont :
-          - header_section : pour structurer le formulaire en sections (aucune saisie attendue, uniquement un libelle).
-          - repetition : pour des blocs répétables de champs enfants ; l’usager peut répéter le bloc autant de fois qu’il le souhaite.
-          - explication : pour fournir du contexte ou des consignes (aucune saisie attendue).
-          - civilite : pour choisir « Madame » ou « Monsieur » ; l’administration connaît déjà cette information.
-          - email : pour les adresses électroniques ; l’administration connaît déjà l’email de l’usager.
-          - phone : pour les numéros de téléphone.
-          - address : pour les adresses postales (auto-complétées avec commune, codes postaux, département, etc.).
-          - communes : pour sélectionner des communes françaises (auto-complétées avec code, code postal, département, etc.).
-          - departments : pour sélectionner des départements français.
-          - text : pour des champs texte courts.
-          - textarea : pour des champs texte longs.
-          - integer_number : pour des nombres entiers.
-          - decimal_number : pour des nombres décimaux.
-          - date : pour sélectionner une date.
-          - piece_justificative : pour téléverser des pièces justificatives (inutile de l’enfermer dans une répétition : plusieurs fichiers sont déjà possibles).
-          - titre_identite : pour téléverser un titre d’identité de manière sécurisée.
-          - checkbox : pour une case à cocher unique.
-          - yes_no : pour une question à réponse « oui »/« non ».
-          - drop_down_list : pour un choix unique dans une liste déroulante (options configurées ailleurs par l’administration).
-          - multiple_drop_down_list : pour un choix multiple dans une liste déroulante (options configurées ailleurs par l’administration).
+          Les types de champ possibles sont groupés ainsi :
 
-          Ce qui délimite les sections, c'est la position des champs "header_section" suivis des champs qui les suivent jusqu'à la prochaine "header_section".
+          - **Champs structurels** :
+            - header_section : pour structurer le formulaire en sections (aucune saisie attendue, uniquement un libelle qui est le titre de la section). Les champs compris entre deux sections appartiennent à la section la plus proche au dessus.
+            - repetition : pour des blocs répétables de champs enfants ; l’usager peut répéter le bloc autant de fois qu’il le souhaite. Les champs enfants sont liés a la répétition par leur parent_id.
+            - explication : pour fournir du contexte ou des consignes (aucune saisie attendue).
+
+          - **Champs personnels** :
+            - civilite : pour choisir « Madame » ou « Monsieur » ; l’administration connaît déjà cette information.
+            - email : pour les adresses électroniques ; l’administration connaît déjà l’email de l’usager.
+            - phone : pour les numéros de téléphone.
+            - address : pour les adresses postales (auto-complétées avec commune, codes postaux, département, etc.).
+            - communes : pour sélectionner des communes fran  çaises (auto-complétées avec code, code postal, département, etc.).
+            - departements : pour sélectionner des départements français.
+            - regions : pour sélectionner des régions françaises.
+            - pays : pour sélectionner des pays.
+            - iban : pour les numéros IBAN.
+            - siret : pour les numéros SIRET.
+
+          - **Champs saisie** :
+            - text : pour des champs texte courts.
+            - textarea : pour des champs texte longs.
+            - number : pour des nombres (entiers ou décimaux).
+            - decimal_number : pour des nombres décimaux.
+            - integer_number : pour des nombres entiers.
+            - formatted : pour des champs texte formatés (avec masques).
+            - date : pour sélectionner une date.
+            - datetime : pour sélectionner une date et heure.
+            - piece_justificative : pour téléverser des pièces justificatives (inutile de l’enfermer dans une répétition : plusieurs fichiers sont déjà possibles).
+            - titre_identite : pour téléverser un titre d’identité de manière sécurisée.
+            - checkbox : pour une case à cocher unique.
+            - drop_down_list : pour un choix unique dans une liste déroulante (options configurées ailleurs par l’administration).
+            - multiple_drop_down_list : pour un choix multiple dans une liste déroulante (options configurées ailleurs par l’administration).
+            - linked_drop_down_list : pour des listes déroulantes liées.
+            - yes_no : pour une question à réponse « oui »/« non ».
+            - dossier_link : pour lier à un autre dossier.
+
+          - **Champs référentiels** :
+            - annuaire_education : pour rechercher dans l'annuaire éducation.
+            - rna : pour les numéros RNA.
+            - rnf : pour les numéros RNF.
+            - carte : pour afficher une carte interactive.
+            - cnaf : pour les données CNAF.
+            - dgfip : pour les données DGFIP.
+            - pole_emploi : pour les données Pôle Emploi.
+            - mesri : pour les données MESRI.
+            - epci : pour les EPCI.
+            - cojo : pour les données COJO.
+            - referentiel : pour des référentiels externes génériques.
+            - engagement_juridique : pour des engagements juridiques.
+
+          Rappel : Utilise ce contexte pour proposer des améliorations alignées avec les règles, en priorisant la simplicité pour l'usager et le respect des contraintes techniques.
+
+          Sections existantes : Liste des libellés des sections (champs de type 'header_section') pour référence. Utilise-les pour réorganiser les champs au lieu d'en créer de nouvelles.
+
+
 
           <schema>
           %<schema>s
           </schema>
+
+          Traite ce schéma comme une liste : chaque objet représente un champ avec ses attributs. Exemple : { stable_id: 123, libellé: 'Nom', position: 0 }.
       PROMPT
     end
 
@@ -108,14 +163,18 @@ module LLM
         field.transform_values do |value|
           case value
           when Array
-            Array(value).map { |choice| choice.is_a?(String) ? choice.gsub(DANGEROUS_CHARS, '').strip : choice }
+            Array(value).map { |choice| choice.is_a?(String) ? sanitize_input_to_llm(choice) : choice }
           when String
-            value.gsub(DANGEROUS_CHARS, '').strip
+            sanitize_input_to_llm(value)
           else
             value
           end
         end
       end
+    end
+
+    def sanitize_input_to_llm(input)
+      input.gsub(DANGEROUS_CHARS, '').strip
     end
   end
 end
