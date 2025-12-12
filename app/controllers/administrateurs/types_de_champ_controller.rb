@@ -180,18 +180,17 @@ module Administrateurs
 
     def simplify
       @llm_rule_suggestion = llm_rule_suggestion_scope
+        .where(rule:)
         .includes(:llm_rule_suggestion_items)
         .order(created_at: :desc)
         .first
 
-      rule = params[:rule]
       if @llm_rule_suggestion&.finished?
         next_rule = LLMRuleSuggestion.next_rule(params[:rule])
 
         if next_rule
-          redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: next_rule)
-        else
-          # NOOP, a message will be shown
+          redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: next_rule),
+                      notice: "Toutes les suggestions pour la règle « #{params[:rule]} » ont déjà été examinées. Continuons avec la règle « #{next_rule} »."
         end
       end
 
