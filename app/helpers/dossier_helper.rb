@@ -122,6 +122,19 @@ module DossierHelper
     tag.span(Dossier.human_attribute_name("pending_correction.#{type}"), class: ['fr-badge fr-badge--sm', html_class])
   end
 
+  def pending_response_badge(profile, html_class: nil)
+    tag.span(Dossier.human_attribute_name("attente_reponse.#{profile}"), class:
+      class_names(
+        "fr-badge fr-badge--sm",
+        "fr-badge--warning super" => profile == :for_user,
+        html_class => true
+      ))
+  end
+
+  def response_resolved_badge(status, html_class: nil)
+    tag.span(Dossier.human_attribute_name("attente_reponse.#{status}"), class: ['fr-badge fr-badge--sm', html_class])
+  end
+
   def tags_label(labels)
     if labels.size > 1
       tag.ul(class: 'fr-tags-group') do
@@ -179,7 +192,8 @@ module DossierHelper
       DossierNotification.notification_types.fetch(:avis_externe)
       "fr-badge fr-badge--sm fr-badge--new"
     when DossierNotification.notification_types.fetch(:attente_correction),
-      DossierNotification.notification_types.fetch(:attente_avis)
+      DossierNotification.notification_types.fetch(:attente_avis),
+      DossierNotification.notification_types.fetch(:attente_reponse)
       "fr-badge fr-badge--sm"
     end
   end

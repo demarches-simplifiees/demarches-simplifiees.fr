@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_21_091000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -462,6 +462,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
     t.index ["keep_until"], name: "index_dossier_operation_logs_on_keep_until"
   end
 
+  create_table "dossier_pending_responses", force: :cascade do |t|
+    t.bigint "commentaire_id"
+    t.datetime "created_at", null: false
+    t.bigint "dossier_id", null: false
+    t.datetime "responded_at"
+    t.datetime "updated_at", null: false
+    t.index ["commentaire_id"], name: "index_dossier_pending_responses_on_commentaire_id"
+    t.index ["dossier_id"], name: "index_dossier_pending_responses_on_dossier_id"
+    t.index ["responded_at"], name: "index_dossier_pending_responses_on_responded_at", where: "(responded_at IS NULL)"
+  end
+
   create_table "dossier_submitted_messages", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "message_on_submit_by_usager"
@@ -857,6 +868,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
     t.string "display_annotation_instructeur_notifications", default: "followed", null: false
     t.string "display_attente_avis_notifications", default: "followed", null: false
     t.string "display_attente_correction_notifications", default: "followed", null: false
+    t.string "display_attente_reponse_notifications", default: "followed", null: false
     t.string "display_avis_externe_notifications", default: "followed", null: false
     t.string "display_dossier_depose_notifications", default: "all", null: false
     t.string "display_dossier_modifie_notifications", default: "followed", null: false
@@ -1471,6 +1483,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
   add_foreign_key "dossier_notifications", "dossiers"
   add_foreign_key "dossier_notifications", "instructeurs"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
+  add_foreign_key "dossier_pending_responses", "commentaires"
+  add_foreign_key "dossier_pending_responses", "dossiers"
   add_foreign_key "dossier_transfer_logs", "dossiers"
   add_foreign_key "dossiers", "batch_operations"
   add_foreign_key "dossiers", "dossier_transfers"
