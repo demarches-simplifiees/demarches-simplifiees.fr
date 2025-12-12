@@ -1,0 +1,21 @@
+<% if show_last_suggestion_status? %>
+  <p class="fr-text--sm">
+    <span class="fr-icon-time-line fr-btn--icon-left" aria-hidden="true"></span>
+    <%= last_suggestion_status_label %>
+  </p>
+<% end %>
+
+<section class="fr-accordion fr-mt-2w fr-mb-3w">
+  <h3 class="fr-accordion__title">
+    <button type="button"
+            class="fr-accordion__btn"
+            aria-controls="<%= accordion_id %>"
+            aria-expanded="false">
+      <%= t('.how_it_works') %>
+    </button>
+  </h3>
+
+  <div class="fr-collapse" id="<%= accordion_id %>">
+    <%= render AccordionContentComponent.new %>
+  </div>
+</section>

@@ -1,7 +1,10 @@
 .fr-col-6.fr-col-md-4.fr-col-lg-3
-  = link_to simplify_admin_procedure_types_de_champ_path(@procedure, rule:), id: 'administrateurs', class: 'fr-tile fr-enlarge-link' do
+  = link_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: :improve_label), id: 'administrateurs', class: 'fr-tile fr-enlarge-link' do
     .fr-tile__body.flex.column.align-center.justify-between
-      %p.fr-badge.fr-badge--warning À faire
+      - if improved?
+        %p.fr-badge.fr-badge--success Amélioré
+      - else
+        %p.fr-badge.fr-badge--warning À faire
       %div
         %h3.fr-h6
           Qualité du formulaire

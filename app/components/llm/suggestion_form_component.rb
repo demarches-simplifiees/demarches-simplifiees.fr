@@ -3,16 +3,16 @@
 class LLM::SuggestionFormComponent < ApplicationComponent
   attr_reader :llm_rule_suggestion
 
-  delegate :rule, :procedure_revision, to: :llm_rule_suggestion
+  delegate :rule, :procedure_revision, :state, to: :llm_rule_suggestion
   delegate :procedure, to: :procedure_revision
-  delegate :step_title, :step_summary, to: :item_component
+  delegate :step_title, to: :item_component
 
   def initialize(llm_rule_suggestion:)
     @llm_rule_suggestion = llm_rule_suggestion
   end
 
-  def step_rule
-    rule
+  def step_summary
+    t(".summary.#{rule}_html")
   end
 
   def ordered_llm_rule_suggestion_items
@@ -30,12 +30,7 @@ class LLM::SuggestionFormComponent < ApplicationComponent
   end
 
   def item_component
-    case rule
-    when 'improve_label'
-      LLM::ImproveLabelItemComponent
-    else
-      raise "Unknown LLM rule suggestion view component for rule: #{rule}"
-    end
+    LLMRuleSuggestion.item_component_class_for(rule)
   end
 
   def prtdcs
@@ -64,7 +59,7 @@ class LLM::SuggestionFormComponent < ApplicationComponent
         'fr-btn' => true,
         'fr-btn--tertiary' => llm_rule_suggestion.state.in?(['running', 'queued']),
         'fr-btn--spin' => llm_rule_suggestion.state.in?(['running', 'queued']),
-        'fr-icon-search-line fr-btn--icon-left' => llm_rule_suggestion.state.in?(['pending', 'failed', 'accepted', 'skipped'])
+        'fr-icon-search-ai-line fr-btn--icon-left' => llm_rule_suggestion.state.in?(['pending', 'failed', 'accepted', 'skipped'])
       ),
     }
   end
@@ -83,10 +78,28 @@ class LLM::SuggestionFormComponent < ApplicationComponent
 
   def display_message
     safe_join([
-      tag.p(class: 'fr-mb-0') { t('.not_completed.message1') },
-      tag.p(class: 'fr-text--bold') { t('.not_completed.message2') },
-      llm_rule_suggestion.state.in?(['failed', 'accepted', 'skipped']) ? tag.p(class: '') { t(".states.#{llm_rule_suggestion.state}") } : nil,
+      llm_rule_suggestion.state.in?(['pending', 'failed', 'accepted', 'skipped']) ? tag.p(class: '') { t(".states.#{llm_rule_suggestion.state}") } : nil,
     ])
+  end
+
+  def last_rule?
+    LLMRuleSuggestion.last_rule?(llm_rule_suggestion.rule)
+  end
+
+  def stepper_finished?
+    llm_rule_suggestion.finished? && last_rule?
+  end
+
+  def should_poll?
+    llm_rule_suggestion.state.in?(['running', 'queued'])
+  end
+
+  def poll_controller_data
+    should_poll? ? 'turbo-poll' : ''
+  end
+
+  def poll_url
+    helpers.poll_simplify_admin_procedure_types_de_champ_path(procedure, rule: rule)
   end
 
   private

@@ -508,7 +508,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
 
     it 'applies only selected operations from posted changes_json' do
       expect { subject }.to change { suggestion.reload.state }.from('completed').to('accepted')
-      expect(response).to redirect_to(admin_procedure_path(procedure))
+      expect(response).to redirect_to(simplify_admin_procedure_types_de_champ_path(procedure, rule: 'improve_structure'))
 
       libelles = procedure.draft_revision.reload.types_de_champ_public.map(&:libelle)
       expect(libelles).to include('Nouveau')
@@ -518,6 +518,23 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       expect(accepted_suggestion_item.applied_at).not_to be_nil
       expect(skipped_suggestion_item.reload.verify_status).to eq('skipped')
       expect(skipped_suggestion_item.reload.applied_at).to be_nil
+    end
+
+    context 'when suggestion has no items' do
+      let(:accepted_suggestion_item) { nil }
+      let(:skipped_suggestion_item) { nil }
+
+      subject do
+        post :accept_simplification, params: {
+          procedure_id: procedure.id,
+          llm_suggestion_rule_id: suggestion.id,
+        }
+      end
+
+      it 'transitions state from completed to skipped and redirect' do
+        expect { subject }.to change { suggestion.reload.state }.from('completed').to('skipped')
+        expect(response).to redirect_to(simplify_admin_procedure_types_de_champ_path(procedure, rule: 'improve_structure'))
+      end
     end
   end
 end
