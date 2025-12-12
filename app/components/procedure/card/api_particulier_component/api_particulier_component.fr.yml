@@ -1,5 +1,0 @@
----
-fr:
-  ready: "Validé"
-  needs_configuration: "À configurer"
-  configure_api_particulier_token: "Configurer le jeton API particulier"

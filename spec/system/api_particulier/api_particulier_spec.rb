@@ -57,13 +57,14 @@ describe 'fetch API Particulier Data', js: true do
 
     scenario 'it can enable api particulier' do
       visit admin_procedure_path(procedure)
-      expect(page).to have_content('Configurer le jeton API particulier')
+      expect(page).to have_content('Configurer les jetons API')
 
-      find('#api-particulier').click
-      expect(page).to have_current_path(admin_procedure_api_particulier_path(procedure))
+      find('#api_token').click
+      expect(page).to have_current_path(admin_procedure_jetons_path(procedure))
 
-      find('#edit-jeton').click
-      expect(page).to have_current_path(admin_procedure_api_particulier_jeton_path(procedure))
+      click_on 'Ajouter un jeton API Particulier'
+
+      expect(page).to have_current_path(api_particulier_admin_procedure_jetons_path(procedure))
 
       fill_in 'procedure_api_particulier_token', with: expected_token
       VCR.use_cassette('api_particulier/success/introspect') { click_on 'Enregistrer' }
@@ -199,10 +200,6 @@ describe 'fetch API Particulier Data', js: true do
       end
 
       click_on 'Enregistrer'
-
-      within('#cnaf-enfants') do
-        expect(find('input[value=nomPrenom]')).to be_checked
-      end
 
       procedure.reload
 

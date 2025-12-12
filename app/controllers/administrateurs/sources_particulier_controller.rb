@@ -10,7 +10,7 @@ module Administrateurs
 
     def update
       if @procedure.update(api_particulier_sources: sources_params)
-        redirect_to admin_procedure_api_particulier_sources_path(@procedure), notice: t('.sources_ok')
+        redirect_to admin_procedure_jetons_path(@procedure), notice: t('.sources_ok')
       else
         flash.now.alert = @procedure.errors.full_messages
         render :show

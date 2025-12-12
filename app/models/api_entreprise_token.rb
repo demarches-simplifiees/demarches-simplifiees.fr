@@ -61,6 +61,7 @@ class APIEntrepriseToken
 
     @decoded_token ||= JWT.decode(@jwt_token, nil, false)[0]
   rescue JWT::DecodeError => e
-    raise TokenError, e.message
+    Rails.logger.error e.message
+    {}
   end
 end
