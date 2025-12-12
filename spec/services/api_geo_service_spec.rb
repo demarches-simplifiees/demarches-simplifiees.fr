@@ -43,6 +43,14 @@ describe APIGeoService do
       expect(APIGeoService.communes('01').first).to eq(code: '01004', name: 'Ambérieu-en-Bugey', postal_code: '01500', departement_code: '01', epci_code: '240100883', region_code: "84")
       expect(APIGeoService.communes('01').last).to eq(code: '01457', name: 'Vonnas', postal_code: '01540', departement_code: '01', epci_code: '200070555', region_code: "84")
     end
+
+    context 'with invalid department code' do
+      it 'returns empty array' do
+        expect(APIGeoService.communes(nil)).to eq([])
+        expect(APIGeoService.communes('')).to eq([])
+        expect(APIGeoService.communes('99')).to eq([])
+      end
+    end
   end
 
   describe 'communes_by_postal_code' do

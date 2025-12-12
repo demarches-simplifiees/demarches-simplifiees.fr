@@ -58,7 +58,9 @@ class SerializerService
       context: { internal_use: true },
       operation_name: operation_name)
     if result['errors'].present?
-      raise result['errors'].first['message']
+      error_message = result['errors'].first['message']
+      Sentry.capture_message("SerializerService execute_query failed: " + error_message)
+      raise error_message
     end
     result['data']
   end
