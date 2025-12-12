@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-class Logic::BinaryOperator < Logic::Term
+class Logic::BinaryOperator < Logic::Operator
   attr_reader :left, :right
 
   def initialize(left, right)
     @left, @right = left, right
+    @operands = [@left, @right]
   end
 
   def sources
@@ -50,11 +51,5 @@ class Logic::BinaryOperator < Logic::Term
     self.class == other.class &&
       @left == other.left &&
       @right == other.right
-  end
-
-  def hash
-    term = self.class.name
-    sorted_operands = [@left, @right].sort_by(&:hash)
-    [term, *sorted_operands].hash
   end
 end

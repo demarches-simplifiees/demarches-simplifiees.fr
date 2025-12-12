@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class Logic::NAryOperator < Logic::Term
-  attr_reader :operands
-
+class Logic::NAryOperator < Logic::Operator
   def initialize(operands)
     @operands = operands
   end
@@ -45,11 +43,5 @@ class Logic::NAryOperator < Logic::Term
       @operands.all? do |operand|
         @operands.count { |o| o == operand } == other.operands.count { |o| o == operand }
       end
-  end
-
-  def hash
-    term = self.class.name
-    sorted_operands = operands.sort_by(&:hash)
-    [term, *sorted_operands].hash
   end
 end
