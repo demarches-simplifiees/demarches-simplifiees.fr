@@ -11,6 +11,10 @@ class Champs::CiviliteChamp < Champ
     false
   end
 
+  def self.options
+    [[Individual::GENDER_FEMALE, Individual::GENDER_FEMALE], [Individual::GENDER_MALE, Individual::GENDER_MALE]]
+  end
+
   def female_input_id
     "#{input_id}-female"
   end
