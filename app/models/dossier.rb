@@ -884,10 +884,11 @@ class Dossier < ApplicationRecord
       if is_administration?(author) && can_be_deleted_by_administration?(reason)
         update(hidden_by_administration_at: Time.zone.now, hidden_by_reason: reason)
         log_dossier_operation(author, :supprimer, self)
-        DossierNotification.create_notifications_for_non_customisable_type(self, :dossier_suppression)
+        DossierNotification.create_notifications_for_non_customisable_type(self, :dossier_suppression) if hidden_by_user?
       elsif is_user?(author) && can_be_deleted_by_user?
         update(hidden_by_user_at: Time.zone.now, dossier_transfer_id: nil, hidden_by_reason: reason)
         log_dossier_operation(author, :supprimer, self)
+        DossierNotification.create_notifications_for_non_customisable_type(self, :dossier_suppression) if hidden_by_administration?
       elsif is_automatic?(author) && can_be_deleted_by_automatic?(reason)
         update(hidden_by_expired_at: Time.zone.now, hidden_by_reason: reason)
         log_automatic_dossier_operation(:supprimer, self)
