@@ -134,6 +134,26 @@ describe AttachmentsController, type: :controller do
             expect(type_de_champ.reload.notice_explicative.attached?).to be(false)
           end
         end
+
+        context 'can remove a groupe instructeur signature' do
+          let(:procedure) { create(:procedure) }
+          let(:groupe_instructeur) { procedure.groupe_instructeurs.first }
+          let(:attachment) { groupe_instructeur.signature.attachments.first }
+          let(:signed_id) { attachment.blob.signed_id }
+
+          before do
+            groupe_instructeur.signature.attach(
+              io: Rails.root.join('spec/fixtures/files/black.png').open,
+              filename: 'signature.png',
+              content_type: 'image/png'
+            )
+          end
+
+          it do
+            is_expected.to have_http_status(200)
+            expect(groupe_instructeur.reload.signature.attached?).to be(false)
+          end
+        end
       end
 
       context 'when the administrateur does not own the procedure' do
