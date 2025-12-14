@@ -10,8 +10,33 @@ class LLM::SuggestionOrderingService
 
     inject_added_header_sections(original, suggestion_by_kind[ADD_KEY] || [])
     swap_updated_rtdc_position(original, suggestion_by_kind[UPDATE_KEY] || [])
+    inject_repetition_children(llm_rule_suggestion, original)
+  end
 
-    original
+  def self.inject_repetition_children(llm_rule_suggestion, original)
+    original.flat_map do |suggestion_or_prtdc|
+      prtdc = nil
+      if suggestion_or_prtdc.is_a?(LLMRuleSuggestionItem)
+        prtdc = llm_rule_suggestion.procedure_revision
+          .revision_types_de_champ
+          .find { it.stable_id == suggestion_or_prtdc.payload['stable_id'] }
+      else
+        prtdc = suggestion_or_prtdc
+      end
+
+      if prtdc.nil? # suggestion had been added, no prtdc exists yet
+        [suggestion_or_prtdc]
+      elsif prtdc.repetition?
+        [suggestion_or_prtdc] + prtdc.revision_types_de_champ
+      else
+        [suggestion_or_prtdc]
+      end
+    end
+  end
+
+  def self.build_original_list(revision)
+    revision.revision_types_de_champ_public
+      .to_a
   end
 
   def self.ordered_label_suggestions(llm_rule_suggestion)
@@ -29,12 +54,6 @@ class LLM::SuggestionOrderingService
 
   def self.find_index_after_stable_id(original, stable_id)
     original.index { |rtdc| rtdc.stable_id == stable_id }
-  end
-
-  def self.build_original_list(revision)
-    revision.revision_types_de_champ_public
-      .to_a
-      .flat_map { it.repetition? ? [it] + it.revision_types_de_champ : [it] }
   end
 
   def self.inject_added_header_sections(original, add_suggestions)
