@@ -17,27 +17,21 @@
         <% end %>
 
         <span class="fr-hint-text fr-mt-1w"><%= item.justification %></span>
-
-        <pre><%= item.payload.inspect %></pre>
       <% end %>
     </div>
-    <hr />
   <% else %>
     <div class="fr-checkbox-group fr-my-1v">
-      <%= check_box_tag :lol, :lol, :lol, disabled: true %>
+      <%= check_box_tag :noop, :noop, :noop, disabled: true %>
 
       <%= label_tag do %>
+        <span class="fr-badge fr-mr-1w"> Inchangé </span>
+
         <% if item.header_section? %>
-          <span class="fr-badge fr-badge--green-menthe fr-mr-1w">
-            <span class="fr-icon-add-line fr-icon--sm fr-mr-1v"></span>
-            Section: <%= item.type_de_champ.stable_id %>
-          </span>
+          #
+          <%= item.type_de_champ.header_section_level %>
+          :
           <%= item.libelle %>
         <% else %>
-          <span class="fr-badge fr-badge--green-bourgeon fr-mr-1w">
-            <span class="fr-icon-arrow-up-down-line fr-icon--sm fr-mr-1v"></span>
-            TDC: <%= item.type_de_champ.stable_id %>
-          </span>
           <%= item.libelle %>
         <% end %>
       <% end %>
