@@ -41,7 +41,7 @@
                     %p.fr-badge.fr-badge--info.fr-badge--sm.fr-mt-1w inactif
                   - elsif gi.routing_rule.nil?
                     %p.fr-badge.fr-badge--warning.fr-badge--sm.fr-mt-1w aucune règle
-                  - elsif gi.invalid_rule?
+                  - elsif gi.invalid_routing_rule?
                     %p.fr-badge.fr-badge--warning.fr-badge--sm.fr-mt-1w règle invalide
                   - elsif gi.non_unique_rule?
                     %p.fr-badge.fr-badge--warning.fr-badge--sm.fr-mt-1w règle déjà attribuée à #{gi.groups_with_same_rule}
