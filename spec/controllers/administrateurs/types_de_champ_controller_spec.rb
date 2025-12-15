@@ -408,7 +408,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
     before { Flipper.enable_actor(:llm_nightly_improve_procedure, procedure) }
     subject { get :simplify, params: { procedure_id: procedure.id, rule: llm_rule_suggestion.rule } }
 
-    context 'with existing completed suggestion' do
+    context 'with existing completed(ready) suggestion' do
       let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'completed', rule: rule) }
 
       it 'assigns label suggestions from stored LLMRuleSuggestion items' do
@@ -419,7 +419,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
 
     context 'with pending llm suggestion' do
       let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'running', rule: rule) }
-      it 'redirects to procedure admin page with alert' do
+      it 'renders' do
         expect(subject).to have_http_status(:ok)
       end
     end
@@ -431,11 +431,20 @@ describe Administrateurs::TypesDeChampController, type: :controller do
         expect(assigns(:llm_rule_suggestion)).to an_instance_of(LLMRuleSuggestion)
       end
     end
-    context 'with non completed suggestion' do
+
+    context 'with queued suggestion' do
       let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'queued', rule: rule) }
 
-      it 'redirects when suggestion is not completed' do
+      it 'renders' do
         expect(subject).to have_http_status(:ok)
+      end
+    end
+
+    context 'with accepted suggestion' do
+      let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'accepted', rule: rule) }
+
+      it 'renders' do
+        expect(subject).to redirect_to(simplify_admin_procedure_types_de_champ_path(procedure, rule: LLMRuleSuggestion.next_rule(llm_rule_suggestion.rule)))
       end
     end
   end
@@ -508,7 +517,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
 
     it 'applies only selected operations from posted changes_json' do
       expect { subject }.to change { suggestion.reload.state }.from('completed').to('accepted')
-      expect(response).to redirect_to(admin_procedure_path(procedure))
+      expect(response).to redirect_to(simplify_admin_procedure_types_de_champ_path(procedure, rule: 'improve_structure'))
 
       libelles = procedure.draft_revision.reload.types_de_champ_public.map(&:libelle)
       expect(libelles).to include('Nouveau')
@@ -518,6 +527,23 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       expect(accepted_suggestion_item.applied_at).not_to be_nil
       expect(skipped_suggestion_item.reload.verify_status).to eq('skipped')
       expect(skipped_suggestion_item.reload.applied_at).to be_nil
+    end
+
+    context 'when suggestion has no items' do
+      let(:accepted_suggestion_item) { nil }
+      let(:skipped_suggestion_item) { nil }
+
+      subject do
+        post :accept_simplification, params: {
+          procedure_id: procedure.id,
+          llm_suggestion_rule_id: suggestion.id,
+        }
+      end
+
+      it 'transitions state from completed to skipped and redirect' do
+        expect { subject }.to change { suggestion.reload.state }.from('completed').to('skipped')
+        expect(response).to redirect_to(simplify_admin_procedure_types_de_champ_path(procedure, rule: 'improve_structure'))
+      end
     end
   end
 end

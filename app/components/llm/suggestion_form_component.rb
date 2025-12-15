@@ -3,39 +3,20 @@
 class LLM::SuggestionFormComponent < ApplicationComponent
   attr_reader :llm_rule_suggestion
 
-  delegate :rule, :procedure_revision, to: :llm_rule_suggestion
+  delegate :rule, :procedure_revision, :state, to: :llm_rule_suggestion
   delegate :procedure, to: :procedure_revision
-  delegate :step_title, :step_summary, to: :item_component
+  delegate :step_title, to: :item_component
 
   def initialize(llm_rule_suggestion:)
     @llm_rule_suggestion = llm_rule_suggestion
   end
 
-  def step_rule
-    rule
-  end
-
-  def ordered_llm_rule_suggestion_items
-    root_tdcs, children_tdcs = llm_rule_suggestion
-      .llm_rule_suggestion_items
-      .partition { |item| item.payload['parent_id'].nil? }
-    children_by_parent_id = children_tdcs.group_by { |item| item.payload['parent_id'] }
-
-    root_tdcs
-      .sort_by { |item| item.payload['position'] }
-      .flat_map do |root_item|
-        [root_item] +
-          (children_by_parent_id[root_item.payload['stable_id']] || []).sort_by { |item| item.payload['position'] }
-      end
+  def step_summary
+    t(".summary.#{rule}_html")
   end
 
   def item_component
-    case rule
-    when 'improve_label'
-      LLM::ImproveLabelItemComponent
-    else
-      raise "Unknown LLM rule suggestion view component for rule: #{rule}"
-    end
+    LLMRuleSuggestion.item_component_class_for(rule)
   end
 
   def prtdcs
@@ -50,12 +31,25 @@ class LLM::SuggestionFormComponent < ApplicationComponent
     llm_rule_suggestion.llm_rule_suggestion_items.size
   end
 
+  def ordered_llm_rule_suggestion_items
+    case rule
+    when LLMRuleSuggestion.rules.fetch('improve_structure')
+      LLM::SuggestionOrderingService.ordered_structure_suggestions(llm_rule_suggestion)
+    when LLMRuleSuggestion.rules.fetch('improve_label')
+      LLM::SuggestionOrderingService.ordered_label_suggestions(llm_rule_suggestion)
+    else
+      raise "Unknown rule: #{rule}"
+    end
+  end
+
   def enqueue_button_text
     t(".buttons.#{llm_rule_suggestion.state}")
   end
 
   def at_least_one_accepted?
-    ordered_llm_rule_suggestion_items.any? { |item| item.verify_status == 'accepted' }
+    ordered_llm_rule_suggestion_items
+      .filter { it.is_a?(LLMRuleSuggestionItem) }
+      .any? { |item| item&.verify_status == 'accepted' }
   end
 
   def button_options
@@ -64,7 +58,7 @@ class LLM::SuggestionFormComponent < ApplicationComponent
         'fr-btn' => true,
         'fr-btn--tertiary' => llm_rule_suggestion.state.in?(['running', 'queued']),
         'fr-btn--spin' => llm_rule_suggestion.state.in?(['running', 'queued']),
-        'fr-icon-search-line fr-btn--icon-left' => llm_rule_suggestion.state.in?(['pending', 'failed', 'accepted', 'skipped'])
+        'fr-icon-search-ai-line fr-btn--icon-left' => llm_rule_suggestion.state.in?(['pending', 'failed', 'accepted', 'skipped'])
       ),
     }
   end
@@ -83,10 +77,28 @@ class LLM::SuggestionFormComponent < ApplicationComponent
 
   def display_message
     safe_join([
-      tag.p(class: 'fr-mb-0') { t('.not_completed.message1') },
-      tag.p(class: 'fr-text--bold') { t('.not_completed.message2') },
-      llm_rule_suggestion.state.in?(['failed', 'accepted', 'skipped']) ? tag.p(class: '') { t(".states.#{llm_rule_suggestion.state}") } : nil,
+      llm_rule_suggestion.state.in?(['pending', 'failed', 'accepted', 'skipped']) ? tag.p(class: '') { t(".states.#{llm_rule_suggestion.state}") } : nil,
     ])
+  end
+
+  def last_rule?
+    LLMRuleSuggestion.last_rule?(llm_rule_suggestion.rule)
+  end
+
+  def stepper_finished?
+    llm_rule_suggestion.finished? && last_rule?
+  end
+
+  def should_poll?
+    llm_rule_suggestion.state.in?(['running', 'queued'])
+  end
+
+  def poll_controller_data
+    should_poll? ? 'turbo-poll' : ''
+  end
+
+  def poll_url
+    helpers.poll_simplify_admin_procedure_types_de_champ_path(procedure, rule: rule)
   end
 
   private

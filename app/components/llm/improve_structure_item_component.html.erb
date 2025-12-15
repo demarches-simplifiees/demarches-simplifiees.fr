@@ -1,0 +1,40 @@
+<div class="fr-fieldset__element">
+  <% if item.is_a?(LLMRuleSuggestionItem) %>
+    <div class="fr-checkbox-group fr-my-1v">
+      <%= checkbox do %>
+        <% if op_kind == 'add' %>
+          <span class="fr-badge fr-badge--green-menthe fr-mr-1w">
+            <span class="fr-icon-add-line fr-icon--sm fr-mr-1v"></span>
+            Ajout de section
+          </span>
+          <%= payload['libelle'] %>
+        <% elsif op_kind == 'update' && original_tdc %>
+          <span class="fr-badge fr-badge--green-bourgeon fr-mr-1w">
+            <span class="fr-icon-arrow-up-down-line fr-icon--sm fr-mr-1v"></span>
+            Réorganisation
+          </span>
+          <%= original_tdc.libelle %>
+        <% end %>
+
+        <span class="fr-hint-text fr-mt-1w"><%= item.justification %></span>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="fr-checkbox-group fr-my-1v">
+      <%= check_box_tag :noop, :noop, :noop, disabled: true %>
+
+      <%= label_tag do %>
+        <span class="fr-badge fr-mr-1w"> Inchangé </span>
+
+        <% if item.header_section? %>
+          #
+          <%= item.type_de_champ.header_section_level %>
+          :
+          <%= item.libelle %>
+        <% else %>
+          <%= item.libelle %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

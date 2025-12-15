@@ -3,7 +3,7 @@
 class LLMRuleSuggestionItem < ApplicationRecord
   belongs_to :llm_rule_suggestion
 
-  enum :verify_status, { pending: 'pending', accepted: 'accepted', skipped: 'skipped' }
+  enum :verify_status, { pending: 'pending', accepted: 'accepted', skipped: 'skipped', failed: 'failed' }
 
   validates :op_kind, presence: true
   validates :op_kind, inclusion: { in: %w[update add destroy] }

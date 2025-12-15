@@ -7,7 +7,7 @@ describe LLM::ImproveProcedureJob, type: :job do
 
   before { Flipper.enable_actor(:llm_nightly_improve_procedure, procedure) }
 
-  it 'creates suggestions and enqueues generation jobs for available rules on the draft revision' do
+  it 'creates suggestions and enqueues generation jobs for given rules on the draft revision' do
     expect { perform }.to change { LLMRuleSuggestion.count }.by(1)
 
     expect(LLM::GenerateRuleSuggestionJob).to have_been_enqueued.exactly(:once)

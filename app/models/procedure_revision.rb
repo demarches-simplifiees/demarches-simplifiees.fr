@@ -254,13 +254,54 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def apply_llm_rule_suggestion_items(changes)
-    transaction do
-      changes.fetch(:update, []).each do |llm_rule_suggestion_items|
-        libelle, description = llm_rule_suggestion_items.payload.with_indifferent_access.values_at(:libelle, :description)
-        tdc = find_and_ensure_exclusive_use(llm_rule_suggestion_items.stable_id)
+    # Handle adds first, outside transaction to ensure stable_ids are generated and available
+    created = changes.fetch(:add, []).each_with_object({}) do |item, accu|
+      after_stable_id, libelle, header_section_level, generated_stable_id = item.payload.with_indifferent_access.values_at(:after_stable_id, :libelle, :header_section_level, :generated_stable_id)
+
+      new_tdc = add_type_de_champ(after_stable_id:, type_champ: 'header_section', libelle:, header_section_level:)
+      accu[generated_stable_id] = new_tdc if new_tdc.persisted? && generated_stable_id
+    end
+
+    # transaction do
+    changes.fetch(:update, []).each do |item|
+      payload = item.payload.with_indifferent_access
+
+      if payload.key?(:after_stable_id) # StructureImprover: déplacement relatif
+        stable_id, after_stable_id, header_section_level, libelle = payload.values_at(:stable_id, :after_stable_id, :header_section_level, :libelle)
+        params = { header_section_level:, libelle: }.compact
+
+        if after_stable_id.nil? # positionned at first
+          coordinate = move_type_de_champ(stable_id, 0)
+          if payload.key?(:header_section_level) && coordinate.type_de_champ.header_section? && params.present?
+            coordinate.type_de_champ.update(params)
+          end
+        else # positionned after another tdc
+          if after_stable_id&.negative?
+            after_tdc = created[after_stable_id]
+            if after_tdc
+              after_stable_id = created[after_stable_id].stable_id
+            else
+              item.failed!
+              next
+            end
+          end
+
+          after_coordinate, _ = coordinate_and_tdc(after_stable_id)
+          if after_coordinate
+            coordinate = move_type_de_champ_after(stable_id, after_coordinate.position)
+            if payload.key?(:header_section_level) && coordinate.type_de_champ.header_section? && params.present?
+              coordinate.type_de_champ.update(params)
+            end
+          end
+        end
+      else # LabelImprover: mise à jour contenu
+        stable_id, libelle, description = payload.values_at(:stable_id, :libelle, :description)
+
+        tdc = find_and_ensure_exclusive_use(stable_id)
         tdc.update({ libelle:, description: }.compact)
       end
     end
+    # end
   end
 
   private

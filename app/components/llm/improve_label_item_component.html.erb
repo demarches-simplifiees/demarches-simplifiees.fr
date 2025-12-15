@@ -1,30 +1,47 @@
-<div class="fr-checkbox-group fr-my-1v fr-my-2w">
-  <%= checkbox do %>
-    <span style="width: 100%;  display: block;">
-      <span class="fr-badge fr-mr-1w"> Libellé </span>
+<div class="fr-fieldset__element">
+  <div class="fr-checkbox-group fr-my-1v">
+    <%= checkbox do %>
+      <span style="width: 100%;  display: block;">
+        <span class="fr-badge fr-mr-1w"> Libellé </span>
 
-      <%= original_tdc.libelle %>
+        <%= original_tdc.libelle %>
 
-      <% if libelle_changed? %>
-        <span class="fr-ml-1w">→ <%= payload['libelle'] %></span>
-      <% end %>
-    </span>
-
-    <% if description_changed? %>
-      <br>
-      <span class="fr-mt-1w" style="width: 100%;  display: block;">
-        <span class="fr-badge fr-mr-1w"> Description </span>
-
-        <%= original_tdc.description %>
-
-        <% if description_changed? %>
-          <span class="fr-ml-1w">→ <%= payload['description'] %></span>
-        <% end %>
-
-        <% if item.justification.present? %>
-          <span class="fr-hint-text"><%= item.justification %></span>
+        <% if libelle_changed? %>
+          <span class="fr-icon-arrow-right-line fr-icon--sm fr-mx-1w" aria-hidden="true"></span>
+          <%= payload['libelle'] %>
         <% end %>
       </span>
+
+      <% if description_changed? %>
+        <br>
+        <span class="fr-mt-1w" style="width: 100%;  display: block;">
+          <span class="fr-badge fr-mr-1w"> Description </span>
+
+          <% if original_tdc.description.present? %>
+            <% if original_tdc.description.lines.many? %>
+              <%= simple_format(original_tdc.description) %>
+            <% else %>
+              <%= original_tdc.description %>
+            <% end %>
+          <% end %>
+
+          <% if description_changed? %>
+            <% if payload['description'].lines.one? %>
+              <span class="fr-icon-arrow-right-line fr-icon--sm" aria-hidden="true"></span>
+              <%= payload['description'] %>
+            <% else %>
+              <span class="fr-icon-arrow-down-line fr-icon--sm" aria-hidden="true"></span>
+              <%= simple_format(payload['description'], class: "fr-mt-1w") %>
+            <% end %>
+          <% end %>
+        </span>
+      <% end %>
+
+      <% if item.justification.present? %>
+        <span style="width: 100%;  display: block;">
+          <span class="fr-hint-text"><%= item.justification %></span>
+        </span>
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
 </div>

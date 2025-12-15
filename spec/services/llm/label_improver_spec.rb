@@ -11,7 +11,8 @@ RSpec.describe LLM::LabelImprover do
     ]
   end
   let(:usage) { double() }
-  let(:revision) { double('revision', schema_to_llm: schema, procedure_id: 123) }
+  let(:procedure) { double('procedure', description: 'Test description', libelle: 'Test libelle') }
+  let(:revision) { double('revision', schema_to_llm: schema, procedure_id: 123, types_de_champ: [], procedure:) }
   let(:suggestion) { double('suggestion', procedure_revision: revision, rule: LLMRuleSuggestion.rules.fetch(:improve_label)) }
   before do
     allow(usage).to receive(:with_indifferent_access).and_return({
