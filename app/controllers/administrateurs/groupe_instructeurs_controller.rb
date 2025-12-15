@@ -448,7 +448,7 @@ module Administrateurs
       end
 
       if params[:filter] == '1'
-        groupes = Kaminari.paginate_array(groupes.filter(&:routing_to_configure?))
+        groupes = Kaminari.paginate_array(groupes.routing_to_configure)
       end
 
       groupes

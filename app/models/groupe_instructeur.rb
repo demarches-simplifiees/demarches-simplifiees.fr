@@ -33,6 +33,9 @@ class GroupeInstructeur < ApplicationRecord
   scope :active, -> { where(closed: false) }
   scope :closed, -> { where(closed: true) }
   scope :for_dossiers, -> (dossiers) { joins(:dossiers).where(dossiers: dossiers).distinct(:id) }
+  scope :routing_to_configure, -> { invalid_routing_rule.or(non_unique_routing_rule) }
+  scope :invalid_routing_rule, -> { where(valid_routing_rule: false) }
+  scope :non_unique_routing_rule, -> { where(unique_routing_rule: false) }
 
   def add(instructeur)
     return if instructeur.nil?
@@ -93,10 +96,6 @@ class GroupeInstructeur < ApplicationRecord
 
   def update_rule_validity_status
     update!(valid_routing_rule: valid_rule?)
-  end
-
-  def routing_to_configure?
-    invalid_rule? || non_unique_rule?
   end
 
   def invalid_rule?
