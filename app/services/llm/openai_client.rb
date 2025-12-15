@@ -11,6 +11,7 @@ module LLM
         api_key: ENV["LLM_API_KEY"],
         llm_options: {
           uri_base: ENV.fetch("LLM_URI_BASE"),
+          timeout: 180,
         },
         default_options: {
           temperature: ENV.fetch("LLM_TEMPERATURE", 0.2).to_f,
