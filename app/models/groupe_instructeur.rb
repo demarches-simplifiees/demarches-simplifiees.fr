@@ -103,6 +103,10 @@ class GroupeInstructeur < ApplicationRecord
     !valid_routing_rule?
   end
 
+  def non_unique_routing_rule?
+    !unique_routing_rule?
+  end
+
   def valid_rule?
     return false if routing_rule.nil?
     if [And, Or].include?(routing_rule.class)
@@ -114,11 +118,6 @@ class GroupeInstructeur < ApplicationRecord
 
   def valid_rule_line?(rule)
     !rule.is_a?(EmptyOperator) && routing_rule_matches_tdc?(rule)
-  end
-
-  def non_unique_rule?
-    return false if invalid_routing_rule?
-    routing_rule.in?(other_groupe_instructeurs.map(&:routing_rule))
   end
 
   def groups_with_same_rule
