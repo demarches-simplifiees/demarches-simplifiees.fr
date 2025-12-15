@@ -27,8 +27,15 @@ module SimpliscoreConcern
 
         if next_rule
           redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: next_rule),
-                      notice: "Toutes les suggestions pour la règle « #{LLM::StepperComponent.step_title(rule)} » ont déjà été examinées. Continuons avec la règle « #{LLM::StepperComponent.step_title(next_rule)} »."
+                      notice: "Toutes les suggestions pour la règle « #{LLM::StepperComponent.step_title(rule)} » ont déjà été examinées. Continuons avec la règle « #{LLM::StepperComponent.step_title(next_rule)} »."
+        elsif tunnel_can_restart?
+          redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: LLMRuleSuggestion::RULE_SEQUENCE.first),
+                      notice: "Le formulaire a évolué depuis la dernière analyse. Vous pouvez relancer une nouvelle analyse."
         end
+      elsif tunnel_can_restart? && rule != LLMRuleSuggestion::RULE_SEQUENCE.first
+        # Tunnel finished with schema change: redirect any non-first step to step 1
+        redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: LLMRuleSuggestion::RULE_SEQUENCE.first),
+                    notice: "Le formulaire a évolué depuis la dernière analyse. Vous pouvez relancer une nouvelle analyse."
       end
 
       @llm_rule_suggestion ||= draft.llm_rule_suggestions.build(rule:)
@@ -67,7 +74,17 @@ module SimpliscoreConcern
       if next_rule
         redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: next_rule), notice: "Parfait, continuons"
       else
-        redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: @llm_rule_suggestion.rule), notice: "Toutes les suggestions ont été examinées"
+        # Tunnel complete - redirect to champs page with appropriate message
+        # Reset memoized values to reflect post-apply state
+        remove_instance_variable(:@current_schema_hash) if defined?(@current_schema_hash)
+
+        if first_rule_suggestion&.schema_hash != current_schema_hash
+          redirect_to champs_admin_procedure_path(@procedure),
+                      notice: "Toutes les suggestions ont été examinées. Le formulaire a évolué, vous pouvez relancer une nouvelle analyse."
+        else
+          redirect_to champs_admin_procedure_path(@procedure),
+                      notice: "Toutes les suggestions ont été examinées."
+        end
       end
     end
 
