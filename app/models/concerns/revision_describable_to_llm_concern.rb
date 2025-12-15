@@ -10,12 +10,13 @@ module RevisionDescribableToLLMConcern
           libelle: rtdc.libelle,
           mandatory: rtdc.mandatory?,
           description: rtdc.description,
-          choices: (rtdc.type_de_champ.drop_down_options.take(10) if rtdc.type_de_champ.choice_type?),
+          total_choices: (rtdc.type_de_champ.drop_down_options&.size if rtdc.type_de_champ.choice_type?),
+          sample_choices: (rtdc.type_de_champ.drop_down_options.take(10) if rtdc.type_de_champ.choice_type?),
           choices_dynamic: (rtdc.type_de_champ.referentiel.present? ? true : nil),
-          header_section_level: (rtdc.type_de_champ.header_section_level if rtdc.type_de_champ.header_section?),
-          absolute_level: (rtdc.type_de_champ.header_section? ? rtdc.type_de_champ.level_for_revision(self) : nil),
           position: rtdc.position,
           parent_id: rtdc.parent&.stable_id,
+          header_section_level: (rtdc.type_de_champ.header_section_level if rtdc.type_de_champ.header_section?),
+          # absolute_level: (rtdc.type_de_champ.header_section? ? rtdc.type_de_champ.level_for_revision(self) : nil),
           display_condition: rtdc.type_de_champ.condition.to_h,
         }.compact
       end
