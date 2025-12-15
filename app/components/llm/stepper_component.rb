@@ -6,6 +6,19 @@ module LLM
     delegate :procedure_revision, :rule, to: :llm_rule_suggestion
     delegate :procedure, to: :procedure_revision
 
+    def self.step_title(rule_name)
+      case rule_name
+      when 'improve_label'
+        "Amélioration des libellés"
+      when 'improve_structure'
+        "Amélioration de la structure"
+      when 'improve_types'
+        "Amélioration des types de champs"
+      when 'cleaner'
+        "Nettoyage des champs redondants"
+      end
+    end
+
     def initialize(step_component:)
       super(step_component:)
     end
@@ -18,21 +31,12 @@ module LLM
       )
     end
 
-    def title
-      "Amélioration de la qualité du formulaire « #{procedure.libelle} »"
+    def step_title(rule_name = rule)
+      self.class.step_title(rule_name)
     end
 
-    def step_title(rule_name = rule)
-      case rule_name
-      when 'improve_label'
-        "Amélioration des libellés"
-      when 'improve_structure'
-        "Amélioration de la structure"
-      when 'improve_types'
-        "Amélioration des types de champs"
-      when 'cleaner'
-        "Nettoyage des champs redondants"
-      end
+    def title
+      "Amélioration de la qualité du formulaire « #{procedure.libelle} »"
     end
 
     def next_step_title
