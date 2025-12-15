@@ -106,7 +106,7 @@ module LLM
 
         * L’aération des sections (paragraphes courts, espaces).
         * Des formulations plus courtes et adaptées aux interfaces.
-        * Le libelle des section (header_section) ne doivent JAMAIS être préfixé par un numéro car le système les gère automatiquement.
+        * Les libellés des sections (header_section) ne doivent JAMAIS être préfixés par un numéro car le système les gère automatiquement.
 
         ---
 
@@ -125,6 +125,7 @@ module LLM
         ## 8. Regles d'accessibilité numérique (WCAG)
         * Ne JAMAIS indiquer quand les champs sont optionnels/facultatifs dans les libellés. Cette information est fournie automatiquement par le système.
         * Ne JAMAIS utilise email, courriel. Preférer adresse électronique.
+        * Ne JAMAIS utiliser les termes "email", "courriel". Préférer "adresse éléctronique".
 
         Utiliser l’outil #{TOOL_DEFINITION.dig(:function, :name)} pour chaque champ à améliorer (un appel par champ).
       TXT

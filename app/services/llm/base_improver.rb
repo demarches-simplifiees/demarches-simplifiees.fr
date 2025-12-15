@@ -147,7 +147,7 @@ module LLM
           - mandatory : indique si le champ est obligatoire ou non
           - description : la description du champ (optionnel)
           - total_choices : le nombre total d'options disponibles pour les champs de type liste déroulante (drop_down_list ou multiple_drop_down_list)
-          - sample_choices : 10 exemples des options disponibles pour les champs de type liste déroulante (drop_down_list ou multiple_drop_down_list)
+          - sample_choices : quelques exemples d'options disponibles pour les champs de type liste déroulante (drop_down_list ou multiple_drop_down_list)
           - choices_dynamic : boolean indiquant si les options du champ sont issues d'un référentiel externe (true) ou non (false ou absent)
           - position : la position du champ dans le formulaire, dans une une répétition la position est relative à la répétition et commence a 0
           - parent_id : l'identifiant stable du champ parent, ou null s’il n’y a pas de parent
