@@ -17,10 +17,12 @@
         <span class="fr-mt-1w" style="width: 100%;  display: block;">
           <span class="fr-badge fr-mr-1w"> Description </span>
 
-          <% if original_tdc.description.lines.many? %>
-            <%= simple_format(original_tdc.description) %>
-          <% elsif original_tdc.description.present? %>
-          <%= original_tdc.description %>
+          <% if original_tdc.description.present? %>
+            <% if original_tdc.description.lines.many? %>
+              <%= simple_format(original_tdc.description) %>
+            <% else %>
+              <%= original_tdc.description %>
+            <% end %>
           <% end %>
 
           <% if description_changed? %>
