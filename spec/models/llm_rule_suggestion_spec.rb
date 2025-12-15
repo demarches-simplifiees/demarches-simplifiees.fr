@@ -10,7 +10,50 @@ RSpec.describe LLMRuleSuggestion, type: :model do
 
   it 'has enums' do
     expect(subject).to define_enum_for(:state).with_values(pending: 'pending', queued: 'queued', running: 'running', completed: 'completed', failed: 'failed', accepted: 'accepted', skipped: 'skipped').backed_by_column_of_type(:string)
-    expect(subject).to define_enum_for(:rule).with_values(improve_label: 'improve_label', improve_structure: 'improve_structure').backed_by_column_of_type(:string)
+    expect(subject).to define_enum_for(:rule).with_values(improve_label: 'improve_label', improve_structure: 'improve_structure', consolidate_types: 'consolidate_types').backed_by_column_of_type(:string)
+  end
+
+  describe 'RULE_SEQUENCE' do
+    it 'includes consolidate_types as the third rule' do
+      expect(LLMRuleSuggestion::RULE_SEQUENCE).to eq(%w[improve_label improve_structure consolidate_types])
+    end
+  end
+
+  describe 'RULE_CONFIG' do
+    it 'has configuration for consolidate_types' do
+      expect(LLMRuleSuggestion::RULE_CONFIG['consolidate_types']).to eq({
+        item_component_class: 'LLM::ConsolidateTypesItemComponent',
+        service_class: 'LLM::TypesConsolidator'
+      })
+    end
+  end
+
+  describe '.next_rule' do
+    it 'returns improve_structure after improve_label' do
+      expect(LLMRuleSuggestion.next_rule('improve_label')).to eq('improve_structure')
+    end
+
+    it 'returns consolidate_types after improve_structure' do
+      expect(LLMRuleSuggestion.next_rule('improve_structure')).to eq('consolidate_types')
+    end
+
+    it 'returns nil after consolidate_types' do
+      expect(LLMRuleSuggestion.next_rule('consolidate_types')).to be_nil
+    end
+  end
+
+  describe '.last_rule?' do
+    it 'returns false for improve_label' do
+      expect(LLMRuleSuggestion.last_rule?('improve_label')).to be false
+    end
+
+    it 'returns false for improve_structure' do
+      expect(LLMRuleSuggestion.last_rule?('improve_structure')).to be false
+    end
+
+    it 'returns true for consolidate_types' do
+      expect(LLMRuleSuggestion.last_rule?('consolidate_types')).to be true
+    end
   end
 
   it 'has validations' do
