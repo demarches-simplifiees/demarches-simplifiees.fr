@@ -93,6 +93,7 @@ class GroupeInstructeur < ApplicationRecord
   def update_rule_statuses
     update_rule_validity_status
     procedure.update_all_groupes_rule_unicity_status
+    reload
   end
 
   def update_rule_validity_status
@@ -121,16 +122,16 @@ class GroupeInstructeur < ApplicationRecord
   end
 
   def groups_with_same_rule
-    return if routing_rule.nil?
+    return if routing_rule.nil? || unique_routing_rule?
+
     other_groupe_instructeurs
-      .filter { _1.routing_rule.present? }
-      .filter { _1.routing_rule == routing_rule }
-      .map(&:label)
+      .where(routing_rule: routing_rule)
+      .pluck(:label)
       .join(', ')
   end
 
   def other_groupe_instructeurs
-    procedure.groupe_instructeurs - [self]
+    procedure.groupe_instructeurs.where.not(id:)
   end
 
   def humanized_routing_rule
