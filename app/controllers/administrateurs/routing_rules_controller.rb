@@ -63,7 +63,7 @@ module Administrateurs
 
     def build_routing_rule_component
       Conditions::RoutingRulesComponent.new(
-        groupe_instructeur: @groupe_instructeur
+        groupe_instructeur: @groupe_instructeur.reload
       )
     end
 
