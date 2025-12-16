@@ -168,24 +168,28 @@ class ApplicationController < ActionController::Base
 
   def authenticate_instructeur!
     if !instructeur_signed_in?
+      store_location_for(:user, request.fullpath)
       redirect_to new_user_session_path
     end
   end
 
   def authenticate_expert!
     if !expert_signed_in?
+      store_location_for(:user, request.fullpath)
       redirect_to new_user_session_path
     end
   end
 
   def authenticate_instructeur_or_expert!
     if !instructeur_signed_in? && !expert_signed_in?
+      store_location_for(:user, request.fullpath)
       redirect_to new_user_session_path
     end
   end
 
   def authenticate_administrateur!
     if !administrateur_signed_in?
+      store_location_for(:user, request.fullpath)
       redirect_to new_user_session_path
     end
   end

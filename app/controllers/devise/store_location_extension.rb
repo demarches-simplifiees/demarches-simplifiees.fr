@@ -19,6 +19,8 @@ module Devise
         location
       end
 
+      helper_method :get_stored_location_for
+
       # Delete the url stored in the session for the given scope.
       def clear_stored_location_for(resource_or_scope)
         session_key = send(:stored_location_key_for, resource_or_scope)
