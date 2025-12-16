@@ -84,7 +84,27 @@ module SimpliscoreConcern
     end
 
     def llm_rule_suggestion_scope
-      LLMRuleSuggestion.where(procedure_revision_id: draft.id, schema_hash: current_schema_hash)
+      scope = LLMRuleSuggestion.where(procedure_revision_id: draft.id)
+
+      if LLMRuleSuggestion.position_for(rule) == 1
+        scope.where(schema_hash: current_schema_hash)
+      else
+        scope.where(created_at: tunnel_first_step.created_at..)
+      end
+    end
+
+    def current_schema_hash
+      @current_schema_hash ||= Digest::SHA256.hexdigest(draft.schema_to_llm.to_json)
+    end
+
+    def tunnel_first_step
+      @tunnel_first_step ||= LLMRuleSuggestion
+        .where(
+          procedure_revision_id: draft.id,
+          rule: LLMRuleSuggestion::RULE_SEQUENCE.first
+        )
+        .order(created_at: :desc)
+        .first
     end
 
     def suggestion_items_attributes
