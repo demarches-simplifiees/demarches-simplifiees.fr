@@ -64,6 +64,33 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
       it { is_expected.not_to have_selector('img[src="demarches-simplifiees.fr"]') }
     end
 
+    context 'attachments visibility' do
+      let(:rib_path) { 'spec/fixtures/files/RIB.pdf' }
+
+      before do
+        commentaire.piece_jointe.attach(
+          io: File.open(rib_path),
+          filename: 'RIB.pdf',
+          content_type: 'application/pdf',
+          metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+        )
+      end
+
+      context 'when commentaire is not discarded' do
+        it 'displays the attachment' do
+          is_expected.to include('RIB.pdf')
+        end
+      end
+
+      context 'when commentaire is discarded' do
+        before { commentaire.discard! }
+
+        it 'does not display the attachment' do
+          is_expected.not_to include('RIB.pdf')
+        end
+      end
+    end
+
     context 'with a seen_at after commentaire created_at' do
       let(:seen_at) { commentaire.created_at + 1.hour  }
 
