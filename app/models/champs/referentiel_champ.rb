@@ -119,7 +119,7 @@ class Champs::ReferentielChamp < Champ
     in [:checkbox | :yes_no, v]
       bool = ActiveModel::Type::Boolean.new.cast(v)
       bool.nil? ? nil : (bool ? Champs::BooleanChamp::TRUE_VALUE : Champs::BooleanChamp::FALSE_VALUE)
-    in [:text | :textarea | :engagement_juridique | :dossier_link | :email | :phone | :iban | :siret | :formatted, v]
+    in [:text | :textarea | :engagement_juridique | :dossier_link | :email | :phone | :iban | :siret | :formatted | :referentiel, v]
       v.to_s
     # case of type from mapping, used to store for display
     in [:boolean, v]
@@ -135,7 +135,7 @@ class Champs::ReferentielChamp < Champ
 
   def cast_value_for_type_de_champ(value, type_de_champ)
     case type_de_champ.type_champ.to_sym
-    when :siret
+    when :siret, :referentiel
       { external_id: call_caster(type_de_champ.type_champ, value, type_de_champ) }
     else
       { value: call_caster(type_de_champ.type_champ, value, type_de_champ) }
