@@ -3,7 +3,7 @@ en:
     attributes:
       champs/dossier_link_champ:
         hints:
-          value: "Expected format: A demarches-simplifiees.fr file number"
+          value: "Expected format: A %{application_name} file number"
 
     errors:
       models:

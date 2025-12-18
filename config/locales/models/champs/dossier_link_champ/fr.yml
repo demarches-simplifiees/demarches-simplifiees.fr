@@ -3,7 +3,7 @@ fr:
     attributes:
       champs/dossier_link_champ:
         hints:
-          value: "Format attendu : Un numéro de dossier déposé sur demarches-simplifiees.fr"
+          value: "Format attendu : Un numéro de dossier déposé sur %{application_name}"
 
     errors:
       models:
