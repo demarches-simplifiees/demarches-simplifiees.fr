@@ -13,7 +13,6 @@ describe Columns::DossierColumn do
         it 'retrieve individual information' do
           expect(procedure.find_column(label: "Prénom").value(dossier)).to eq("Paul")
           expect(procedure.find_column(label: "Nom").value(dossier)).to eq("Sim")
-          expect(procedure.find_column(label: "Civilité").value(dossier)).to eq("M.")
           expect(procedure.find_column(label: "Dépôt pour un tiers").value(dossier)).to eq(true)
           expect(procedure.find_column(label: "Nom du mandataire").value(dossier)).to eq("Christophe")
           expect(procedure.find_column(label: "Prénom du mandataire").value(dossier)).to eq("Martin")

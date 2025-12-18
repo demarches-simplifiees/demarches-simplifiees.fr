@@ -225,6 +225,10 @@ describe DossierFilterService do
       let!(:last_dossier) { create(:dossier, procedure:, individual: build(:individual, gender: 'Mme', prenom: 'Zora', nom: 'Zemmour')) }
 
       context 'for gender column' do
+        before do
+          procedure.update!(no_gender: false)
+        end
+
         let(:column) { procedure.find_column(label: 'Civilité') }
 
         it { is_expected.to eq([first_dossier, last_dossier].map(&:id)) }
@@ -790,6 +794,10 @@ describe DossierFilterService do
       let!(:discarded_dossier) { create(:dossier, procedure:, individual: build(:individual, gender: 'M', prenom: 'Jean', nom: 'Tremblay')) }
 
       context 'for gender column' do
+        before do
+          procedure.update!(no_gender: false)
+        end
+
         let(:filter) { ['Civilité', 'Mme'] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
