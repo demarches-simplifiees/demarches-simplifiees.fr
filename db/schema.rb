@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_04_075211) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -810,7 +810,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_06_145255) do
     t.text "label", null: false
     t.bigint "procedure_id", null: false
     t.jsonb "routing_rule"
+    t.boolean "unique_routing_rule", default: false, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.boolean "valid_routing_rule", default: false, null: false
     t.index ["closed", "procedure_id"], name: "index_groupe_instructeurs_on_closed_and_procedure_id"
     t.index ["procedure_id", "label"], name: "index_groupe_instructeurs_on_procedure_id_and_label", unique: true
     t.index ["procedure_id"], name: "index_groupe_instructeurs_on_procedure_id"

@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-class Logic::BinaryOperator < Logic::Term
+class Logic::BinaryOperator < Logic::Operator
   attr_reader :left, :right
 
   def initialize(left, right)
     @left, @right = left, right
+    @operands = [@left, @right]
   end
 
   def sources

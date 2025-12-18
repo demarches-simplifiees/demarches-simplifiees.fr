@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class Logic::NAryOperator < Logic::Term
-  attr_reader :operands
-
+class Logic::NAryOperator < Logic::Operator
   def initialize(operands)
     @operands = operands
   end
