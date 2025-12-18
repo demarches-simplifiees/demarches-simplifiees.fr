@@ -248,17 +248,44 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       dossierB.reload
     end
 
-    it do
-      expect(dossierA.groupe_instructeur.id).to be(procedure.defaut_groupe_instructeur.id)
-      expect(dossierB.groupe_instructeur.id).to be(procedure.defaut_groupe_instructeur.id)
-      expect(dossierA.dossier_assignment.dossier_id).to be(dossierA.id)
-      expect(dossierB.dossier_assignment.dossier_id).to be(dossierB.id)
-      expect(dossierA.dossier_assignment.groupe_instructeur_id).to be(procedure.defaut_groupe_instructeur.id)
-      expect(dossierB.dossier_assignment.groupe_instructeur_id).to be(procedure.defaut_groupe_instructeur.id)
-      expect(dossierA.dossier_assignment.assigned_by).to eq(admin.email)
-      expect(dossierB.dossier_assignment.assigned_by).to eq(admin.email)
+    context 'when it works' do
+      it do
+        expect(dossierA.groupe_instructeur.id).to be(procedure.defaut_groupe_instructeur.id)
+        expect(dossierB.groupe_instructeur.id).to be(procedure.defaut_groupe_instructeur.id)
+        expect(dossierA.dossier_assignment.dossier_id).to be(dossierA.id)
+        expect(dossierB.dossier_assignment.dossier_id).to be(dossierB.id)
+        expect(dossierA.dossier_assignment.groupe_instructeur_id).to be(procedure.defaut_groupe_instructeur.id)
+        expect(dossierB.dossier_assignment.groupe_instructeur_id).to be(procedure.defaut_groupe_instructeur.id)
+        expect(dossierA.dossier_assignment.assigned_by).to eq(admin.email)
+        expect(dossierB.dossier_assignment.assigned_by).to eq(admin.email)
+      end
+    end
+
+    context 'when an error occurs during deletion' do
+      let!(:initial_groupe_count) { procedure.groupe_instructeurs.count }
+
+      before do
+        allow_any_instance_of(Procedure).to receive(:update!).and_raise(ActiveRecord::RecordInvalid.new)
+      end
+
+      it 'rolls back the transaction and does not delete any groups' do
+        expect {
+          post :destroy_all_groups_but_defaut, params: { procedure_id: procedure.id }
+        }.not_to change { procedure.groupe_instructeurs.count }
+
+        expect(procedure.groupe_instructeurs.count).to eq(initial_groupe_count)
+      end
+
+      it 'displays an error message and redirects to the groupe instructeurs page' do
+        post :destroy_all_groups_but_defaut, params: { procedure_id: procedure.id }
+
+        expect(flash.alert).to be_present
+        expect(flash.alert).to include('Une erreur est survenue')
+        expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure))
+      end
     end
   end
+
   describe '#update' do
     let(:new_name) { 'nouveau nom du groupe' }
     let!(:procedure_non_routee) { create(:procedure, :published, :for_individual, administrateurs: [admin]) }

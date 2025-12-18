@@ -119,16 +119,38 @@ module Administrateurs
     end
 
     def destroy_all_groups_but_defaut
-      reaffecter_all_dossiers_to_defaut_groupe
-      procedure.groupe_instructeurs_but_defaut.each(&:destroy!)
-      procedure.update!(routing_enabled: false, routing_alert: false)
-      procedure.defaut_groupe_instructeur.update!(
-        routing_rule: nil,
-        label: GroupeInstructeur::DEFAUT_LABEL,
-        closed: false,
-        contact_information: nil
-      )
+      GroupeInstructeur.transaction do
+        reaffecter_all_dossiers_to_defaut_groupe
+
+        groupe_ids = procedure.groupe_instructeurs_but_defaut.pluck(:id)
+
+        AssignTo.where(groupe_instructeur_id: groupe_ids).delete_all
+        DossierAssignment.where(groupe_instructeur_id: groupe_ids).update_all(groupe_instructeur_id: nil)
+        DossierAssignment.where(previous_groupe_instructeur_id: groupe_ids).update_all(previous_groupe_instructeur_id: nil)
+        ExportTemplate.where(groupe_instructeur_id: groupe_ids).delete_all
+        ContactInformation.where(groupe_instructeur_id: groupe_ids).delete_all
+        exports_groupe_instructeur_model = Class.new(ApplicationRecord) do
+          self.table_name = 'exports_groupe_instructeurs'
+        end
+        exports_groupe_instructeur_model.where(groupe_instructeur_id: groupe_ids).delete_all
+
+        procedure.groupe_instructeurs_but_defaut.delete_all
+
+        procedure.update!(routing_enabled: false, routing_alert: false)
+        procedure.defaut_groupe_instructeur.update!(
+          routing_rule: nil,
+          label: GroupeInstructeur::DEFAUT_LABEL,
+          closed: false,
+          contact_information: nil
+        )
+      end
+
       flash.notice = 'Tous les groupes instructeurs ont été supprimés'
+      redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotDestroyed => e
+      Sentry.capture_exception(e, extra: { procedure_id: procedure.id })
+      flash.alert = "Une erreur est survenue lors de la suppression des groupes : #{e.message}"
       redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
 
@@ -236,8 +258,12 @@ module Administrateurs
     end
 
     def reaffecter_all_dossiers_to_defaut_groupe
-      procedure.groupe_instructeurs_but_defaut.each do |gi|
-        gi.dossiers.find_each do |dossier|
+      dossiers = Dossier.joins(:groupe_instructeur)
+        .where(groupe_instructeur: procedure.groupe_instructeurs_but_defaut)
+        .includes(:groupe_instructeur)
+
+      dossiers.find_in_batches(batch_size: 1000) do |batch|
+        batch.each do |dossier|
           dossier.assign_to_groupe_instructeur(procedure.defaut_groupe_instructeur, DossierAssignment.modes.fetch(:auto), current_administrateur)
         end
       end
