@@ -201,4 +201,50 @@ describe ImageProcessorJob, type: :job do
       end
     end
   end
+
+  describe 'error handling' do
+    let(:attachment) { blob.attachments.first }
+    let(:representation_double) { instance_double("ActiveStorage::Variant") }
+
+    before do
+      allow(blob).to receive(:representation_required?).and_return(true)
+      allow(attachment).to receive(:representable?).and_return(true)
+      allow(attachment).to receive(:representation).and_return(representation_double)
+      allow(representation_double).to receive(:processed).and_raise(
+        MiniMagick::Error.new(error_message)
+      )
+    end
+
+    context 'when ImageMagick raises a "width or height exceeds limit" error' do
+      let(:error_message) { "width or height exceeds limit" }
+
+      it 'completes successfully without raising an error' do
+        expect {
+          described_class.perform_now(blob)
+        }.not_to raise_error
+      end
+
+      it 'does not enqueue a retry job' do
+        expect {
+          described_class.perform_now(blob)
+        }.not_to have_enqueued_job(described_class)
+      end
+
+      it 'logs the error' do
+        allow(Rails.logger).to receive(:info).and_call_original
+        described_class.perform_now(blob)
+        expect(Rails.logger).to have_received(:info).with(/ImageProcessorJob raising known error: width or height exceeds limit/)
+      end
+    end
+
+    context 'when ImageMagick raises an unknown error' do
+      let(:error_message) { "unknown error" }
+
+      it 'enqueues a retry job' do
+        expect {
+          described_class.perform_now(blob)
+        }.to have_enqueued_job(described_class)
+      end
+    end
+  end
 end

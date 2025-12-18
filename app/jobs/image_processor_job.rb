@@ -20,16 +20,14 @@ class ImageProcessorJob < ApplicationJob
   # If the file is deleted during the scan, ignore the error
   discard_on ActiveStorage::FileNotFoundError
   discard_on ActiveRecord::InvalidForeignKey
-  # If the file is not an image, not in format we can process or the image is corrupted, ignore the error
-  DISCARDABLE_ERRORS = [
+
+  # If imagemagick can't process the image due to policy.xml or the file itself, ignore the error
+  KNOWN_ERRORS = [
     'improper image header',
     'width or height exceeds limit',
     'attempt to perform an operation not allowed by the security policy',
     'no decode delegate for this image format',
   ]
-  discard_on do |_, error|
-    DISCARDABLE_ERRORS.any? { error.message.match?(_1) }
-  end
   # If the file is not analyzed or scanned for viruses yet, retry later
   # (to avoid modifying the file while it is being scanned).
   retry_on FileNotScannedYetError, wait: :polynomially_longer, attempts: 10
@@ -52,6 +50,12 @@ class ImageProcessorJob < ApplicationJob
     uninterlace(blob) if blob.content_type == "image/png"
     create_representations(blob) if blob.representation_required? && mime_type_authorized_by_policy?(blob)
     add_watermark(blob) if blob.watermark_pending?
+  rescue MiniMagick::Error => e
+    if KNOWN_ERRORS.any? { e.message.match?(it) }
+      Rails.logger.info "ImageProcessorJob raising known error: #{e.message}"
+    else
+      raise e
+    end
   end
 
   private
