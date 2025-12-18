@@ -23,6 +23,12 @@ class SwitchDomainBannerComponent < ApplicationComponent
   end
 
   def new_host_url
+    stored_location = helpers.get_stored_location_for(:user)
+
+    # don't work on any controller
+    # user was not signed on ds.fr,  ut may be signed on demarche.numerique.gouv
+    return "//#{ApplicationHelper::APP_HOST}#{stored_location}" if stored_location.present?
+
     helpers.url_for(url_options)
   end
 
