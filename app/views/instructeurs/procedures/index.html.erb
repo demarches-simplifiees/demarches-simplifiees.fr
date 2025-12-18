@@ -39,7 +39,8 @@
         <%= tab_item(t('pluralize.closed', count: @procedures_closes_count), instructeur_procedures_path(statut: 'archivees'), active: @statut == 'archivees', badge: number_with_html_delimiter(@procedures_closes_count)) %>
 
         <li class="relative">
-          <%= render Instructeurs::TabsExplanationsComponent.new %>
+          <%# Render only button, not dialog here: because of position it would break z-index" %>
+          <%= render Instructeurs::TabsExplanationsComponent.new(element: :button) %>
         </li>
       </ul>
     </nav>
@@ -66,3 +67,5 @@
     <%= paginate @procedures, views_prefix: 'shared' %>
   <% end %>
 </div>
+
+<%= render Instructeurs::TabsExplanationsComponent.new(element: :dialog) %>
