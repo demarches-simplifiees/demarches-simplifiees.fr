@@ -14,8 +14,8 @@ class ResetExpiringDossiersJob < ApplicationJob
                         en_construction_close_to_expiration_notice_sent_at: nil,
                         termine_close_to_expiration_notice_sent_at: nil,
                         hidden_by_expired_at: nil)
-          dossier.update_expired_at
         end
+        dossier.update_expired_at
       end
     end
   end
