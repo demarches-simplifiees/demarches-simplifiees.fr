@@ -409,6 +409,29 @@ ul.dropdown-items {
   line-height: 1.75rem;
 }
 
+// Split button with dropdown menu
+
+.split-button-wrapper {
+  position: relative;
+  .dropdown {
+    position: static;
+  }
+  .split-button-toggle {
+    border-left: 2px solid white;
+    span {
+      margin-left: 0 !important;
+    }
+  }
+  .split-button-dropdown {
+    position: absolute;
+    bottom: 100% !important;
+    top: unset !important;
+    left: 0;
+    min-width: max-content;
+    border: none;
+  }
+}
+
 .copy-zone {
   cursor: pointer;
 

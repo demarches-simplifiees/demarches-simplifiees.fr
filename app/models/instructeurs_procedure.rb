@@ -11,6 +11,7 @@ class InstructeursProcedure < ApplicationRecord
     avis_externe: 'followed',
     attente_correction: 'followed',
     attente_avis: 'followed',
+    attente_reponse: 'followed',
   }.freeze
 
   NOTIFICATION_COLUMNS = {
@@ -21,6 +22,7 @@ class InstructeursProcedure < ApplicationRecord
     avis_externe: 'display_avis_externe_notifications',
     attente_correction: 'display_attente_correction_notifications',
     attente_avis: 'display_attente_avis_notifications',
+    attente_reponse: 'display_attente_reponse_notifications',
   }.freeze
 
   # TODO: remove when the transfer on instructeurs_procedures is done
@@ -42,6 +44,7 @@ class InstructeursProcedure < ApplicationRecord
   validates :display_avis_externe_notifications, inclusion: { in: NOTIFICATION_PREFERENCES }
   validates :display_attente_correction_notifications, inclusion: { in: NOTIFICATION_PREFERENCES }
   validates :display_attente_avis_notifications, inclusion: { in: NOTIFICATION_PREFERENCES }
+  validates :display_attente_reponse_notifications, inclusion: { in: NOTIFICATION_PREFERENCES }
 
   def self.update_instructeur_procedures_positions(instructeur, ordered_procedure_ids)
     procedure_id_position = ordered_procedure_ids.reverse.each.with_index.to_h

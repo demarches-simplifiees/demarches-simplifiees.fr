@@ -11,6 +11,9 @@
   - if badge = correction_badge
     .fr-mt-1v.fr-mb-1w
       = badge
+  - if badge = response_badge
+    .fr-mt-1v.fr-mb-1w
+      = badge
   .rich-text
     - if commentaire.discarded?
       %p= "(#{t('.deleted_body')})"
