@@ -10,6 +10,7 @@ describe ResetExpiringDossiersJob do
   let!(:expiring_dossier_en_construction) { create(:dossier, :en_construction, procedure: procedure, en_construction_close_to_expiration_notice_sent_at: duree_conservation_dossiers_dans_ds.months.ago) }
   let!(:expiring_dossier_termine) { create(:dossier, :accepte, procedure: procedure, termine_close_to_expiration_notice_sent_at: duree_conservation_dossiers_dans_ds.months.ago) }
   let!(:automatic_expiring_dossier) { create(:dossier, :accepte, procedure:, termine_close_to_expiration_notice_sent_at: 3.weeks.ago, hidden_by_expired_at: 1.week.ago) }
+  let!(:not_expiring_dossier) { create(:dossier, :accepte, procedure:, processed_at: 1.month.ago) }
 
   describe '.perform_now' do
     it 'resets flags' do
@@ -22,6 +23,7 @@ describe ResetExpiringDossiersJob do
       expect(expiring_dossier_en_construction.expired_at).to be_within(1.hour).of(2.months.from_now)
       expect(expiring_dossier_termine.expired_at).to be_within(1.hour).of(2.months.from_now)
       expect(automatic_expiring_dossier.reload.hidden_by_expired_at).to eq(nil)
+      expect(not_expiring_dossier.reload.expired_at).to be_within(1.hour).of(1.month.from_now)
     end
 
     it 'destroys dossier_expirant notification' do
