@@ -514,12 +514,41 @@ module Administrateurs
     end
 
     def create_groups_from_drop_down_list_tdc(tdc_options, stable_id)
-      tdc_options.each do |label, _|
-        routing_rule = ds_eq(champ_value(stable_id), constant(label))
-        @procedure
-          .groupe_instructeurs
-          .find_or_create_by(label: label)
-          .update(instructeurs: [current_administrateur.instructeur], routing_rule:)
+      existing_labels = @procedure.groupe_instructeurs.pluck(:label)
+      new_groups = tdc_options.reject { |label, _| existing_labels.include?(label) }
+
+      return if new_groups.empty?
+
+      base_time = Time.current
+      groupe_data = new_groups.map do |label, _|
+        {
+          label: label,
+          procedure_id: @procedure.id,
+          routing_rule: ds_eq(champ_value(stable_id), constant(label)),
+          created_at: base_time,
+          updated_at: base_time,
+        }
+      end
+
+      GroupeInstructeur.transaction do
+        GroupeInstructeur.insert_all(groupe_data)
+
+        new_group_labels = new_groups.map(&:first)
+
+        new_group_ids = @procedure.reload.groupe_instructeurs
+          .where(label: new_group_labels)
+          .pluck(:id)
+
+        assign_to_data = new_group_ids.map do |id|
+          {
+            instructeur_id: current_administrateur.instructeur.id,
+            groupe_instructeur_id: id,
+            created_at: base_time,
+            updated_at: base_time,
+          }
+        end
+
+        AssignTo.insert_all(assign_to_data) if assign_to_data.present?
       end
     end
 

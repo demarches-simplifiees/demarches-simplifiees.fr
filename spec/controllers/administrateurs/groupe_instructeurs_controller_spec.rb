@@ -963,6 +963,21 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         expect(procedure3.routing_enabled).to be_truthy
         expect(procedure3.routing_alert).to be_truthy
       end
+
+      it 'assigns the admin instructeur to all new groups' do
+        groups = procedure3.groupe_instructeurs.where(label: ['Paris', 'Lyon', 'Marseille'])
+        expect(groups.map(&:instructeurs)).to all(include(admin.instructeur))
+      end
+
+      it 'creates exactly one AssignTo per new group' do
+        paris_groupe = procedure3.groupe_instructeurs.find_by(label: 'Paris')
+        lyon_groupe = procedure3.groupe_instructeurs.find_by(label: 'Lyon')
+        marseille_groupe = procedure3.groupe_instructeurs.find_by(label: 'Marseille')
+
+        expect(AssignTo.where(groupe_instructeur: paris_groupe, instructeur: admin.instructeur).count).to eq(1)
+        expect(AssignTo.where(groupe_instructeur: lyon_groupe, instructeur: admin.instructeur).count).to eq(1)
+        expect(AssignTo.where(groupe_instructeur: marseille_groupe, instructeur: admin.instructeur).count).to eq(1)
+      end
     end
 
     context 'with a departements type de champ' do
