@@ -209,6 +209,26 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           expect(Referentiel.first.headers).to eq(["adresse", "nom", "numéro", "email"])
         end
       end
+
+      context 'when SmarterCSV returns symbol keys (edge case)' do
+        let(:referentiel_file) { fixture_file_upload('spec/fixtures/files/modele-import-referentiel.csv', 'text/csv') }
+        let(:csv_content_with_symbol_keys) do
+          [
+            { :dessert => "60" },
+          ]
+        end
+
+        before do
+          # Simulate what happens when SmarterCSV returns Symbol keys as headers
+          # This can happen with certain SmarterCSV versions or edge cases (https://demarches-simplifiees.sentry.io/issues/6969132983/events/a1516d5564ca4b9a87ed74921c8c470e/?project=1429550)
+          allow_any_instance_of(Administrateurs::TypesDeChampController).to receive(:parse_csv).and_return(csv_content_with_symbol_keys)
+        end
+
+        it 'should work' do
+          expect { subject }.to change(Referentiel, :count).by(1).and change(ReferentielItem, :count).by(1)
+          expect(ReferentielItem.first.data).to eq({ "row" => { "dessert" => "60" } })
+        end
+      end
     end
 
     context 'with a multiple dropdown list with a referentiel' do
