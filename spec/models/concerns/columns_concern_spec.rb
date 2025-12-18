@@ -158,10 +158,9 @@ describe ColumnsConcern do
     context 'when the procedure is for individuals' do
       let(:name_field) { Column.new(procedure_id:, label: "Prénom", table: "individual", column: "prenom", displayable: true, type: :text, filterable: true) }
       let(:surname_field) { Column.new(procedure_id:, label: "Nom", table: "individual", column: "nom", displayable: true, type: :text, filterable: true) }
-      let(:gender_field) { Column.new(procedure_id:, label: "Civilité", table: "individual", column: "gender", displayable: true, type: :text, filterable: true) }
       let(:procedure) { create(:procedure, :for_individual) }
 
-      it { is_expected.to include(name_field, surname_field, gender_field) }
+      it { is_expected.to include(name_field, surname_field) }
     end
 
     context 'when the procedure is sva' do
@@ -204,7 +203,6 @@ describe ColumnsConcern do
             procedure.find_column(label: "N° dossier"),
             procedure.find_column(label: "Adresse électronique"),
             procedure.find_column(label: "France connecté ?"),
-            procedure.find_column(label: "Civilité"),
             procedure.find_column(label: "Nom"),
             procedure.find_column(label: "Prénom"),
             procedure.find_column(label: "Dépôt pour un tiers"),

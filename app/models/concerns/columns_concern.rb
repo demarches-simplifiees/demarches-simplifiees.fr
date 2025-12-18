@@ -200,7 +200,9 @@ module ColumnsConcern
     end
 
     def individual_columns
-      gender_column = dossier_col(
+      @individual_columns = []
+
+      @individual_columns << dossier_col(
         table: 'individual',
         column: 'gender',
         type: :enum,
@@ -208,9 +210,9 @@ module ColumnsConcern
           [Individual::GENDER_FEMALE, Individual::GENDER_FEMALE],
           [Individual::GENDER_MALE, Individual::GENDER_MALE],
         ]
-      )
+      ) unless self.no_gender?
 
-      [gender_column]
+      @individual_columns
         .concat ['nom', 'prenom'].map { |column| dossier_col(table: 'individual', column:) }
         .concat ['mandataire_last_name', 'mandataire_first_name'].map { |column| dossier_col(table: 'self', column:) }
         .concat ['for_tiers'].map { |column| dossier_col(table: 'self', column:, type: :boolean) }
