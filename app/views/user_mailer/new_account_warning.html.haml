@@ -14,19 +14,23 @@
     Si vous souhaitez remplir la démarche
     = surround '« ', ' »,' do
       %i= @procedure.libelle
-    cliquez sur le bouton ci-dessous.
+    cliquez sur le bouton ci-dessous, puis connectez-vous à votre compte.
 
   = round_button("Commencer la démarche « #{@procedure.libelle.truncate(60)} »", commencer_sign_in_url(path: @procedure.path), :primary)
   = vertical_margin(16)
-  = round_button('J’ai oublié mon mot de passe', new_password_url(@user), :secondary)
+  = round_button('Demander un nouveau mot de passe', new_password_url(@user), :secondary)
 
 - else
   %p
-    Vous n’avez rien à faire. Si vous avez oublié votre mot de passe, cliquez sur le bouton ci-dessous.
-  = round_button('J’ai oublié mon mot de passe', new_password_url(@user), :secondary)
+    Rendez-vous sur le site #{APPLICATION_NAME} pour vous connecter à votre compte.
+    = round_button('Se connecter', new_user_session_url, :primary)
+
+  %p
+    Vous avez oublié votre mot de passe ?
+    = round_button('Demander un nouveau mot de passe', new_password_url(@user), :secondary)
 
 = vertical_margin(6)
 %p
-  Si vous n’êtes pas à l'origine de cette demande, vous pouvez ignorer ce mail.
+  Si vous n’êtes pas à l'origine de cette demande, vous pouvez ignorer cet email.
 
 = render partial: "layouts/mailers/signature"
