@@ -34,7 +34,7 @@ class Etablissement < ApplicationRecord
     "libelle_naf" => { type: :text },
   }.freeze
 
-  EXPORTABLE_COLUMNS = {
+  EXPORTABLE_ETABLISSEMENT_COLUMNS = {
     "siege_social" => { type: :boolean },
     "code_naf" => { type: :text },
     "adresse" => { type: :text },
@@ -52,6 +52,9 @@ class Etablissement < ApplicationRecord
     "entreprise_siret_siege_social" => { type: :text },
     "entreprise_nom" => { type: :text },
     "entreprise_prenom" => { type: :text },
+  }.freeze
+
+  EXPORTABLE_ASSOCIATION_COLUMNS = {
     "association_rna" => { type: :text },
     "association_titre" => { type: :text },
     "association_objet" => { type: :text },
