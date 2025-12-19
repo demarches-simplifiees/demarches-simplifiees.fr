@@ -9,7 +9,7 @@ module Administrateurs
     include CsvParsingConcern
     include InstructeurEmailNotificationConcern
 
-    before_action :ensure_not_super_admin!, only: [:add_instructeur]
+    before_action :ensure_not_super_admin!, only: [:add_instructeurs]
 
     ITEMS_PER_PAGE = 25
 
@@ -244,7 +244,7 @@ module Administrateurs
       end
     end
 
-    def add_instructeur
+    def add_instructeurs
       emails_with_typos = JSON.parse(params[:emails_with_typos]) if params[:emails_with_typos]
       emails = params['emails'].presence || []
       emails.push(emails_with_typos).flatten! if emails_with_typos
