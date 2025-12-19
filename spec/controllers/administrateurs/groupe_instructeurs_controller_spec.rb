@@ -620,7 +620,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         before do
           allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
             .and_return(double(deliver_later: true))
-          allow(GroupeInstructeurMailer).to receive(:confirm_and_notify_added_instructeur)
+          allow(GroupeInstructeurMailer).to receive(:confirm_and_notify_added_instructeur_from_groupes_import)
             .and_return(double(deliver_later: true))
           subject
         end
@@ -630,7 +630,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
           expect(flash.notice).to be_present
           expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès")
           expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
-          expect(GroupeInstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).exactly(4).times
+          expect(GroupeInstructeurMailer).to have_received(:confirm_and_notify_added_instructeur_from_groupes_import).exactly(4).times
         end
       end
 
@@ -640,14 +640,14 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         before do
           allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
             .and_return(double(deliver_later: true))
-          allow(GroupeInstructeurMailer).to receive(:confirm_and_notify_added_instructeur)
+          allow(GroupeInstructeurMailer).to receive(:confirm_and_notify_added_instructeur_from_groupes_import)
             .and_return(double(deliver_later: true))
           subject
         end
 
         it 'works' do
           expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
-          expect(GroupeInstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).exactly(4).times
+          expect(GroupeInstructeurMailer).to have_received(:confirm_and_notify_added_instructeur_from_groupes_import).exactly(4).times
           expect(procedure.groupe_instructeurs.pluck(:label)).to match_array(["Marne", "Loire", "deuxième groupe", "défaut"])
           expect(flash.notice).to be_present
           expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès")
@@ -660,7 +660,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         before do
           allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
             .and_return(double(deliver_later: true))
-          allow(GroupeInstructeurMailer).to receive(:confirm_and_notify_added_instructeur)
+          allow(GroupeInstructeurMailer).to receive(:confirm_and_notify_added_instructeur_from_groupes_import)
             .and_return(double(deliver_later: true))
           subject
         end
@@ -670,7 +670,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
           expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès")
           expect(procedure.groupe_instructeurs.pluck(:label)).to match_array(["Auvergne-Rhône-Alpes", "Vendée", "deuxième groupe", "défaut"])
           expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
-          expect(GroupeInstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).exactly(4).times
+          expect(GroupeInstructeurMailer).to have_received(:confirm_and_notify_added_instructeur_from_groupes_import).exactly(4).times
         end
       end
 
