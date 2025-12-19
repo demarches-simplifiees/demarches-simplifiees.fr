@@ -22,21 +22,27 @@ module Maintenance
         expect { subject }.to change { element.reload.value_json }
           .from(anything)
           .to({
-            "street_number" => "33",
-            "street_name" => "de Modagor",
-            "street_address" => "33 rue de Modagor",
-            "postal_code" => "75009",
-            "city_name" => "Paris",
+            "title" => "LA PRÉVENTION ROUTIERE",
             "city_code" => "75108",
-            "departement_code" => nil,
-            "department_code" => nil,
-            "departement_name" => nil,
-            "department_name" => nil,
+            "city_name" => "Paris",
+            "postal_code" => "75009",
             "region_code" => nil,
             "region_name" => nil,
-            "title" => "LA PRÉVENTION ROUTIERE",
-            "country_name" => "France",
+            "street_name" => "de Modagor",
             "country_code" => "FR",
+            "country_name" => "France",
+            "street_number" => "33",
+            "street_address" => "33 rue de Modagor",
+            "association_rna" => "W751080001",
+            "department_code" => nil,
+            "department_name" => nil,
+            "departement_code" => nil,
+            "departement_name" => nil,
+            "association_objet" =>
+            "L'association a pour objet de promouvoir la pratique du sport de haut niveau et de contribuer à la formation des jeunes sportifs.",
+            "association_date_creation" => "2015-01-01",
+            "association_date_declaration" => "2019-01-01",
+            "association_date_publication" => "2018-01-01",
           })
       end
     end

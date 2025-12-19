@@ -58,9 +58,9 @@ class Etablissement < ApplicationRecord
     "association_rna" => { type: :text },
     "association_titre" => { type: :text },
     "association_objet" => { type: :text },
-    "association_date_creation" => { type: :text },
-    "association_date_declaration" => { type: :text },
-    "association_date_publication" => { type: :text },
+    "association_date_creation" => { type: :text, filterable: false },
+    "association_date_declaration" => { type: :text, filterable: false },
+    "association_date_publication" => { type: :text, filterable: false },
   }.freeze
 
   def entreprise_raison_sociale
