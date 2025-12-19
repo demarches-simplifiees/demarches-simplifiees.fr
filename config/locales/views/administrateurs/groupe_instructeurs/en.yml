@@ -8,7 +8,7 @@ en:
     groupe_instructeurs:
       index:
         procedures: Procedures
-      add_instructeur:
+      add_instructeurs:
         wrong_address:
           one: "%{emails} is not a valid email address"
           other: "%{emails} are not valid email addresses"

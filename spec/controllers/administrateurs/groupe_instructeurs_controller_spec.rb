@@ -329,7 +329,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
   end
 
-  describe '#add_instructeur_procedure_non_routee' do
+  describe '#add_instructeurs_procedure_non_routee' do
     # faire la meme chose sur une procedure non routee
     let(:procedure_non_routee) { create(:procedure, administrateur: admin) }
     let(:emails) { ['instructeur_3@ministere_a.gouv.fr', 'instructeur_4@ministere_b.gouv.fr'] }
@@ -337,7 +337,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     before {
       procedure_non_routee.administrateurs_procedures.where(administrateur: admin).update_all(manager:)
     }
-    subject { post :add_instructeur, params: { emails: emails, procedure_id: procedure_non_routee.id, id: procedure_non_routee.defaut_groupe_instructeur.id } }
+    subject { post :add_instructeurs, params: { emails: emails, procedure_id: procedure_non_routee.id, id: procedure_non_routee.defaut_groupe_instructeur.id } }
     context 'when all emails are valid' do
       let(:emails) { ['test@b.gouv.fr', 'test2@b.gouv.fr'] }
       it do
@@ -369,10 +369,10 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
   end
 
-  describe '#add_instructeur' do
+  describe '#add_instructeurs' do
     let!(:instructeur) { create(:instructeur) }
     let(:do_request) do
-      post :add_instructeur,
+      post :add_instructeurs,
         params: {
           procedure_id: procedure.id,
           id: gi_1_2.id,
