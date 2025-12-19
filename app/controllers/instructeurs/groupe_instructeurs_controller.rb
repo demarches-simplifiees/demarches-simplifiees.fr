@@ -23,7 +23,7 @@ module Instructeurs
       @maybe_typos = flash[:maybe_typos]
     end
 
-    def add_instructeur
+    def add_instructeurs
       emails_with_typos = JSON.parse(params[:emails_with_typos]) if params[:emails_with_typos]
       emails = params['emails'].presence || []
       emails.push(emails_with_typos).flatten! if emails_with_typos

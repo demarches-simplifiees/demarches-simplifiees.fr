@@ -84,14 +84,14 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
     end
   end
 
-  describe '#add_instructeur' do
+  describe '#add_instructeurs' do
     before do
       allow(GroupeInstructeurMailer).to receive(:confirm_and_notify_added_instructeur).and_call_original
       allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs).and_call_original
     end
 
     subject do
-      post :add_instructeur,
+      post :add_instructeurs,
         params: {
           procedure_id: procedure.id,
           id: gi_1_2.id,
