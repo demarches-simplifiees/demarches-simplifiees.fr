@@ -473,6 +473,38 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       it { expect(response).to have_http_status(:forbidden) }
     end
+
+    context 'when adding instructeurs to all groups' do
+      let!(:instructeur_1) { create(:instructeur, email: 'instructeur1@test.fr') }
+      let!(:instructeur_2) { create(:instructeur, email: 'instructeur2@test.fr') }
+      let(:new_instructeur_emails) { ['new_instructeur@test.fr'] }
+      let(:do_request_all_groups) do
+        post :add_instructeurs,
+          params: {
+            procedure_id: procedure.id,
+            id: gi_1_2.id,
+            emails: new_instructeur_emails,
+            instructeur: { add_to_all_groups: '1' }
+          }
+      end
+
+      before do
+        allow(GroupeInstructeurMailer).to receive(:notify_added_instructeur_from_groupes_import)
+          .and_return(double(deliver_later: true))
+        do_request_all_groups
+      end
+
+      it 'adds instructeur to all groups and sends grouped notification' do
+        new_instructeur = User.find_by(email: 'new_instructeur@test.fr').instructeur
+
+        expect(gi_1_1.instructeurs).to include(new_instructeur)
+        expect(gi_1_2.instructeurs).to include(new_instructeur)
+        expect(flash.notice).to include('aux 2 groupes instructeurs')
+        expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2))
+        expect(GroupeInstructeurMailer).to have_received(:notify_added_instructeur_from_groupes_import)
+          .with(new_instructeur, match_array([gi_1_1, gi_1_2]), admin.email)
+      end
+    end
   end
 
   describe '#remove_instructeur' do
