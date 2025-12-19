@@ -242,7 +242,31 @@ module Administrateurs
       emails, maybe_typos = check_if_typo(emails)
       errors = Array.wrap(generate_emails_suggestions_message(maybe_typos))
 
-      added_instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
+      add_to_all_groups = params.dig(:instructeur, :add_to_all_groups) == '1'
+
+      if add_to_all_groups && procedure.routing_enabled?
+        groupes_emails = emails.flat_map do |email|
+          procedure.groupe_instructeurs.pluck(:label).map do |label|
+            { 'email' => email, 'groupe' => label }
+          end
+        end
+        groupes_by_instructeur, import_errors = InstructeursImportService.import_groupes(procedure, groupes_emails)
+
+        added_instructeurs = groupes_by_instructeur.keys
+        invalid_emails = import_errors
+
+        if added_instructeurs.present?
+          groupes_by_instructeur.each do |instructeur, groupes|
+            notify_instructeur_after_groupes_import(instructeur, groupes)
+          end
+        end
+      else
+        added_instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
+
+        if added_instructeurs.present?
+          notify_instructeurs(groupe_instructeur, added_instructeurs, current_administrateur)
+        end
+      end
 
       if invalid_emails.present?
         errors += [
@@ -253,7 +277,9 @@ module Administrateurs
       end
 
       if added_instructeurs.present?
-        flash[:notice] = if procedure.routing_enabled?
+        flash[:notice] = if add_to_all_groups && procedure.routing_enabled?
+          "#{added_instructeurs.size} #{'instructeur'.pluralize(added_instructeurs.size)} #{added_instructeurs.size > 1 ? 'ont été ajoutés' : 'a été ajouté'} aux #{procedure.groupe_instructeurs.count} groupes instructeurs de la démarche."
+        elsif procedure.routing_enabled?
           t('.assignment',
             count: added_instructeurs.size,
             emails: added_instructeurs.map(&:email).join(', '),
@@ -261,8 +287,6 @@ module Administrateurs
         else
           "Les instructeurs ont bien été affectés à la démarche"
         end
-
-        notify_instructeurs(groupe_instructeur, added_instructeurs, current_administrateur)
       end
 
       flash[:alert] = errors.join(". ") if !errors.empty?

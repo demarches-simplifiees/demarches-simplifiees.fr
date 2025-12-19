@@ -22,6 +22,14 @@
         %react-fragment
           = render ReactComponent.new 'ComboBox/MultiComboBox', items: available_instructeur_emails, id: 'instructeur_emails', name: 'emails[]', allows_custom_value: true, 'aria-label': 'Emails', data: { 'enable-submit-if-filled-target': 'input' }
 
+      - if procedure.routing_enabled?
+        .fr-fieldset__element.fr-mt-3w
+          .fr-checkbox-group
+            = f.check_box :add_to_all_groups, class: 'fr-checkbox'
+            = f.label :add_to_all_groups, class: 'fr-label' do
+              Ajouter également aux #{@procedure.groupe_instructeurs.count -1} autres groupes instructeurs
+            %p.fr-hint-text Si cette option est cochée, les instructeurs seront ajoutés à tous les groupes instructeurs de la démarche, pas seulement au groupe #{groupe_instructeur.label}.
+
       = f.submit t('views.shared.groupe_instructeurs.assign'), class: 'fr-btn fr-btn--tertiary', disabled: true, data: { 'enable-submit-if-filled-target': 'submit' }
 
   %hr.fr-mt-4w
