@@ -14,4 +14,8 @@ class Siret
   def remove_whitespace
     self.siret = siret.delete(' ') if siret.present?
   end
+
+  def to_siren
+    siret[0..8]
+  end
 end

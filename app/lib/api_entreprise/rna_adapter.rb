@@ -7,7 +7,8 @@ class APIEntreprise::RNAAdapter < APIEntreprise::Adapter
   private
 
   def get_resource
-    api(@procedure_id).rna(@siret)
+    return if siren_or_rna.blank?
+    api(@procedure_id).rna(siren_or_rna)
   end
 
   def process_params
@@ -29,5 +30,15 @@ class APIEntreprise::RNAAdapter < APIEntreprise::Adapter
         "adresse" => data[:adresse_siege],
       }
     end
+  end
+
+  private
+
+  def siren_or_rna
+    siret = Siret.new(siret: @siret)
+
+    return siret.to_siren if siret.valid?
+    return @siret if Champs::RNAChamp::RNA_REGEXP.match?(@siret)
+    nil
   end
 end

@@ -2,6 +2,7 @@
 
 RSpec.describe APIEntreprise::AssociationJob, type: :job do
   let(:siret) { '50480511000013' }
+  let(:siren) { siret[0..8] }
   let(:etablissement) { create(:etablissement, siret: siret) }
   let(:procedure) { create(:procedure) }
   let(:procedure_id) { procedure.id }
@@ -9,7 +10,7 @@ RSpec.describe APIEntreprise::AssociationJob, type: :job do
   let(:status) { 200 }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v4\/djepva\/api-association\/associations\/open_data\/#{siret}/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v4\/djepva\/api-association\/associations\/open_data\/#{siren}/)
       .to_return(body: body, status: status)
     allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
