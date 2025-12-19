@@ -70,6 +70,35 @@ RSpec.describe GroupeInstructeurMailer, type: :mailer do
     end
   end
 
+  describe '#confirm_and_notify_added_instructeur' do
+    let(:procedure) { create(:procedure) }
+    let(:groupe_instructeur) { procedure.defaut_groupe_instructeur }
+    let(:instructeur) { create(:instructeur, email: 'instructeur@test.fr') }
+    let(:current_instructeur_email) { 'admin@test.fr' }
+
+    subject { described_class.confirm_and_notify_added_instructeur(instructeur, groupe_instructeur, current_instructeur_email) }
+
+    context 'when procedure is not routed' do
+      it 'sends email with correct subject' do
+        expect(subject.to).to eq(['instructeur@test.fr'])
+        expect(subject.subject).to include('Vous avez été affecté(e) à la démarche')
+        expect(subject.subject).to include(procedure.libelle)
+        expect(instructeur.user.reset_password_token).to be_present
+      end
+    end
+
+    context 'when procedure is routed' do
+      let!(:groupe_instructeur_2) { create(:groupe_instructeur, procedure: procedure, label: 'Autre Groupe') }
+
+      it 'sends email with correct subject' do
+        expect(subject.to).to eq(['instructeur@test.fr'])
+        expect(subject.subject).to include('Vous avez été ajouté(e) au groupe "défaut"')
+        expect(subject.subject).to include(procedure.libelle)
+        expect(instructeur.user.reset_password_token).to be_present
+      end
+    end
+  end
+
   describe '#notify_added_instructeur_from_groupes_import' do
     let(:procedure) { create(:procedure) }
     let(:groupe_instructeur_1) { create(:groupe_instructeur, procedure: procedure, label: 'Groupe 1') }

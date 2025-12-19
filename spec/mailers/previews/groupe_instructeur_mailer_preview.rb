@@ -33,4 +33,13 @@ class GroupeInstructeurMailerPreview < ActionMailer::Preview
     @reset_password_token = instructeur.user.send(:set_reset_password_token)
     GroupeInstructeurMailer.confirm_and_notify_added_instructeur_from_groupes_import(instructeur, groups, current_instructeur_email)
   end
+
+  def confirm_and_notify_added_instructeur
+    procedure = Procedure.new(id: 1, libelle: 'une superbe procedure')
+    groupe = GroupeInstructeur.new(id: 1, label: 'Val-De-Marne', procedure:)
+    current_instructeur_email = 'admin@dgfip.com'
+    instructeur = Instructeur.last
+    @reset_password_token = instructeur.user.send(:set_reset_password_token)
+    GroupeInstructeurMailer.confirm_and_notify_added_instructeur(instructeur, groupe, current_instructeur_email)
+  end
 end
