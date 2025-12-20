@@ -35,6 +35,8 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
       TypesDeChamp::PrefillFormattedTypeDeChamp.new(type_de_champ, revision)
     when TypeDeChamp.type_champs.fetch(:siret)
       TypesDeChamp::PrefillSiretTypeDeChamp.new(type_de_champ, revision)
+    when TypeDeChamp.type_champs.fetch(:referentiel)
+      TypesDeChamp::PrefillReferentielTypeDeChamp.new(type_de_champ, revision)
     else
       new(type_de_champ, revision)
     end

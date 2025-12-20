@@ -66,7 +66,17 @@ RSpec.describe PrefillChamps do
 
     shared_examples "a champ public value that is authorized" do |type_de_champ_type, value|
       context "when the type de champ is authorized (#{type_de_champ_type})" do
-        let(:types_de_champ_public) { [{ type: type_de_champ_type }] }
+        let(:types_de_champ_public) { [{ type: type_de_champ_type }.merge(additional_tdc_opts)] }
+
+        let(:additional_tdc_opts) do
+          case type_de_champ_type
+          when :referentiel
+            { referentiel: create(:api_referentiel, :exact_match) }
+          else
+            {}
+          end
+        end
+
         let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
         let(:champ) { find_champ_by_stable_id(dossier, type_de_champ.stable_id) }
         let(:champ_value) { value == 'linked_dossier_id' ? linked_dossier.id : value }
@@ -131,6 +141,7 @@ RSpec.describe PrefillChamps do
     it_behaves_like "a champ public value that is authorized", :dossier_link, 'linked_dossier_id'
     it_behaves_like "a champ public value that is authorized", :epci, ['01', '200042935']
     it_behaves_like "a champ public value that is authorized", :siret, "13002526500013"
+    it_behaves_like "a champ public value that is authorized", :referentiel, "13002526500013"
 
     context "when the public type de champ is authorized (repetition)" do
       let(:types_de_champ_public) { [{ type: :repetition, children: [{ type: :text }] }] }

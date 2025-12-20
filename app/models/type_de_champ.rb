@@ -391,7 +391,14 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:epci),
       TypeDeChamp.type_champs.fetch(:dossier_link),
       TypeDeChamp.type_champs.fetch(:siret),
-    ])
+    ]) || referentiel_in_exact_match?
+  end
+
+  def referentiel_in_exact_match?
+    maybe_referentiel = type_champ == TypeDeChamp.type_champs.fetch(:referentiel)
+    maybe_exact_match = referentiel&.exact_match?
+
+    maybe_referentiel && maybe_exact_match
   end
 
   def fillable?
