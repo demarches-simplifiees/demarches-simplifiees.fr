@@ -27,11 +27,11 @@ describe API::V2::GraphqlController do
 
   describe 'demarche.dossiers' do
     let(:operation_name) { 'getDemarche' }
-    let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, includeTraitements: true, includeRevision: true, includeRevisions: true } }
-    let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_populated_champs, procedure:) }
-    let(:dossiers_en_instruction) { create_list(:dossier, dossiers_per_state, :en_instruction, :with_individual, :with_populated_champs, procedure:) }
-    let(:dossiers_accepte) { create_list(:dossier, dossiers_per_state, :accepte, :with_individual, :with_populated_champs, procedure:) }
-    let(:dossiers_refuse) { create_list(:dossier, dossiers_per_state, :refuse, :with_individual, :with_populated_champs, procedure:) }
+    let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, includeTraitements: true, includeRevision: true, includeRevisions: true, includeMessages: true } }
+    let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_populated_champs, :with_commentaires, procedure:) }
+    let(:dossiers_en_instruction) { create_list(:dossier, dossiers_per_state, :en_instruction, :with_individual, :with_populated_champs, :with_commentaires, procedure:) }
+    let(:dossiers_accepte) { create_list(:dossier, dossiers_per_state, :accepte, :with_individual, :with_populated_champs, :with_commentaires, procedure:) }
+    let(:dossiers_refuse) { create_list(:dossier, dossiers_per_state, :refuse, :with_individual, :with_populated_champs, :with_commentaires, procedure:) }
 
     it "should not have n+1 on one dossier" do
       query_count = 0
