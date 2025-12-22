@@ -470,9 +470,11 @@ Rails.application.routes.draw do
       end
 
       collection do
-        get 'order_positions'
-        patch 'update_order_positions'
-        get 'select_procedure'
+        get :order_positions
+        patch :update_order_positions
+        get :select_procedure
+        get :synthese
+        get :counters
       end
 
       get 'display_notifications', defaults: { format: :turbo_stream }

@@ -1,0 +1,345 @@
+<li class="list-style-type-none fr-mb-3w">
+  <div class="procedure-details">
+    <div class="fr-mb-2w fr-mt-2w flex align-baseline">
+      <nav
+        class="fr-nav"
+        role="navigation"
+        aria-label="<%= t('.menu_aria_label') %>"
+      >
+        <ul class="fr-nav__list">
+          <li class="fr-nav__item relative">
+            <button
+              class="fr-nav__btn fr-btn--tertiary-no-outline fr-h-5v hide-chevron"
+              aria-expanded="false"
+              aria-controls="mega-menu-<%= p.id %>"
+            >
+              <span class="fr-icon-menu-2-fill fr-icon--sm fr-mr-1w"></span>
+              <%= t('.menu') %>
+            </button>
+
+            <div
+              class="fr-collapse fr-mega-menu"
+              id="mega-menu-<%= p.id %>"
+              tabindex="-1"
+              style="min-width: 350px"
+            >
+              <div class="fr-container fr-container--fluid fr-container-lg">
+                <button
+                  class="fr-btn--close fr-btn fr fr-mb-3w"
+                  aria-controls="mega-menu-<%= p.id %>"
+                >
+                  <%= t('utils.modal_close') %>
+                </button>
+
+                <div class="fr-grid-row">
+                  <div class="fr-col-12">
+                    <div class="fr-mega-menu__leader">
+                      <h4 class="fr-h6">
+                        <%= t('instructeurs.procedures.index.procedure_menu') %>
+                      </h4>
+                    </div>
+                  </div>
+
+                  <div class="fr-col-12">
+                    <h5 class="fr-mega-menu__category">
+                      <%= link_to t('instructeurs.dossiers.header.banner.follow_up'), instructeur_procedure_path(p), class: "fr-nav__link" %>
+                    </h5>
+                  </div>
+
+                  <div class="fr-col-12">
+                    <ul class="fr-mega-menu__list fr-pb-0">
+                      <li class="fr-nav__item">
+                        <button
+                          class="fr-nav__btn fr-mega-menu__category flex justify-between"
+                          aria-expanded="false"
+                          aria-controls="procedure-management-<%= p.id %>"
+                          style="height: 47px"
+                        >
+                          <%= t('instructeurs.dossiers.header.banner.procedure_management') %>
+                        </button>
+
+                        <div
+                          class="fr-collapse width-100"
+                          id="procedure-management-<%= p.id %>"
+                        >
+                          <ul class="fr-menu__list fr-mb-0">
+                            <li>
+                              <%= link_to t('instructeurs.dossiers.header.banner.administrators_list'), administrateurs_instructeur_procedure_path(p), class: 'fr-nav__link' %>
+                            </li>
+
+                            <% if p.instructeurs_self_management_enabled? %>
+                              <li>
+                                <%= link_to t('instructeurs.dossiers.header.banner.instructeurs'), instructeur_groupes_path(p), class: 'fr-nav__link' %>
+                              </li>
+                            <% elsif current_administrateur && p.administrateurs_procedures.any? { _1.administrateur_id == current_administrateur.id } %>
+                              <li>
+                                <%= link_to t('instructeurs.dossiers.header.banner.instructeurs'), admin_procedure_groupe_instructeurs_path(p), class: 'fr-nav__link' %>
+                              </li>
+                            <% end %>
+
+                            <li>
+                              <%= link_to t('instructeurs.dossiers.header.banner.notification_management'), notification_preferences_instructeur_procedure_path(p), class: 'fr-nav__link' %>
+                            </li>
+
+                            <li>
+                              <%= link_to t('instructeurs.dossiers.header.banner.statistics'), stats_instructeur_procedure_path(p), class: 'fr-nav__link' %>
+                            </li>
+
+                            <li>
+                              <%= link_to t('views.instructeurs.dossiers.show_deleted_dossiers'), deleted_dossiers_instructeur_procedure_path(p), class: 'fr-nav__link' %>
+                            </li>
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div class="fr-col-12">
+                    <ul class="fr-mega-menu__list fr-pb-0">
+                      <li class="fr-nav__item">
+                        <button
+                          class="fr-nav__btn fr-mega-menu__category flex justify-between"
+                          aria-expanded="false"
+                          aria-controls="user-support-<%= p.id %>"
+                          style="height: 47px"
+                        >
+                          <%= t('instructeurs.dossiers.header.banner.user_support') %>
+                        </button>
+
+                        <div
+                          class="fr-collapse width-100"
+                          id="user-support-<%= p.id %>"
+                        >
+                          <ul class="fr-menu__list fr-mb-0">
+                            <li>
+                              <%= link_to t('instructeurs.dossiers.header.banner.contact_users'), email_usagers_instructeur_procedure_path(p), class: 'fr-nav__link' %>
+                            </li>
+
+                            <% if p.rdv_enabled? %>
+                              <li>
+                                <%= link_to t('instructeurs.dossiers.header.banner.users_with_rdvs'), RdvService.rdv_sp_host_url, class: 'fr-nav__link', **external_link_attributes, title: new_tab_suffix(t('instructeurs.dossiers.header.banner.users_with_rdvs')) %>
+                              </li>
+                            <% end %>
+
+                            <li>
+                              <%= link_to t('instructeurs.dossiers.header.banner.preview'), apercu_instructeur_procedure_path(p), target: "_blank", rel: "noopener", class: 'fr-nav__link' %>
+                            </li>
+
+                            <li>
+                              <%= link_to "#", class: "fr-nav__link fr-link fr-link--md fr-link--icon-left fr-icon-clipboard-line", data: { controller: "clipboard", clipboard_text_value: commencer_url(p.path), action: "click->clipboard#copy" } do %>
+                                <%= t('instructeurs.dossiers.header.banner.copy_link_button') %>
+                              <% end %>
+                            </li>
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div class="fr-col-12">
+                    <ul class="fr-mega-menu__list fr-pb-0">
+                      <li class="fr-nav__item">
+                        <button
+                          class="fr-nav__btn fr-mega-menu__category flex justify-between"
+                          aria-expanded="false"
+                          aria-controls="downloads-<%= p.id %>"
+                          style="height: 47px"
+                        >
+                          <%= t('instructeurs.dossiers.header.banner.downloads') %>
+                        </button>
+
+                        <div
+                          class="fr-collapse width-100"
+                          id="downloads-<%= p.id %>"
+                        >
+                          <ul class="fr-menu__list fr-mb-0">
+                            <li>
+                              <%= link_to exports_instructeur_procedure_path(p), class: 'fr-nav__link' do %>
+                                <%= t('instructeurs.dossiers.header.banner.exports_list') %>
+                              <% end %>
+                            </li>
+
+                            <li>
+                              <%= link_to t('instructeurs.dossiers.header.banner.archives'), list_instructeur_archives_path(p), class: 'fr-nav__link' %>
+                            </li>
+
+                            <li>
+                              <%= link_to t('instructeurs.dossiers.header.banner.export_templates'), export_templates_instructeur_procedure_path(p), class: 'fr-nav__link' %>
+                            </li>
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="fr-hidden fr-unhidden-lg">
+        <h3 class="card-title fr-mb-0 fr-ml-1w">
+          <%= link_to procedure_libelle_with_number(p), instructeur_procedure_path(p) %>
+
+          <%= render Dsfr::CopyButtonComponent.new(text: commencer_url(p.path), title: t('instructeurs.dossiers.header.banner.copy_link_button')) %>
+          <%= procedure_badge(p, 'align-middle') %>
+        </h3>
+      </div>
+    </div>
+
+    <div class="fr-hidden-lg fr-mb-2w">
+      <h3 class="card-title fr-mb-0 fr-ml-1w">
+        <%= link_to procedure_libelle_with_number(p), instructeur_procedure_path(p) %>
+        <%= render Dsfr::CopyButtonComponent.new(text: commencer_url(p.path), title: t('instructeurs.dossiers.header.banner.copy_link_button')) %>
+        <%= procedure_badge(p, 'align-middle') %>
+      </h3>
+    </div>
+
+    <ul
+      class="
+        procedure-stats flex fr-background-alt--grey fr-p-1w justify-around
+        wrap
+      "
+    >
+      <li
+        class="
+          fr-btn fr-btn--tertiary-no-outline flex justify-center
+          fr-enlarge-link fr-my-1w
+        "
+      >
+        <%= link_to instructeur_procedure_path(p, statut: 'a-suivre') do %>
+          <span id="procedure-<%= p.id %>-a-suivre-notification"></span>
+
+          <div class="center fr-text--bold">
+            <span id="procedure-<%= p.id %>-a-suivre-count">
+              <%= placeholder_span %>
+            </span>
+          </div>
+
+          <div class="center fr-text--sm">
+            <%= t('instructeurs.dossiers.labels.to_follow') %>
+          </div>
+        <% end %>
+      </li>
+
+      <li
+        class="
+          fr-btn fr-btn--tertiary-no-outline flex justify-center
+          fr-enlarge-link fr-my-1w
+        "
+      >
+        <%= link_to(instructeur_procedure_path(p, statut: 'suivis')) do %>
+          <span id="procedure-<%= p.id %>-suivis-notification"></span>
+
+          <div class="center fr-text--bold">
+            <span id="procedure-<%= p.id %>-followed-count">
+              <%= placeholder_span %>
+            </span>
+          </div>
+
+          <div class="center fr-text--sm">
+            <%= t('instructeurs.dossiers.labels.followed') %>
+          </div>
+        <% end %>
+      </li>
+
+      <li
+        class="
+          fr-btn fr-btn--tertiary-no-outline flex justify-center
+          fr-enlarge-link fr-my-1w
+        "
+      >
+        <%= link_to(instructeur_procedure_path(p, statut: 'traites')) do %>
+          <span id="procedure-<%= p.id %>-traites-notification"></span>
+
+          <div class="center fr-text--bold">
+            <span id="procedure-<%= p.id %>-termines-count">
+              <%= placeholder_span %>
+            </span>
+          </div>
+
+          <div class="center fr-text--sm">
+            <%= t('instructeurs.dossiers.labels.processed') %>
+          </div>
+        <% end %>
+      </li>
+
+      <li
+        class="
+          fr-btn fr-btn--tertiary-no-outline flex justify-center
+          fr-enlarge-link fr-my-1w
+        "
+      >
+        <%= link_to(instructeur_procedure_path(p, statut: 'tous')) do %>
+          <div class="center fr-text--bold">
+            <span id="procedure-<%= p.id %>-dossier-count">
+              <%= placeholder_span %>
+            </span>
+          </div>
+
+          <div class="center fr-text--sm">
+            <%= t('instructeurs.dossiers.labels.total') %>
+          </div>
+        <% end %>
+      </li>
+
+      <% if p.procedure_expires_when_termine_enabled %>
+        <li
+          class="
+            fr-btn fr-btn--tertiary-no-outline flex justify-center
+            fr-enlarge-link fr-my-1w
+          "
+        >
+          <%= link_to(instructeur_procedure_path(p, statut: 'expirant')) do %>
+            <div class="center fr-text--bold">
+              <span id="procedure-<%= p.id %>-expirant-count">
+                <%= placeholder_span %>
+              </span>
+            </div>
+
+            <div class="center fr-text--sm">
+              <%= t('instructeurs.dossiers.labels.close_to_expiration') %>
+            </div>
+          <% end %>
+        </li>
+      <% end %>
+
+      <li
+        class="
+          fr-btn fr-btn--tertiary-no-outline flex justify-center
+          fr-enlarge-link fr-my-1w
+        "
+      >
+        <%= link_to(instructeur_procedure_path(p, statut: 'archives')) do %>
+          <div class="center fr-text--bold">
+            <span class="fr-icon-folder-2-line fr-icon--sm"></span>
+          </div>
+
+          <div class="center fr-text--sm">
+            <%= t('instructeurs.dossiers.labels.to_archive') %>
+          </div>
+        <% end %>
+      </li>
+
+      <li
+        class="
+          fr-btn fr-btn--tertiary-no-outline flex justify-center
+          fr-enlarge-link fr-my-1w
+        "
+      >
+        <%= link_to(instructeur_procedure_path(p, statut: 'supprimes')) do %>
+          <div class="center fr-text--bold">
+            <span class="fr-icon-delete-line fr-icon--sm"></span>
+          </div>
+
+          <div class="center fr-text--sm">
+            <%= t('instructeurs.dossiers.labels.trash') %>
+          </div>
+        <% end %>
+      </li>
+    </ul>
+
+    <div id="procedure-<%= p.id %>-notifications"></div>
+  </div>
+</li>

@@ -1,0 +1,36 @@
+<%= turbo_stream.update "procedure-#{procedure.id}-a-suivre-count" do %>
+  <%= a_suivre_count %>
+<% end %>
+
+<%= turbo_stream.update "procedure-#{procedure.id}-followed-count" do %>
+  <%= followed_count %>
+<% end %>
+
+<%= turbo_stream.update "procedure-#{procedure.id}-termines-count" do %>
+  <%= termines_count %>
+<% end %>
+
+<%= turbo_stream.update "procedure-#{procedure.id}-dossier-count" do %>
+  <%= dossier_count %>
+<% end %>
+
+<% if procedure.procedure_expires_when_termine_enabled? %>
+  <%= turbo_stream.update "procedure-#{procedure.id}-expirant-count" do %>
+    <%= expirant_count %>
+  <% end %>
+<% end %>
+
+<%- each_statut_having_notification do |statut| %>
+  <%= turbo_stream.update "procedure-#{procedure.id}-#{statut.to_s.dasherize}-notification" do %>
+    <span class="notifications" aria-label="<%= t('.notifications') %>"></span>
+  <% end %>
+<% end %>
+
+<% if notifications? %>
+  <%= turbo_stream.update "procedure-#{procedure.id}-notifications" do %>
+    <%= tags_summary_notification(notifications_counts_per_procedure[procedure.id]) %>
+    <div class="fr-container" id="notifications-container-<%= procedure.id %>"></div>
+
+    <%= link_to t('.notifications_details'), instructeur_procedure_display_notifications_path(procedure_id: procedure.id, display: 'true'), class: "fr-btn fr-btn--tertiary-no-outline fr-icon-arrow-down-s-line fr-btn--icon-right fr-btn--sm fr-px-0", id: "notifications-button-#{procedure.id}", data: { turbo: true } %>
+  <% end %>
+<% end %>

@@ -447,7 +447,6 @@ en:
         follow_file: Follow-up the file
         stop_follow: No longer follow
         no_file: No file
-        dossier_synthesis: Summary of files
         passer_en_instruction_blocked_by_pending_correction: |
           It is not possible to switch to instruction while the file is awaiting correction.
           If necessary, the instructor who requested the correction can delete the corresponding message.
