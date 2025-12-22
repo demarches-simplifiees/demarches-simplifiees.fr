@@ -3,10 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe Dossiers::AutosaveFooterComponent, type: :component do
-  subject(:component) { render_inline(described_class.new(dossier:, annotation:)) }
+  subject(:component) { render_inline(described_class.new(dossier:, annotation:, owner:)) }
 
   let(:dossier) { create(:dossier) }
   let(:annotation) { false }
+  let(:owner) { create(:user) }
 
   context 'when showing brouillon state (default state)' do
     it 'displays brouillon explanation' do
