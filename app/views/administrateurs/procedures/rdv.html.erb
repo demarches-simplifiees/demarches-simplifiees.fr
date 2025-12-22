@@ -31,6 +31,10 @@
         <% end %>
 
       <% else %>
+        <div class="fr-mb-6w">
+          <%= turbo_frame_tag "rdv-connection-info", loading: :lazy, src: instructeur_rdv_connections_path(redirect_path: rdv_admin_procedure_path(@procedure)) %>
+        </div>
+
         <%= render Dsfr::CalloutComponent.new(title: "Accès à la fonctionnalité par les instructeurs") do |c| %>
           <% c.with_body do %>
             <p>
@@ -41,10 +45,6 @@
             <%= link_to "Vérifier ma configuration dans RDV Service Public", RdvService.rdv_sp_org_config_url, class: 'fr-btn', target: '_blank' %>
           <% end %>
         <% end %>
-
-        <div class="fr-mb-6w">
-          <%= turbo_frame_tag "rdv-connection-info", loading: :lazy, src: instructeur_rdv_connections_path(redirect_path: rdv_admin_procedure_path(@procedure)) %>
-        </div>
 
         <ul class="fr-toggle__list">
           <li>
