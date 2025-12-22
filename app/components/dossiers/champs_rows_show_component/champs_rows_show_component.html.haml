@@ -66,7 +66,9 @@
           - when TypeDeChamp.type_champs.fetch(:datetime)
             %p.copy-zone= champ.to_s
           - when TypeDeChamp.type_champs.fetch(:number), TypeDeChamp.type_champs.fetch(:integer_number), TypeDeChamp.type_champs.fetch(:decimal_number)
-            %p.copy-zone= helpers.number_with_html_delimiter(champ.to_s)
+            %p.copy-zone
+              = helpers.number_with_html_delimiter(champ.to_s)
+              %span{ data: 'copy-message-placeholder' }
           - when TypeDeChamp.type_champs.fetch(:referentiel)
             = render Dossiers::ReferentielComponent.new(champ:, profile: @profile)
 
