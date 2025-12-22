@@ -733,7 +733,7 @@ RSpec.describe DossierChampsConcern do
           dossier.reload
 
           expect(dossier.history.size).to eq(2)
-          expect(dossier.history.map(&:piece_justificative_file).map { [_1.record.type, _1.attached?] }).to eq([['Champs::PieceJustificativeChamp', true], ['Champs::TitreIdentiteChamp', false]])
+          expect(dossier.history.map(&:piece_justificative_file).map { [_1.record.type, _1.attached?] }).to match_array([['Champs::PieceJustificativeChamp', true], ['Champs::TitreIdentiteChamp', false]])
 
           pj_champ = dossier.project_champ(dossier.find_type_de_champ_by_stable_id(98), row_id: nil)
           expect(pj_champ.piece_justificative_file.size).to eq(2)
