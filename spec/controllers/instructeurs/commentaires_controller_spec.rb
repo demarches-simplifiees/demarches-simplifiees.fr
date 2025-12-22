@@ -45,6 +45,29 @@ describe Instructeurs::CommentairesController, type: :controller do
             expect(correction.reload).to be_resolved
           end
         end
+
+        context 'when a message has an attachment' do
+          let(:commentaire) { create(:commentaire, instructeur: instructeur, dossier: dossier) }
+          let(:rib_path) { 'spec/fixtures/files/RIB.pdf' }
+
+          before do
+            commentaire.piece_jointe.attach(
+              io: File.open(rib_path),
+              filename: 'RIB.pdf',
+              content_type: 'application/pdf',
+              metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+            )
+          end
+
+          it 'removes the attachment when the message is deleted' do
+            expect(subject).to have_http_status(:ok)
+
+            commentaire.reload
+            expect(commentaire).to be_discarded
+            expect(commentaire.body).to be_empty
+            expect(subject.body).not_to include('RIB.pdf')
+          end
+        end
       end
 
       context 'when dossier had been discarded' do

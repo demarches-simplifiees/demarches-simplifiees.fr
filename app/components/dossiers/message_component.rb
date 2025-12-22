@@ -147,4 +147,10 @@ class Dossiers::MessageComponent < ApplicationComponent
       false
     end
   end
+
+  def show_attachments?
+    return false if commentaire.discarded?
+
+    commentaire.piece_jointe.attached?
+  end
 end
