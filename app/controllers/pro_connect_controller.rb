@@ -7,6 +7,8 @@ class ProConnectController < ApplicationController
   before_action :redirect_to_login_if_fc_aborted, only: [:callback]
   before_action :check_state, only: [:callback]
 
+  MON_COMPTE_PRO_IDP_ID = "71144ab3-ee1a-4401-b7b3-79b44f7daeeb"
+
   STATE_COOKIE_NAME = :proConnect_state
   NONCE_COOKIE_NAME = :proConnect_nonce
 
@@ -48,6 +50,17 @@ class ProConnectController < ApplicationController
     )
 
     if user.instructeur?
+      if user_info['idp_id'] == MON_COMPTE_PRO_IDP_ID && !amr.include?('mfa')
+        # a new session is built to force MFA as we know MON COMPTE PRO allows it
+        # we also provide a login_hint to avoid the user having to retype its email / pwd
+        uri, state, nonce = ProConnectService.authorization_uri(force_mfa: true, login_hint: email)
+
+        cookies.encrypted[STATE_COOKIE_NAME] = { value: state, secure: Rails.env.production?, httponly: true }
+        cookies.encrypted[NONCE_COOKIE_NAME] = { value: nonce, secure: Rails.env.production?, httponly: true }
+
+        return redirect_to uri, allow_other_host: true
+      end
+
       user.instructeur.update!(pro_connect_id_token: id_token)
     end
 
