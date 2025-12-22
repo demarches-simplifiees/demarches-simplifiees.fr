@@ -48,3 +48,23 @@ class Rack::Attack
     IPService.ip_trusted?(req.remote_ip)
   end
 end
+
+Rack::Attack.throttled_response_retry_after_header = true
+Rack::Attack.throttled_responder = lambda do |request|
+  match_data = request.env['rack.attack.match_data']
+  now = match_data[:epoch_time]
+  reset = (now + (match_data[:period] - now % match_data[:period]))
+
+  headers = {
+    # 'RateLimit-Limit' => match_data[:limit].to_s,
+    'RateLimit-Remaining' => '0',
+    'RateLimit-Reset' => reset.to_s,
+  }
+
+  [
+    429, headers, [
+      "Calme toi, cowboy ! T'enchaines un peu trop les requêtes. Respire un peu réessaie dans un petit moment.\n" +
+      "Calm down, cowboy! You're making too many requests. Take a breather and try again soon.\n",
+    ],
+  ]
+end
