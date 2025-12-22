@@ -38,6 +38,12 @@ class Rack::Attack
     req.remote_ip if req.post? && req.path.match?(/data_sources\/referentiel/) && rack_attack_enabled?
   end
 
+  throttle('/api/v2/graphql', limit: ENV.fetch('RACK_ATTACK_GRAPHQL_LIMIT', 400).to_i, period: 1.minute) do |req|
+    if req.post? && req.path.start_with?("/api/v2/graphql") && rack_attack_enabled?
+      req.get_header('HTTP_AUTHORIZATION')
+    end
+  end
+
   Rack::Attack.safelist('allow trusted ips') do |req|
     IPService.ip_trusted?(req.remote_ip)
   end
