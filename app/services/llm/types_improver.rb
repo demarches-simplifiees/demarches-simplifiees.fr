@@ -16,6 +16,16 @@ module LLM
               properties: {
                 stable_id: { type: 'integer', description: 'Identifiant du champ à modifier.' },
                 type_champ: { type: 'string', description: 'Nouveau type du champ.' },
+                options: {
+                  type: 'object',
+                  description: <<~DESC.squish,
+                    Options spécifiques au type de champ.
+                    Pour formatted, at least one of: letters_accepted (boolean), numbers_accepted (boolean), special_characters_accepted (boolean), min_character_length (integer), max_character_length (integer).
+                    Pour integer_number/decimal_number: positive_number (boolean), min_number (number), max_number (number).
+                    Pour date/datetime: date_in_past (boolean), start_date (string ISO), end_date (string ISO).
+                  DESC
+                  additionalProperties: false,
+                },
               },
               required: %w[stable_id type_champ],
             },
@@ -61,7 +71,7 @@ module LLM
         Nombres et dates :
         - decimal_number : Nombre décimal avec validation (min/max configurables)
         - integer_number : Nombre entier avec validation (min/max configurables). Ne PAS utiliser pour des numéros/codes etc… même s'ils ne contiennent que des chiffres.
-        - formatted : Texte court avec contraintes de format, par exemple que des lettres ou chiffres. A n'utiliser que pour des codes, numéros administratifs, identifiants dont le format est bien connu.
+        - formatted : UNIQUEMENT pour des codes/identifiants ayant un format standardisé clairement connu (code postal, numéro précis, immatriculation…). Ne PAS utiliser pour limiter la longueur d'un texte libre ou remplacer un champ texte/nombre/date classique ou plus spécifique. L'interface de saisie reste un input texte normal.
         - date : Date seule avec sélecteur calendrier
         - datetime : Date et heure avec sélecteur
 
@@ -70,6 +80,38 @@ module LLM
         - yes_no : Boutons radio pour une question à réponse binaire Oui/Non avec interface dédiée
         - drop_down_list : Choix unique dans une liste déroulante ou des boutons radio suivant la quantité de choix
         - multiple_drop_down_list : Choix multiples dans une liste sous forme de checkbox ou combobox suivant la quantité de choix
+
+        ## Options par type de champ:
+
+        Certains types de champs prennent des options.
+
+        Pour "formatted" (codes/identifiants à format connu) :
+        - letters_accepted (boolean): accepter les lettres.
+        - numbers_accepted (boolean): accepter les chiffres.
+        - special_characters_accepted (boolean): accepter les caractères spéciaux.
+        - min_character_length (integer): longueur minimale
+        - max_character_length (integer): longueur maximale
+
+        IMPORTANT: N'utiliser "formatted" QUE si le champ correspond à un code/identifiant normalisé dont le format est bien défini.
+        Ne PAS utiliser pour : un nom, un titre, une description, un commentaire, une quantité, ou tout texte libre.
+        Au moins une des options *_accepted doit être true.
+
+        Exemples valides:
+        - Code postal français: { numbers_accepted: true, letters_accepted: false, special_characters_accepted: false, min_character_length: 5, max_character_length: 5 }
+        - Numéro de parcelle cadastrale: { letters_accepted: false, numbers_accepted: true, special_characters_accepted: false }
+
+        Pour "integer_number" / "decimal_number" :
+        - positive_number (boolean): n'accepter que les valeurs positives
+        - min_number (number): valeur minimale optionelle
+        - max_number (number): valeur maximale optionelle
+
+        Pour "date" / "datetime" :
+        - date_in_past (boolean): n'accepter que les dates passées
+        - start_date (string ISO): date minimale (ex: "2020-01-01")
+        - end_date (string ISO): date maximale
+
+        Note: Les options fournies seront fusionnées avec les options existantes du champ.
+        Ne fournis que les options que tu souhaites modifier. Les options actuelles sont visibles dans le schéma du formulaire.
 
         ## Règles :
         - Utilise `update` pour modifier le type du champ (avec stable_id et type_champ)
@@ -110,10 +152,15 @@ module LLM
       original_tdc = tdc_index[stable_id]
       return if original_tdc && original_tdc.type_champ == type_champ
 
+      options = sanitize_options(type_champ, data['options'])
+
+      payload = { 'stable_id' => stable_id, 'type_champ' => type_champ }
+      payload['options'] = options if options.present?
+
       {
         op_kind: 'update',
         stable_id:,
-        payload: { 'stable_id' => stable_id, 'type_champ' => type_champ },
+        payload:,
         verify_status: 'pending',
         justification: args['justification'].presence,
       }
@@ -121,6 +168,15 @@ module LLM
 
     def valid_type_champ?(type_champ)
       TypeDeChamp.type_champs.key?(type_champ.to_s)
+    end
+
+    def sanitize_options(type_champ, options)
+      return nil if options.blank? || !options.is_a?(Hash)
+
+      allowed_keys = TypeDeChamp::OPTS_BY_TYPE[type_champ.to_s]
+      return nil if allowed_keys.blank?
+
+      options.slice(*allowed_keys.map(&:to_s)).presence
     end
   end
 end

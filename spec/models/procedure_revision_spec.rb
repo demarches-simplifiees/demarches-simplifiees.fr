@@ -1323,6 +1323,41 @@ describe ProcedureRevision do
           expect(tdc.libelle).to eq("Email du contact")
         end
       end
+
+      context 'with type_champ update and options' do
+        let(:types_de_champ_public) { [{ type: :text, libelle: "Code postal", stable_id: 10 }] }
+
+        it "can update type_champ to formatted with options" do
+          llm_rule_suggestion = create(:llm_rule_suggestion, procedure_revision: revision, rule: 'improve_types', schema_hash:)
+          create(:llm_rule_suggestion_item,
+            llm_rule_suggestion:,
+            verify_status: 'accepted',
+            stable_id: 10,
+            op_kind: 'update',
+            payload: {
+              'stable_id' => 10,
+              'type_champ' => 'formatted',
+              'options' => {
+                'letters_accepted' => false,
+                'numbers_accepted' => true,
+                'special_characters_accepted' => false,
+                'min_character_length' => 5,
+                'max_character_length' => 5,
+              },
+            })
+
+          revision.apply_llm_rule_suggestion_items(llm_rule_suggestion.changes_to_apply)
+          revision.reload
+
+          tdc = revision.types_de_champ_public.find { |t| t.stable_id == 10 }
+          expect(tdc.type_champ).to eq('formatted')
+          expect(tdc.options['letters_accepted']).to eq(false)
+          expect(tdc.options['numbers_accepted']).to eq(true)
+          expect(tdc.options['special_characters_accepted']).to eq(false)
+          expect(tdc.options['min_character_length']).to eq(5)
+          expect(tdc.options['max_character_length']).to eq(5)
+        end
+      end
     end
 
     context 'from LLM::CleanerImprover' do
