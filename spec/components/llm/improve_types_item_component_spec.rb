@@ -35,5 +35,57 @@ RSpec.describe LLM::ImproveTypesItemComponent, type: :component do
         expect(subject).to have_css('.fr-badge.fr-badge--green-emeraude', text: "Adresse électronique")
       end
     end
+
+    context 'with formatted type and options' do
+      before do
+        create(:llm_rule_suggestion_item,
+          llm_rule_suggestion:,
+          op_kind: 'update',
+          stable_id: 10,
+          payload: {
+            'stable_id' => 10,
+            'type_champ' => 'formatted',
+            'options' => {
+              'letters_accepted' => false,
+              'numbers_accepted' => true,
+              'special_characters_accepted' => false,
+              'min_character_length' => 5,
+              'max_character_length' => 5,
+            },
+          },
+          justification: 'Code postal avec validation')
+      end
+
+      it 'renders the options summary' do
+        expect(subject).to have_css('.fr-badge.fr-badge--green-emeraude', text: "Champ formaté")
+        expect(subject).to have_text("chiffres")
+        expect(subject).to have_text("5-5 caractères")
+      end
+    end
+
+    context 'with integer_number type and options' do
+      before do
+        create(:llm_rule_suggestion_item,
+          llm_rule_suggestion:,
+          op_kind: 'update',
+          stable_id: 10,
+          payload: {
+            'stable_id' => 10,
+            'type_champ' => 'integer_number',
+            'options' => {
+              'positive_number' => true,
+              'min_number' => 0,
+              'max_number' => 100,
+            },
+          },
+          justification: 'Pourcentage')
+      end
+
+      it 'renders the number options summary' do
+        expect(subject).to have_css('.fr-badge.fr-badge--green-emeraude', text: "Nombre entier")
+        expect(subject).to have_text("positif")
+        expect(subject).to have_text("entre 0 et 100")
+      end
+    end
   end
 end
