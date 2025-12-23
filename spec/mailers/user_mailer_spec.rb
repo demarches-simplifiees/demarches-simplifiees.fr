@@ -9,7 +9,7 @@ RSpec.describe UserMailer, type: :mailer do
     it 'sends email to the correct user with expected body content and link' do
       expect(subject.to).to eq([user.email])
       expect(subject.body).to include(user.email)
-      expect(subject.body).to have_link('J’ai oublié mon mot de passe')
+      expect(subject.body).to have_link('Demander un nouveau mot de passe')
     end
 
     context 'when a procedure is provided' do
