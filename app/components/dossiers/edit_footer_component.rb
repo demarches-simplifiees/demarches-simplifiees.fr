@@ -14,6 +14,10 @@ class Dossiers::EditFooterComponent < ApplicationComponent
     controller.current_user.owns?(@dossier)
   end
 
+  def show_for_user?
+    controller.is_a?(Users::DossiersController)
+  end
+
   def annotation?
     @annotation.present?
   end
