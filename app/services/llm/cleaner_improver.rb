@@ -63,7 +63,8 @@ module LLM
         - Un champ "Raison sociale", "Adresse du siège" ou "Date de création" quand un champ "SIRET" existe
 
         ## Règle critique :
-        Les champs à supprimer doivent concerner le MÊME sujet/contexte.
+        - Ne supprime JAMAIS un champ qui sert de condition d'affichage pour d'autres champs: cela les rendrait invalides.
+        - Les champs à supprimer doivent concerner le MÊME sujet/contexte.
         Exemple : "Adresse de résidence" + "Commune de résidence" → supprimer le champ commune
         Contre-exemple : "Adresse de résidence" + "Commune de naissance" → NE PAS supprimer (sujets différents)
 
@@ -77,16 +78,17 @@ module LLM
     end
 
     def build_item(args, tdc_index: {})
-      build_destroy_item(args) if args['destroy']
+      build_destroy_item(args, tdc_index:) if args['destroy']
     end
 
     private
 
-    def build_destroy_item(args)
+    def build_destroy_item(args, tdc_index:)
       data = args['destroy']
       stable_id = data.is_a?(Hash) ? data['stable_id'] : data
 
       return if stable_id.nil?
+      return if used_as_condition_source?(stable_id, tdc_index)
 
       {
         op_kind: 'destroy',
@@ -95,6 +97,12 @@ module LLM
         verify_status: 'pending',
         justification: args['justification'].presence,
       }
+    end
+
+    def used_as_condition_source?(stable_id, tdc_index)
+      tdc_index.values.any? do |tdc|
+        tdc.condition&.sources&.include?(stable_id)
+      end
     end
   end
 end
