@@ -6,9 +6,9 @@ class LLMRuleSuggestion < ApplicationRecord
   has_many :llm_rule_suggestion_items, dependent: :destroy
 
   enum :state, { pending: 'pending', queued: 'queued', running: 'running', completed: 'completed', failed: 'failed', accepted: 'accepted', skipped: 'skipped' }
-  enum :rule, { improve_label: 'improve_label', improve_structure: 'improve_structure' }
+  enum :rule, { improve_label: 'improve_label', improve_structure: 'improve_structure', improve_types: 'improve_types', cleaner: 'cleaner' }
 
-  RULE_SEQUENCE = %w[improve_label improve_structure].freeze
+  RULE_SEQUENCE = %w[improve_label improve_structure improve_types cleaner].freeze
 
   RULE_CONFIG = {
     'improve_label' => {
@@ -18,6 +18,14 @@ class LLMRuleSuggestion < ApplicationRecord
     'improve_structure' => {
       item_component_class: 'LLM::ImproveStructureItemComponent',
       service_class: 'LLM::StructureImprover',
+    },
+    'improve_types' => {
+      item_component_class: 'LLM::ImproveTypesItemComponent',
+      service_class: 'LLM::TypesImprover',
+    },
+    'cleaner' => {
+      item_component_class: 'LLM::CleanerItemComponent',
+      service_class: 'LLM::CleanerImprover',
     },
   }.freeze
 

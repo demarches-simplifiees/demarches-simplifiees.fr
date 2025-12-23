@@ -90,7 +90,8 @@
   <div
     data-controller="<%= poll_controller_data %>"
     data-turbo-poll-url-value="<%= poll_url if should_poll? %>"
-    data-turbo-poll-interval-value="3000"
+    data-turbo-poll-interval-value="4000" <%# max attempts is hardcoded to 20 %>
+    data-turbo-poll-strategy-value="fixed"
   >
     <%= display_message %>
 
