@@ -504,6 +504,7 @@ Rails.application.routes.draw do
             member do
               resources :commentaires, only: [:destroy]
               resources :rdvs, only: [:create]
+              get 'original' => 'dossiers#show_submitted_revision', as: :original
               get 'next'
               get 'previous'
               post 'repousser-expiration' => 'dossiers#extend_conservation'

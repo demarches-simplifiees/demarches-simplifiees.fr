@@ -4,6 +4,12 @@ fr:
       archive_pending_html: Archive en cours de création<br>(demandée il y a %{created_period})
       archive_ready_html: Télécharger l’archive<br>(demandée il y a %{generated_period})
     dossiers:
+      submitted_revision:
+        download: "Télécharger le dossier (PDF)"
+        badge: "VERSION D’ORIGINE DÉPOSÉE PAR L’USAGER"
+        back: "Retour au dossier"
+        footer:
+          back: "Fermer et revenir au dossier"
       filterable_state:
         en_construction: "En construction"
         en_instruction: "En instruction"
