@@ -134,23 +134,28 @@ describe Champs::RNAController, type: :controller do
         it 'populates the value_json and RNA on the model' do
           champ.reload
           expect(champ.value).to eq(rna)
-          expect(champ.value_json).to eq({
+          expect(champ.value_json).to eq(
+            "title" => "LA PRÉVENTION ROUTIERE",
             "city_code" => "75108",
             "city_name" => "Paris",
-            "departement_code" => nil, # might seem broken lookup, but no, it's anonymized
-            "department_code" => nil, # might seem broken lookup, but no, it's anonymized
-            "departement_name" => nil,
-            "department_name" => nil,
             "postal_code" => "75009",
             "region_code" => nil,
             "region_name" => nil,
-            "street_address" => "33 rue de Modagor",
             "street_name" => "de Modagor",
-            "street_number" => "33",
-            "title" => "LA PRÉVENTION ROUTIERE",
             "country_code" => "FR",
             "country_name" => "France",
-          })
+            "street_number" => "33",
+            "street_address" => "33 rue de Modagor",
+            "association_rna" => "W751080001",
+            "department_code" => nil,
+            "department_name" => nil,
+            "departement_code" => nil,
+            "departement_name" => nil,
+            "association_objet" => "L'association a pour objet de promouvoir la pratique du sport de haut niveau et de contribuer à la formation des jeunes sportifs.",
+            "association_date_creation" => "2015-01-01",
+            "association_date_declaration" => "2019-01-01",
+            "association_date_publication" => "2018-01-01"
+          )
         end
       end
     end

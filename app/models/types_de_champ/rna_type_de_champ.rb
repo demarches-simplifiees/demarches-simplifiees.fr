@@ -11,9 +11,36 @@ class TypesDeChamp::RNATypeDeChamp < TypesDeChamp::TypeDeChampBase
     champ.identifier
   end
 
+  def info_columns(procedure:)
+    # Get base labels from columns (with libelle prefix removed automatically by parent)
+    column_labels = super(procedure:)
+
+    # Add exportable columns that are not in the main columns
+    column_labels.concat Etablissement::EXPORTABLE_ASSOCIATION_COLUMNS.keys.dup.map { I18n.t(_1, scope: [:activerecord, :attributes, :procedure_presentation, :fields, :etablissement]) }
+
+    column_labels
+  end
+
   def columns(procedure:, displayable: true, prefix: nil)
+    i18n_scope = [:activerecord, :attributes, :procedure_presentation, :fields, :etablissement]
+
     super
       .concat(addressable_columns(procedure:, displayable:, prefix:))
+      .concat(
+        Etablissement::EXPORTABLE_ASSOCIATION_COLUMNS.map do |(column, attributes)|
+          Columns::JSONPathColumn.new(
+            procedure_id: procedure.id,
+            stable_id:,
+            tdc_type: type_champ,
+            label: [prefix, libelle, I18n.t(column, scope: i18n_scope)].compact.join(' – '),
+            type: attributes[:type],
+            jsonpath: "$.#{column}",
+            displayable: true,
+            filterable: attributes.fetch(:filterable, false),
+            mandatory: mandatory?
+          )
+        end
+      )
       .concat([
         Columns::JSONPathColumn.new(
           procedure_id: procedure.id,

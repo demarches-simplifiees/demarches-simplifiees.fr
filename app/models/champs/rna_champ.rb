@@ -66,6 +66,13 @@ class Champs::RNAChamp < Champ
 
   def extract_value_json(data:)
     h = APIGeoService.parse_rna_address(data['adresse'])
-    h.merge(title: data['association_titre'])
+    h.merge(
+      title: data['association_titre'],
+      association_rna: data['association_rna'],
+      association_objet: data['association_objet'],
+      association_date_creation: data['association_date_creation'],
+      association_date_declaration: data['association_date_declaration'],
+      association_date_publication: data['association_date_publication']
+    )
   end
 end
