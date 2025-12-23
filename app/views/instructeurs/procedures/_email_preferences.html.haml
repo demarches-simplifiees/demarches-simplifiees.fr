@@ -3,37 +3,37 @@
     %p
       = t('.subtitle')
 
-= form_for assign_to, url: update_email_notifications_instructeur_procedure_path(procedure), html: { data: { controller: 'enable-submit-if-form-changes', action: 'change->enable-submit-if-form-changes#onFormChange' } } do |form|
+= form_for instructeur_procedure, url: update_email_notifications_instructeur_procedure_path(procedure), html: { data: { controller: 'enable-submit-if-form-changes', action: 'change->enable-submit-if-form-changes#onFormChange' } } do |form|
   %fieldset.fr-fieldset
     .fr-fieldset__element
       %ul.fr-toggle__list
         %li
           = render Dsfr::ToggleComponent.new(form:,
-            target: :instant_email_dossier_notifications_enabled,
+            target: :instant_email_new_dossier,
             title: t(".for_each_file_submitted.title"),
             hint: t('.for_each_file_submitted.notice'),
             extra_class_names: 'fr-toggle--border-bottom')
         %li
           = render Dsfr::ToggleComponent.new(form:,
-            target: :instant_email_message_notifications_enabled,
+            target: :instant_email_new_message,
             title: t(".for_each_message_submitted.title"),
             hint: t('.for_each_message_submitted.notice'),
             extra_class_names: 'fr-toggle--border-bottom')
         %li
           = render Dsfr::ToggleComponent.new(form:,
-            target: :instant_expert_avis_email_notifications_enabled,
+            target: :instant_email_new_expert_avis,
             title: t(".avis_notifications.title"),
             hint: t('.avis_notifications.notice'),
             extra_class_names: 'fr-toggle--border-bottom')
         %li
           = render Dsfr::ToggleComponent.new(form:,
-            target: :daily_email_notifications_enabled,
+            target: :daily_email_summary,
             title: t(".daily_notifications.title"),
             hint: t('.daily_notifications.notice'),
             extra_class_names: 'fr-toggle--border-bottom')
         %li
           = render Dsfr::ToggleComponent.new(form:,
-            target: :weekly_email_notifications_enabled,
+            target: :weekly_email_summary,
             title: t(".hebdo_recap.title"),
             hint: t('.hebdo_recap.notice'),
             extra_class_names: 'fr-toggle--border-bottom')

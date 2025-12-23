@@ -23,6 +23,7 @@ RSpec.describe Crisp::UserDataBuilder do
       let(:procedure1) { create(:procedure) }
       let(:procedure2) { create(:procedure) }
       let(:instructeur) { create(:instructeur, user:) }
+      let(:instructeur_procedure2) { create(:instructeurs_procedure, instructeur:, procedure: procedure2) }
 
       before do
         procedure1.defaut_groupe_instructeur.add(instructeur)
@@ -40,12 +41,11 @@ RSpec.describe Crisp::UserDataBuilder do
         expect(data["NotifsDesactivees"]).to include("**Désactivées** sur démarche n° #{procedure1.id}, #{procedure2.id}")
       end
 
-      it 'active une démarche et laisse l’autre désactivée' do
-        assign_to_p2 = instructeur.assign_to.find { it.groupe_instructeur.procedure_id == procedure2.id }
-        assign_to_p2.update!(
-          instant_email_dossier_notifications_enabled: true,
-          instant_email_message_notifications_enabled: true,
-          instant_expert_avis_email_notifications_enabled: true
+      it 'active sur une démarche et laisse l’autre désactivée' do
+        instructeur_procedure2.update!(
+          instant_email_new_dossier: true,
+          instant_email_new_message: true,
+          instant_email_new_expert_avis: true
         )
 
         data = build
