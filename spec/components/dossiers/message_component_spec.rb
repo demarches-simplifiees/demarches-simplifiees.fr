@@ -290,6 +290,49 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
         end
       end
     end
+
+    describe 'correction alert for usager' do
+      let(:connected_user) { dossier.user }
+      let(:dossier) { create(:dossier, :en_construction) }
+      let(:commentaire) { create(:commentaire, dossier: dossier) }
+
+      subject { render_inline(component) }
+
+      context 'when there is a pending correction' do
+        before do
+          create(:dossier_correction, commentaire: commentaire, dossier: dossier, resolved_at: nil)
+        end
+
+        it 'displays the correction alert' do
+          expect(subject).to have_css('.fr-alert')
+          expect(subject).to have_css('.fr-alert--warning')
+          expect(subject).to have_text(component.t('.alert_correction_title'))
+          expect(subject).to have_text(component.t('.alert_correction_description'))
+          expect(subject).to have_link(
+            component.t('.alert_correction_cta'),
+            href: component.helpers.modifier_dossier_path(dossier)
+          )
+        end
+      end
+
+      context 'when connected as instructeur' do
+        let(:connected_user) { create(:instructeur) }
+
+        before do
+          create(:dossier_correction, commentaire: commentaire, dossier: dossier, resolved_at: nil)
+        end
+
+        it 'does not display the correction alert' do
+          expect(subject).not_to have_css('.fr-alert')
+        end
+      end
+
+      context 'when there is no correction' do
+        it 'does not display the correction alert' do
+          expect(subject).not_to have_css('.fr-alert')
+        end
+      end
+    end
   end
 
   describe 'groupe_gestionnaire' do

@@ -12,3 +12,6 @@ en:
   read_label: Read
   unread_label: Unread
   applicant: User
+  alert_correction_title: How do I correct my file?
+  alert_correction_description: You must make the requested changes by editing your file.
+  alert_correction_cta: Edit the file
