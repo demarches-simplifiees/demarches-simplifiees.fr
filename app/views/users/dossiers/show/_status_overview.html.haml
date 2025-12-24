@@ -27,8 +27,9 @@
       - if dossier.en_construction?
         .en-construction
           - if dossier.pending_correction.present?
-            .message.fr-background-alt--grey
-              = render Dossiers::MessageComponent.new(commentaire: dossier.pending_correction.commentaire, connected_user: current_user)
+            = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: "fr-mb-2w") do |c|
+              - c.with_body do
+                = t('views.users.dossiers.dossiers_list.pending_correction_html', link: messagerie_dossier_path(dossier), id: dossier.id, class: 'fr-link')
 
           - if dossier.awaiting_response.present?
             = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: "fr-mb-2w") do |c|
