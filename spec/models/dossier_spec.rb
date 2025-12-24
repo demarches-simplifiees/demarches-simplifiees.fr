@@ -1872,14 +1872,29 @@ describe Dossier, type: :model do
     end
   end
 
-  describe "#check_mandatory_and_visible_champs" do
+  describe "can't transition to terminer when annotations privees are not valid" do
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure) { create(:procedure, types_de_champ_private:) }
+    let(:dossier_incomplete) { create(:dossier, :en_instruction, procedure:) }
+    let(:dossier_ok) { create(:dossier, :en_instruction, :with_populated_annotations, procedure:) }
+    let(:types_de_champ_private) { [{ type: :text, mandatory: true }] }
+
+    context "when dossier is en_instruction" do
+      it "can't accepter" do
+        expect(dossier_incomplete.may_accepter?(instructeur:)).to be_falsey
+        expect(dossier_ok.accepter(instructeur:)).to be_truthy
+      end
+    end
+  end
+
+  describe "#check_mandatory_and_visible_champs_public" do
     include Logic
 
     let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:types_de_champ) { [type_de_champ].compact }
     let(:type_de_champ) { nil }
-    let(:errors) { dossier.check_mandatory_and_visible_champs }
+    let(:errors) { dossier.check_mandatory_and_visible_champs_public }
 
     it 'no mandatory champs' do
       expect(errors).to be_empty

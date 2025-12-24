@@ -49,6 +49,10 @@ class ProcedureRevision < ApplicationRecord
 
     type_de_champ = TypeDeChamp.new(params)
 
+    if params[:private].to_s == "true"
+      type_de_champ.mandatory = false
+    end
+
     if type_de_champ.save
       siblings = siblings_for(type_de_champ:, parent_coordinate:)
       position = next_position_for(after_coordinate:)
