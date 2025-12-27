@@ -25,7 +25,7 @@ module Mutations
       result = { groupe_instructeur: }
 
       if invalid_emails.present?
-        warning = I18n.t('administrateurs.groupe_instructeurs.add_instructeur.wrong_address',
+        warning = I18n.t('administrateurs.groupe_instructeurs.add_instructeurs.wrong_address',
           count: invalid_emails.size,
           emails: invalid_emails.join(', '))
 

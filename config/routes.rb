@@ -575,7 +575,7 @@ Rails.application.routes.draw do
         resources :groupes, only: [:index, :show], controller: 'groupe_instructeurs' do
           resource :contact_information
           member do
-            post 'add_instructeur'
+            post 'add_instructeurs'
             delete 'remove_instructeur'
             post 'add_signature'
             get 'preview_attestation_acceptation'
@@ -739,7 +739,7 @@ Rails.application.routes.draw do
         patch 'update_state' => 'groupe_instructeurs#update_state'
 
         member do
-          post 'add_instructeur'
+          post 'add_instructeurs'
           delete 'remove_instructeur'
           get 'reaffecter_dossiers'
           post 'reaffecter'

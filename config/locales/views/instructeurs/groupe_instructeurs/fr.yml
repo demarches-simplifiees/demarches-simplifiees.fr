@@ -7,7 +7,7 @@ fr:
         copy_paste_hint: "Vous pouvez saisir les adresses individuellement, ou bien copier-coller dans le champ ci-dessous une liste d’adresses séparées par des points-virgules (exemple : adresse1@mail.com; adresse2@mail.com; adresse3@mail.com)."
         assign: Affecter
         wrong_adress: "L’adresse électronique saisie n’est pas valide."
-      add_instructeur:
+      add_instructeurs:
         wrong_address:
           one: "%{emails} n’est pas une adresse électronique valide"
           other: "%{emails} ne sont pas des adresses électroniques valides"
