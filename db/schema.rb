@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_21_091000) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_05_084441) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -873,6 +873,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_21_091000) do
     t.string "display_dossier_depose_notifications", default: "all", null: false
     t.string "display_dossier_modifie_notifications", default: "followed", null: false
     t.string "display_message_notifications", default: "followed", null: false
+    t.boolean "instant_email_dossier_deletion", default: true, null: false
+    t.boolean "instant_email_dossier_expiration", default: true, null: false
+    t.boolean "instant_email_dossier_expired", default: true, null: false
     t.boolean "instant_email_new_dossier", default: false, null: false
     t.boolean "instant_email_new_expert_avis", default: false, null: false
     t.boolean "instant_email_new_message", default: false, null: false
