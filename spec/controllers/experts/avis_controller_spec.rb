@@ -277,18 +277,12 @@ describe Experts::AvisController, type: :controller do
         end
       end
 
-      context 'without attachment with an instructeur wants to be notified' do
+      context 'when an instructeur wants to be notified by email' do
+        let!(:ip) { create(:instructeurs_procedure, instructeur: instructeur_with_instant_avis_notification, procedure:, instant_email_new_expert_avis: true) }
+
         before do
-          AssignTo.find_by(instructeur: instructeur_with_instant_avis_notification).update!(instant_expert_avis_email_notifications_enabled: true)
           instructeur_with_instant_avis_notification.follow(avis_without_answer.dossier)
-
           instructeur_without_instant_avis_notification.follow(avis_without_answer.dossier)
-
-          another_procedure = create(:procedure, instructeurs: [instructeur_without_instant_avis_notification])
-          another_dossier = create(:dossier, :en_construction, procedure: another_procedure)
-          instructeur_without_instant_avis_notification.follow(another_dossier)
-          AssignTo.find_by(instructeur: instructeur_without_instant_avis_notification, groupe_instructeur: another_dossier.groupe_instructeur)
-            .update!(instant_expert_avis_email_notifications_enabled: true)
         end
 
         it 'The instructeur should be notified of the new avis' do

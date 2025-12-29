@@ -2,7 +2,9 @@
 
 describe NotificationService do
   describe '.send_instructeur_email_notification' do
-    let(:procedure) { create(:procedure) }
+    let(:procedure) { create(:procedure, :published) }
+    let(:groupe_instructeur) { create(:groupe_instructeur, procedure:, instructeurs: [instructeur]) }
+    let(:instructeur) { create(:instructeur) }
 
     before do
       allow(InstructeurMailer).to receive(:send_notifications)
@@ -13,9 +15,8 @@ describe NotificationService do
 
     context 'when a instructeur does not enable its email notification' do
       let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
-      let(:instructeur) { create(:instructeur) }
 
-      before { create(:assign_to, instructeur: instructeur, procedure: procedure) }
+      before { create(:instructeurs_procedure, instructeur: instructeur, procedure: procedure) }
 
       it do
         subject
@@ -24,13 +25,11 @@ describe NotificationService do
     end
 
     context 'when a instructeur enables its email_notification on one procedure' do
-      let(:instructeur_with_email_notifications) { create(:instructeur) }
-
       before do
-        create(:assign_to,
-          instructeur: instructeur_with_email_notifications,
+        create(:instructeurs_procedure,
+          instructeur: instructeur,
           procedure: procedure,
-          daily_email_notifications_enabled: true)
+          daily_email_summary: true)
       end
 
       context "when there is no activity on the instructeur's procedures" do
@@ -41,7 +40,7 @@ describe NotificationService do
       end
 
       context 'when a dossier en construction exists on this procedure' do
-        let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+        let!(:dossier) { create(:dossier, :en_construction, procedure:, groupe_instructeur:) }
 
         it do
           subject
@@ -50,7 +49,7 @@ describe NotificationService do
       end
 
       context 'when a dossier en instruction exists on this procedure' do
-        let!(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+        let!(:dossier) { create(:dossier, :en_instruction, procedure:, groupe_instructeur:) }
 
         it do
           subject
@@ -59,7 +58,7 @@ describe NotificationService do
       end
 
       context 'when a dossier accepte exists on this procedure' do
-        let!(:dossier) { create(:dossier, :accepte, procedure: procedure) }
+        let!(:dossier) { create(:dossier, :accepte, procedure:, groupe_instructeur:) }
 
         it do
           subject
@@ -68,7 +67,7 @@ describe NotificationService do
       end
 
       context 'when a dossier refuse exists on this procedure' do
-        let!(:dossier) { create(:dossier, :refuse, procedure: procedure) }
+        let!(:dossier) { create(:dossier, :refuse, procedure:, groupe_instructeur:) }
 
         it do
           subject
@@ -77,7 +76,7 @@ describe NotificationService do
       end
 
       context 'when a dossier classé sans suite exists on this procedure' do
-        let!(:dossier) { create(:dossier, :sans_suite, procedure: procedure) }
+        let!(:dossier) { create(:dossier, :sans_suite, procedure:, groupe_instructeur:) }
 
         it do
           subject
@@ -86,8 +85,8 @@ describe NotificationService do
       end
 
       context 'when there is a notification on this procedure' do
-        let(:dossier) { create(:dossier, :en_construction, procedure:) }
-        let!(:notification) { create(:dossier_notification, instructeur: instructeur_with_email_notifications, dossier:, notification_type: :dossier_modifie) }
+        let(:dossier) { create(:dossier, :en_construction, procedure:, groupe_instructeur:) }
+        let!(:notification) { create(:dossier_notification, instructeur: instructeur, dossier:, notification_type: :dossier_modifie) }
 
         it do
           subject

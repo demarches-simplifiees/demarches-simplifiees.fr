@@ -274,15 +274,10 @@ module Instructeurs
 
     def notification_preferences
       @procedure = procedure
-      @assign_to = assign_tos.first
       @instructeur_procedure = find_or_create_instructeur_procedure(@procedure)
     end
 
     def update_email_notifications
-      # TODO: remove assign_tos update when the transfer on instructeurs_procedure is done
-      assign_tos.each do |assign_to|
-        assign_to.update!(assign_to_params)
-      end
       instructeur_procedure = InstructeursProcedure.find_by!(procedure_id:, instructeur: current_instructeur)
       instructeur_procedure.update!(email_notification_params)
 
@@ -416,15 +411,9 @@ module Instructeurs
       end
     end
 
-    def assign_to_params
-      # TODO: remove method when the transfer on instructeurs_procedure is done
-      params.require(:assign_to)
-        .permit(:instant_expert_avis_email_notifications_enabled, :instant_email_dossier_notifications_enabled, :instant_email_message_notifications_enabled, :daily_email_notifications_enabled, :weekly_email_notifications_enabled)
-    end
-
     def email_notification_params
-      # TODO : take params of instructeurs_procedure from the form for the transfer
-      InstructeursProcedure::EMAIL_COLUMNS.transform_values { |column| assign_to_params[column] }
+      params.require(:instructeurs_procedure)
+        .permit(:instant_email_new_dossier, :instant_email_new_message, :instant_email_new_expert_avis, :daily_email_summary, :weekly_email_summary)
     end
 
     def assign_tos

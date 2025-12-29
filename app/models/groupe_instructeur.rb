@@ -38,8 +38,7 @@ class GroupeInstructeur < ApplicationRecord
     return if instructeur.nil?
     return if in?(instructeur.groupe_instructeurs)
 
-    default_notification_settings = instructeur.notification_settings(procedure_id)
-    instructeur.assign_to.create(groupe_instructeur: self, **default_notification_settings)
+    instructeur.assign_to.create(groupe_instructeur: self)
     DossierNotification.refresh_notifications_new_instructeur_for_dossiers(self, instructeur)
   end
 

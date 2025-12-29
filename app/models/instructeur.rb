@@ -12,8 +12,6 @@ class Instructeur < ApplicationRecord
   has_many :procedures, -> { distinct }, through: :unordered_groupe_instructeurs
   has_many :deleted_dossiers, through: :procedures
   has_many :batch_operations, dependent: :nullify
-  has_many :assign_to_with_email_notifications, -> { with_email_notifications }, class_name: 'AssignTo', inverse_of: :instructeur
-  has_many :groupe_instructeur_with_email_notifications, through: :assign_to_with_email_notifications, source: :groupe_instructeur
   has_many :export_templates, through: :groupe_instructeurs
   has_many :commentaires, inverse_of: :instructeur, dependent: :nullify
   has_many :dossiers, -> { state_not_brouillon }, through: :unordered_groupe_instructeurs
@@ -34,23 +32,36 @@ class Instructeur < ApplicationRecord
 
   validates :user_id, uniqueness: true
 
-  scope :with_instant_email_message_notifications, -> (groupe_instructeur) {
-    includes(:assign_to)
-      .where(assign_tos: {
-        groupe_instructeur_id: groupe_instructeur.id,
-        instant_email_message_notifications_enabled: true,
+  scope :with_instant_email_new_message, -> (procedure) {
+    joins(:instructeurs_procedures)
+      .where(instructeurs_procedures: {
+        procedure:,
+        instant_email_new_message: true,
       })
   }
 
-  scope :with_instant_expert_avis_email_notifications_enabled, -> (groupe_instructeur) {
-    includes(:assign_to).where(assign_tos: {
-      groupe_instructeur_id: groupe_instructeur.id,
-      instant_expert_avis_email_notifications_enabled: true,
-    })
+  scope :with_instant_email_new_expert_avis, -> (procedure) {
+    joins(:instructeurs_procedures)
+      .where(instructeurs_procedures: {
+        procedure:,
+        instant_email_new_expert_avis: true,
+      })
   }
 
-  scope :with_instant_email_dossier_notifications, -> {
-    includes(:assign_to).where(assign_tos: { instant_email_dossier_notifications_enabled: true })
+  scope :with_instant_email_new_dossier, -> (procedure) {
+    joins(:instructeurs_procedures)
+      .where(instructeurs_procedures: {
+        procedure:,
+        instant_email_new_dossier: true,
+      })
+  }
+
+  scope :with_daily_email_summary, -> {
+    joins(:instructeurs_procedures)
+      .where(instructeurs_procedures: {
+        daily_email_summary: true,
+      })
+      .distinct
   }
 
   default_scope { eager_load(:user) }
@@ -93,34 +104,6 @@ class Instructeur < ApplicationRecord
     end
   end
 
-  NOTIFICATION_SETTINGS = [:daily_email_notifications_enabled, :instant_email_dossier_notifications_enabled, :instant_email_message_notifications_enabled, :weekly_email_notifications_enabled, :instant_expert_avis_email_notifications_enabled]
-
-  def notification_settings(procedure_id)
-    assign_to
-      .joins(:groupe_instructeur)
-      .find_by(groupe_instructeurs: { procedure_id: procedure_id })
-      &.slice(*NOTIFICATION_SETTINGS) || {}
-  end
-
-  def last_week_overview
-    start_date = Time.zone.now.beginning_of_week
-
-    active_procedure_overviews = procedures
-      .where(assign_tos: { weekly_email_notifications_enabled: true })
-      .publiees
-      .map { |procedure| procedure.procedure_overview(start_date, groupe_instructeurs) }
-      .filter(&:had_some_activities?)
-
-    if active_procedure_overviews.empty?
-      nil
-    else
-      {
-        start_date: start_date,
-        procedure_overviews: active_procedure_overviews,
-      }
-    end
-  end
-
   def procedure_presentation_for_procedure_id(procedure_id)
     assign_to = assign_to_for_procedure_id(procedure_id)
     assign_to.procedure_presentation || assign_to.create_procedure_presentation!
@@ -137,19 +120,25 @@ class Instructeur < ApplicationRecord
     Follow.where(instructeur: self, dossier: dossier).update_all(attributes)
   end
 
-  def email_notification_data
-    groupe_instructeur_with_email_notifications
-      .includes(:procedure)
+  def daily_email_summary_data
+    groupe_instructeurs
+      .joins(procedure: :instructeurs_procedures)
+      .where(instructeurs_procedures: {
+        instructeur: self,
+        daily_email_summary: true,
+      })
+      .merge(Procedure.publiee)
       .group_by(&:procedure_id)
       .reduce([]) do |acc, (_, groupe_instructeurs)|
       procedure = groupe_instructeurs.first.procedure
+      dossiers_count = self.dossiers.where(groupe_instructeur: groupe_instructeurs).visible_by_administration.group(:state).count
 
       h = {
-        nb_en_construction: dossiers.where(groupe_instructeur: groupe_instructeurs).visible_by_administration.en_construction.count,
-        nb_en_instruction: dossiers.where(groupe_instructeur: groupe_instructeurs).visible_by_administration.en_instruction.count,
-        nb_accepted: dossiers.where(groupe_instructeur: groupe_instructeurs).visible_by_administration.accepte.count,
-        nb_refused: dossiers.where(groupe_instructeur: groupe_instructeurs).visible_by_administration.refuse.count,
-        nb_closed_without_continuation: dossiers.where(groupe_instructeur: groupe_instructeurs).visible_by_administration.sans_suite.count,
+        nb_en_construction: dossiers_count['en_construction'] || 0,
+        nb_en_instruction: dossiers_count['en_instruction'] || 0,
+        nb_accepted: dossiers_count['accepte'] || 0,
+        nb_refused: dossiers_count['refuse'] || 0,
+        nb_closed_without_continuation: dossiers_count['sans_suite'] || 0,
       }
 
       if h.values.any?(&:positive?)
@@ -166,6 +155,31 @@ class Instructeur < ApplicationRecord
 
       acc
     end
+  end
+
+  def weekly_email_summary_data
+    procedures = self.procedures
+      .joins(:instructeurs_procedures)
+      .where(instructeurs_procedures: {
+        instructeur: self,
+        weekly_email_summary: true,
+      })
+      .publiees
+      .includes(dossiers: :groupe_instructeur)
+
+    gi_ids = groupe_instructeurs.ids
+
+    procedure_overviews = procedures.map do |procedure|
+      dossiers = procedure
+        .dossiers
+        .filter { |d| gi_ids.include?(d.groupe_instructeur_id) && d.visible_by_administration? }
+
+      ProcedureOverview.new(procedure, dossiers)
+    end
+
+    active_procedure_overviews = procedure_overviews.filter(&:had_some_activities?)
+
+    active_procedure_overviews.empty? ? nil : active_procedure_overviews
   end
 
   def create_trusted_device_token

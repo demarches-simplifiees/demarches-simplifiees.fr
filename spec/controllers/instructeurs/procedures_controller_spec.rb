@@ -735,33 +735,29 @@ describe Instructeurs::ProceduresController, type: :controller do
 
   describe '#update_email_notifications' do
     let(:instructeur) { create(:instructeur) }
-    let!(:procedure) { create(:procedure, instructeurs: [instructeur]) }
+    let(:procedure) { create(:procedure, instructeurs: [instructeur]) }
 
     context "when logged in" do
       before { sign_in(instructeur.user) }
 
-      it { expect(instructeur.groupe_instructeur_with_email_notifications).to be_empty }
-
       context 'when the instructeur update its preferences' do
-        let(:assign_to) { instructeur.assign_to.joins(:groupe_instructeur).find_by(groupe_instructeurs: { procedure: procedure }) }
         let!(:instructeur_procedure) { create(:instructeurs_procedure, instructeur:, procedure:) }
 
         before do
           patch :update_email_notifications, params: {
             procedure_id: procedure.id,
-            assign_to: {
-              id: assign_to.id,
-              daily_email_notifications_enabled: true,
-              weekly_email_notifications_enabled: false,
-              instant_email_dossier_notifications_enabled: false,
-              instant_email_message_notifications_enabled: false,
-              instant_expert_avis_email_notifications_enabled: false,
+            instructeurs_procedure: {
+              id: instructeur_procedure.id,
+              daily_email_summary: true,
+              weekly_email_summary: false,
+              instant_email_new_dossier: false,
+              instant_email_new_message: false,
+              instant_email_new_expert_avis: false,
             },
           }
         end
 
         it do
-          expect(instructeur.groupe_instructeur_with_email_notifications).to eq([procedure.defaut_groupe_instructeur])
           instructeur_procedure.reload
           expect(instructeur_procedure.daily_email_summary).to eq(true)
           expect(instructeur_procedure.weekly_email_summary).to eq(false)

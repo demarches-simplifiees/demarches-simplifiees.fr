@@ -1554,11 +1554,11 @@ describe Users::DossiersController, type: :controller do
       allow(DossierMailer).to receive(:notify_new_commentaire_to_instructeur).and_return(double(deliver_later: nil))
       instructeur_with_instant_message.follow(dossier)
       instructeur_without_instant_message.follow(dossier)
-      create(:assign_to, instructeur: instructeur_with_instant_message, procedure: procedure, instant_email_message_notifications_enabled: true)
-      create(:assign_to, instructeur: instructeur_without_instant_message, procedure: procedure, instant_email_message_notifications_enabled: false)
+      create(:instructeurs_procedure, instructeur: instructeur_with_instant_message, procedure: procedure, instant_email_new_message: true)
+      create(:instructeurs_procedure, instructeur: instructeur_without_instant_message, procedure: procedure, instant_email_new_message: false)
       another_procedure = create(:procedure, instructeurs: [instructeur_without_instant_message])
       instructeur_without_instant_message.follow(create(:dossier, :en_construction, user: user, procedure: another_procedure))
-      create(:assign_to, instructeur: instructeur_without_instant_message, procedure: create(:procedure), instant_email_message_notifications_enabled: true)
+      create(:instructeurs_procedure, instructeur: instructeur_without_instant_message, procedure: create(:procedure), instant_email_new_message: true)
     end
 
     context 'commentaire creation' do
@@ -1575,10 +1575,7 @@ describe Users::DossiersController, type: :controller do
       context 'when dossier is marked as waiting for response' do
         let(:instructeur_message) { create(:commentaire, dossier: dossier, instructeur: instructeur_with_instant_message) }
         let!(:pending_response) { create(:dossier_pending_response, dossier: dossier, commentaire: instructeur_message) }
-
-        before do
-          DossierNotification.create_notification(dossier, :attente_reponse)
-        end
+        let!(:notification) { create(:dossier_notification, instructeur: instructeur_with_instant_message, dossier:, notification_type: :attente_reponse) }
 
         it "marks pending response as responded when user responds" do
           expect {
@@ -1629,12 +1626,12 @@ describe Users::DossiersController, type: :controller do
       end
     end
 
-    context "when there are instructeurs followers" do
-      let!(:instructeur_not_follower) { create(:instructeur) }
-      let!(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur_with_instant_message, instructeur_without_instant_message, instructeur_not_follower]) }
+    context "when there are instructeurs who want a badge notification :message" do
+      let!(:instructeur_without_message_badge) { create(:instructeur) }
+      let!(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur_with_instant_message, instructeur_without_instant_message, instructeur_without_message_badge]) }
 
       before do
-        dossier.assign_to_groupe_instructeur(groupe_instructeur, DossierAssignment.modes.fetch(:auto))
+        dossier.update(groupe_instructeur:)
       end
 
       it "create message notification only for instructeur follower" do
