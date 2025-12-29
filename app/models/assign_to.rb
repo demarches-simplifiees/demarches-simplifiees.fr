@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
 class AssignTo < ApplicationRecord
-  self.ignored_columns += [
-    "instant_email_dossier_notifications_enabled",
-    "instant_email_message_notifications_enabled",
-    "instant_expert_avis_email_notifications_enabled",
-    "daily_email_notifications_enabled",
-    "weekly_email_notifications_enabled",
-  ]
-
   belongs_to :instructeur, optional: false
   belongs_to :groupe_instructeur, optional: false
   has_one :procedure_presentation, dependent: :destroy
