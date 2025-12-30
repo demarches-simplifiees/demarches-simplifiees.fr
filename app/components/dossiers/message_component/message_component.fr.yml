@@ -12,3 +12,6 @@ fr:
   read_label: Lu
   unread_label: Non lu
   applicant: Usager
+  alert_correction_title: Comment corriger mon dossier ?
+  alert_correction_description: Vous devez effectuer les modifications demandées en modifiant votre dossier.
+  alert_correction_cta: Modifier le dossier
