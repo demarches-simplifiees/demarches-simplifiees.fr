@@ -412,8 +412,16 @@ module Instructeurs
     end
 
     def email_notification_params
-      params.require(:instructeurs_procedure)
-        .permit(:instant_email_new_dossier, :instant_email_new_message, :instant_email_new_expert_avis, :daily_email_summary, :weekly_email_summary)
+      params.require(:instructeurs_procedure).permit(
+        :instant_email_new_dossier,
+        :instant_email_new_message,
+        :instant_email_new_expert_avis,
+        :instant_email_dossier_expiration,
+        :instant_email_dossier_expired,
+        :instant_email_dossier_deletion,
+        :daily_email_summary,
+        :weekly_email_summary
+      )
     end
 
     def assign_tos

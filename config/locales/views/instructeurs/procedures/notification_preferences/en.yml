@@ -30,21 +30,34 @@ en:
       email_preferences:
         flash_notice: Your notification email preferences have been saved.
         subtitle: On this page, configure the notifications you wish to receive by email for this procedure.
-        for_each_file_submitted:
-          title: Receive an email for each file submitted
-          notice: This email notifies you that a new file has been submitted. It is sent each time a user submits a file.
-        for_each_message_submitted:
-          title: Receive an email for each message submitted
-          notice: This email notifies you that a new message has been submitted on your following files. It is sent each time a user submits a message.
-        daily_notifications:
+        instant_email_new_dossier:
+          title: Receive an email for each file submitted by user
+          notice: This email notifies you that a new file has been submitted on this procedure.
+        instant_email_new_message:
+          title: Receive an email for each message submitted by user
+          notice: This email notifies you that a new message has been submitted by user, only on your following files.
+        daily_email_summary:
           title: Receive a daily recap
-          notice: This email notifies you of the filing of new files on this approach, or of changes to your monitored files. It is sent once a day, Monday to Saturday, around 10 a.m.
-        hebdo_recap:
+          notice: This email summarises the current status of the files involved in this procedure. It is sent once a day, Monday to Friday.
+        weekly_email_summary:
           title: Receive a weekly recap
-          notice: This email summarizes the activity of the week on all of your procedures. It is sent weekly on Monday morning.
-        avis_notifications:
+          notice: This email summarises the week's activity on the files related to this procedure. It is sent every Monday morning.
+        instant_email_new_expert_avis:
           title: Receive an email for each opinion issued by an expert
-          notice: This email notifies you of a new opinion posted by an expert you have consulted on a file. It is sent each time an expert issues an opinion.
+          notice: This email informs you that a new opinion has been sent by an expert you have consulted on a file.
+        instant_email_dossier_expiration:
+          title: Receive an email alerting me that files are close to expiration
+          notice: This email informs you that one or more files will soon expire. It is sent 14 days before the maximum retention period for a file is reached.
+        instant_email_dossier_expired:
+          title: Receive an email alerting me that expired files will soon be deleted
+          notice: This email informs you that one or more files have reached their maximum retention period and have been moved to the trash. It is sent 14 days before a file is permanently deleted. In the meantime, we recommend that you download these files or extend their retention period.
+        instant_email_dossier_deletion:
+          title: Receive an email informing me that a user has deleted their file
+          notice: This email informs you that a file « en construction » that you were following has been deleted at the user's request. You will therefore no longer have access to it.
+        warning_notice:
+          title: Caution
+          desc_expiration: When this option is disabled, you will no longer receive alerts about files expiring before they are automatically moved to the trash.
+          desc_expired: When this option is disabled, you will no longer receive alerts about the upcoming permanent deletion of files. Be sure to download them or extend their retention period before they are permanently deleted.
       apercu:
         title_with_libelle: Preview of « %{libelle} »
         title: Procedure preview
