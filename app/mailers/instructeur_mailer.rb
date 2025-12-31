@@ -58,21 +58,4 @@ class InstructeurMailer < ApplicationMailer
   def self.critical_email?(action_name)
     action_name.in?(["send_login_token", "trusted_device_token_renewal"])
   end
-
-  def confirm_and_notify_added_instructeur(instructeur, group, current_instructeur_email)
-    @instructeur = instructeur
-    @group = group
-    @current_instructeur_email = current_instructeur_email
-    @reset_password_token = instructeur.user.send(:set_reset_password_token)
-
-    subject = if group.procedure.groupe_instructeurs.many?
-      "Vous avez été ajouté(e) au groupe \"#{group.label}\" de la démarche \"#{group.procedure.libelle}\""
-    else
-      "Vous avez été affecté(e) à la démarche \"#{group.procedure.libelle}\""
-    end
-
-    bypass_unverified_mail_protection!
-
-    mail(to: instructeur.email, subject: subject)
-  end
 end
