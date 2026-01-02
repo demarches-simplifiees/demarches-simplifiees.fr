@@ -35,7 +35,7 @@ class LLM::SuggestionFormComponent < ApplicationComponent
     case rule
     when LLMRuleSuggestion.rules.fetch('improve_structure')
       LLM::SuggestionOrderingService.ordered_structure_suggestions(llm_rule_suggestion)
-    when LLMRuleSuggestion.rules.fetch('improve_label')
+    when LLMRuleSuggestion.rules.fetch('improve_label'), LLMRuleSuggestion.rules.fetch('improve_types'), LLMRuleSuggestion.rules.fetch('cleaner')
       LLM::SuggestionOrderingService.ordered_label_suggestions(llm_rule_suggestion)
     else
       raise "Unknown rule: #{rule}"
@@ -81,12 +81,32 @@ class LLM::SuggestionFormComponent < ApplicationComponent
     ])
   end
 
+  def tunnel_first_step
+    @tunnel_first_step ||= LLMRuleSuggestion
+      .where(
+        procedure_revision_id: llm_rule_suggestion.procedure_revision_id,
+        rule: LLMRuleSuggestion::RULE_SEQUENCE.first
+      )
+      .order(created_at: :desc)
+      .first
+  end
+
+  def tunnel_last_step_finished
+    @tunnel_last_step ||= LLMRuleSuggestion
+      .where(procedure_revision_id: llm_rule_suggestion.procedure_revision_id)
+      .where(rule: llm_rule_suggestion.rule)
+      .where(state: ['accepted', 'skipped'])
+      .where('created_at > ?', tunnel_first_step.created_at)
+      .order(created_at: :desc)
+      .first
+  end
+
   def last_rule?
     LLMRuleSuggestion.last_rule?(llm_rule_suggestion.rule)
   end
 
   def stepper_finished?
-    llm_rule_suggestion.finished? && last_rule?
+    tunnel_first_step.present? && tunnel_last_step_finished.present?
   end
 
   def should_poll?
