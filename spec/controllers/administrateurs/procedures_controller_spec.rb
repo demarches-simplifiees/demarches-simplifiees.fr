@@ -14,7 +14,7 @@ describe Administrateurs::ProceduresController, type: :controller do
   let(:description) { 'Description de test' }
   let(:organisation) { 'Organisation de test' }
   let(:ministere) { create(:zone) }
-  let(:cadre_juridique) { 'cadre juridique' }
+  let(:cadre_juridique) { "https://www.legifrance.gouv.fr" }
   let(:duree_conservation_dossiers_dans_ds) { 3 }
   let(:monavis_embed) { nil }
   let(:lien_site_web) { 'http://mon-site.gouv.fr' }
