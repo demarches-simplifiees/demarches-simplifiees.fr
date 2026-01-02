@@ -58,6 +58,7 @@ en:
           cojo: 'Accreditation Paris 2024'
           formatted: 'Formatted field'
           referentiel: 'External data to configure (advanced)'
+          quotient_familial: 'Family quotient (FranceConnect)'
         default_libelle:
           annuaire_education: Educational institution
           dossier_link: File number submitted on %{app_name}

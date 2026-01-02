@@ -63,6 +63,7 @@ class TypeDeChamp < ApplicationRecord
     pole_emploi: REFERENTIEL_EXTERNE,
     mesri: REFERENTIEL_EXTERNE,
     cojo: REFERENTIEL_EXTERNE,
+    quotient_familial: REFERENTIEL_EXTERNE,
   }
 
   enum :type_champ, {
@@ -107,6 +108,7 @@ class TypeDeChamp < ApplicationRecord
     epci: 'epci',
     cojo: 'cojo',
     referentiel: 'referentiel',
+    quotient_familial: 'quotient_familial',
   }
 
   enum :nature, {

@@ -58,6 +58,7 @@ fr:
           cojo: 'Accréditation Paris 2024'
           formatted: Champ formaté
           referentiel: 'Référentiel configurable (avancé)'
+          quotient_familial: 'Quotient familial (FranceConnect)'
         default_libelle:
           annuaire_education: Établissement
           communes: Commune
