@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 class FranceConnectService
+  UPDATABLE_FRANCE_CONNECT_CLAIMS = [
+    :birthdate,
+    :birthplace,
+    :email_france_connect,
+    :family_name,
+    :gender,
+    :given_name,
+    :birthcountry,
+  ].freeze
+
   def self.enabled?
     ENV.fetch("FRANCE_CONNECT_ENABLED", "enabled") == "enabled"
   end
@@ -12,7 +22,7 @@ class FranceConnectService
     nonce = SecureRandom.alphanumeric(32)
 
     uri = client.authorization_uri(
-      scope: [:profile, :email],
+      scope: [:identite_pivot, :email],
       state:,
       nonce:,
       acr_values: 'eidas1'
@@ -23,8 +33,16 @@ class FranceConnectService
 
   def self.find_or_retrieve_france_connect_information(code, nonce)
     fetched_fci, id_token = retrieve_user_informations(code, nonce)
-    fci_to_return = FranceConnectInformation.find_by(france_connect_particulier_id: fetched_fci[:france_connect_particulier_id]) || fetched_fci
-    [fci_to_return, id_token]
+
+    fci = FranceConnectInformation.find_or_initialize_by(
+      france_connect_particulier_id: fetched_fci.france_connect_particulier_id
+    )
+
+    fci.assign_attributes(fetched_fci.slice(*UPDATABLE_FRANCE_CONNECT_CLAIMS))
+
+    fci.save! if fci.changed?
+
+    [fci, id_token]
   end
 
   def self.logout_url(id_token:, state:, callback:)
@@ -53,6 +71,7 @@ class FranceConnectService
       email_france_connect: user_info[:email],
       birthdate: user_info[:birthdate],
       birthplace: user_info[:birthplace],
+      birthcountry: user_info[:birthcountry],
       france_connect_particulier_id: user_info[:sub]
     )
 
