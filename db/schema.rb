@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_21_091000) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_02_083858) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -753,6 +753,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_21_091000) do
   end
 
   create_table "france_connect_informations", id: :serial, force: :cascade do |t|
+    t.string "birthcountry"
     t.date "birthdate"
     t.string "birthplace"
     t.datetime "created_at", precision: nil, null: false
