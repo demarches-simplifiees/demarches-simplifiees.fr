@@ -106,7 +106,9 @@ module ProcedureCloneConcern
 
     if !procedure.valid?
       procedure.errors.attribute_names.each do |attribute|
-        next if [:notice, :deliberation, :logo].exclude?(attribute)
+        # cadre_juridique: legacy data may contain non-URL values
+        # that were valid before URL validation was added on :create
+        next if [:notice, :cadre_juridique, :deliberation, :logo].exclude?(attribute)
         procedure.public_send("#{attribute}=", nil)
       end
     end

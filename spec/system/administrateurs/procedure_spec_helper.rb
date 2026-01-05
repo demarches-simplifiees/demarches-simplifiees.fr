@@ -5,7 +5,7 @@ module ProcedureSpecHelper
     fill_in 'procedure_libelle', with: 'libelle de la procedure'
     fill_in 'procedure_description', with: "description de l'objet de la procedure"
     fill_in 'procedure_description_target_audience', with: "description d'à qui s'adresse la procedure"
-    fill_in 'procedure_cadre_juridique', with: 'cadre juridique'
+    fill_in 'procedure_cadre_juridique', with: 'https://www.legifrance.gouv.fr'
     fill_in 'procedure_duree_conservation_dossiers_dans_ds', with: '3'
   end
 end

@@ -301,7 +301,8 @@ describe Procedure do
     context 'juridique' do
       it do
         is_expected.not_to allow_value(nil).on(:publication).for(:cadre_juridique)
-        is_expected.to allow_value('text').on(:publication).for(:cadre_juridique)
+        is_expected.not_to allow_value("script").on(:publication).for(:cadre_juridique)
+        is_expected.to allow_value('https://legifrance.gouv.fr').on(:publication).for(:cadre_juridique)
       end
 
       context 'with deliberation' do
@@ -330,6 +331,38 @@ describe Procedure do
         let(:procedure) { build(:procedure, juridique_required: false, cadre_juridique: nil) }
 
         it { expect(procedure.valid?(:publication)).to eq(true) }
+      end
+
+      describe 'url validation on create' do
+        let(:procedure) { build(:procedure, cadre_juridique:) }
+
+        context 'when valid link' do
+          let(:cadre_juridique) { 'https://www.legifrance.gouv.fr' }
+          it { expect(procedure.valid?(:create)).to be_truthy }
+        end
+
+        context 'when not a valid link' do
+          let(:cadre_juridique) { 'Loi du 6 janvier 1978' }
+          it do
+            expect(procedure.valid?(:create)).to be_falsey
+            expect(procedure.valid?(:publication)).to be_falsey
+          end
+        end
+
+        context 'when empty with deliberation attached' do
+          let(:cadre_juridique) { '' }
+          before { procedure.deliberation.attach(io: StringIO.new('test'), filename: 'deliberation.pdf', content_type: 'application/pdf') }
+          it { expect(procedure.valid?(:create)).to be_truthy }
+        end
+      end
+
+      describe 'no url validation on update (legacy data)' do
+        let(:procedure) { create(:procedure) }
+
+        it 'allows non-URL values on update for existing procedures' do
+          procedure.cadre_juridique = 'Décret n° 2019-1088'
+          expect(procedure.valid?).to be_truthy
+        end
       end
     end
 
@@ -1307,7 +1340,7 @@ describe Procedure do
 
       expect(p.juridique_required).to be_falsey
 
-      p.update(cadre_juridique: 'cadre')
+      p.update(cadre_juridique: 'https://legifrance.gouv.fr')
       expect(p.juridique_required).to be_truthy
 
       p.update(cadre_juridique: nil)
@@ -1317,9 +1350,8 @@ describe Procedure do
       p.reload
       expect(p.juridique_required).to be_falsey
 
-      @deliberation = fixture_file_upload('spec/fixtures/files/file.pdf', 'application/pdf')
-      p.update(deliberation: @deliberation)
-      p.reload
+      p.deliberation = fixture_file_upload('spec/fixtures/files/file.pdf', 'application/pdf')
+      p.save
       expect(p.juridique_required).to be_truthy
     end
   end
