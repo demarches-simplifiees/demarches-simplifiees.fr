@@ -3,9 +3,10 @@ en:
   reply: Reply
   guest: Guest
   delete_button: Delete this message
-  delete_with_correction_button: Delete the correction request and this message
   delete_with_response_button: Delete the pending response message
+  cancel_correction_button: Cancel the correction request
   confirm: Are you sure you want to delete this message ?
+  confirm_cancel_correction: Are you sure you want to cancel the correction request? The message will remain visible.
   automatic_email: Automatic email
   you: You
   deleted_body: Message deleted

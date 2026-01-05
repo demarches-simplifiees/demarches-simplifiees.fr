@@ -3,9 +3,10 @@ fr:
   reply: Répondre
   guest: Invité
   delete_button: Supprimer le message
-  delete_with_correction_button: Supprimer la demande de correction et ce message
   delete_with_response_button: Supprimer le message en attente de réponse
+  cancel_correction_button: Annuler la demande de correction
   confirm: Êtes-vous sûr de vouloir supprimer ce message ?
+  confirm_cancel_correction: Êtes-vous sûr de vouloir annuler la demande de correction ? Le message restera visible.
   automatic_email: Email automatique
   you: Vous
   deleted_body: Message supprimé
