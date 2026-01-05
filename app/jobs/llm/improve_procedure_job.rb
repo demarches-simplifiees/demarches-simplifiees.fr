@@ -11,9 +11,13 @@ module LLM
       procedure_revision = procedure.draft_revision
       schema_hash = Digest::SHA256.hexdigest(procedure_revision.schema_to_llm.to_json)
 
-      suggestion = LLMRuleSuggestion.find_or_initialize_by(procedure_revision:, schema_hash:, rule:)
+      suggestion = LLMRuleSuggestion
+        .where(procedure_revision:, schema_hash:, rule:)
+        .first
 
-      return if suggestion.persisted? && !suggestion.failed?
+      return if suggestion&.persisted? && !suggestion&.failed?
+
+      suggestion ||= LLMRuleSuggestion.new(procedure_revision:, schema_hash:, rule:)
       suggestion.state = :queued
       suggestion.save!
       LLM::GenerateRuleSuggestionJob.perform_later(suggestion, action:, user_id:)

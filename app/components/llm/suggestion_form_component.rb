@@ -23,8 +23,12 @@ class LLM::SuggestionFormComponent < ApplicationComponent
     procedure_revision.types_de_champ.index_by(&:stable_id)
   end
 
-  def back_link
-    helpers.admin_procedure_path(procedure)
+  def restart_link
+    helpers.simplify_admin_procedure_types_de_champ_path(procedure, rule: 'improve_label')
+  end
+
+  def next_link
+    helpers.simplify_admin_procedure_types_de_champ_path(procedure, rule: LLMRuleSuggestion.next_rule(rule))
   end
 
   def suggestions_count
@@ -75,6 +79,10 @@ class LLM::SuggestionFormComponent < ApplicationComponent
     t(".states.#{llm_rule_suggestion.state}")
   end
 
+  def back_link
+    helpers.admin_procedure_path(procedure)
+  end
+
   def display_message
     safe_join([
       llm_rule_suggestion.state.in?(['pending', 'failed', 'accepted', 'skipped']) ? tag.p(class: '') { t(".states.#{llm_rule_suggestion.state}") } : nil,
@@ -94,7 +102,7 @@ class LLM::SuggestionFormComponent < ApplicationComponent
   def tunnel_last_step_finished
     @tunnel_last_step ||= LLMRuleSuggestion
       .where(procedure_revision_id: llm_rule_suggestion.procedure_revision_id)
-      .where(rule: llm_rule_suggestion.rule)
+      .where(rule: 'cleaner')
       .where(state: ['accepted', 'skipped'])
       .where('created_at > ?', tunnel_first_step.created_at)
       .order(created_at: :desc)
@@ -106,7 +114,7 @@ class LLM::SuggestionFormComponent < ApplicationComponent
   end
 
   def stepper_finished?
-    tunnel_first_step.present? && tunnel_last_step_finished.present?
+    tunnel_first_step.present? && tunnel_last_step_finished.present? && last_rule?
   end
 
   def should_poll?

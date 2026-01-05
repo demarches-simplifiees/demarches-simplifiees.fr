@@ -12,7 +12,7 @@ RSpec.describe LLM::SuggestionFormComponent, type: :component do
     context 'when state is queued' do
       let(:state) { 'queued' }
 
-      it "afficher en attente (delai d'attente dans la queue)" do
+      it 'shows waiting message' do
         expect(subject).to have_content("Recherche en cours")
         expect(subject).not_to have_css("button[value='Lancer la recherche de suggestions']")
       end
@@ -20,9 +20,17 @@ RSpec.describe LLM::SuggestionFormComponent, type: :component do
     context 'when state is running' do
       let(:state) { 'running' }
 
-      it "afficher en attente (delai de ± 40 secs?)" do
+      it 'shows waiting message' do
         expect(subject).to have_content("Recherche en cours")
         expect(subject).not_to have_css("button[value='Lancer la recherche de suggestions']")
+      end
+    end
+
+    context 'when state is pending' do
+      let(:state) { 'pending' }
+
+      it 'shows status message and launch button' do
+        expect(subject).to have_button("Lancer la recherche de suggestions")
       end
     end
 
@@ -72,7 +80,7 @@ RSpec.describe LLM::SuggestionFormComponent, type: :component do
     context 'when state is failed' do
       let(:state) { 'failed' }
 
-      it "echouer, afficher l'erreur et pouvoir relancer" do
+      it 'shows error message and retry button' do
         expect(subject).to have_content("La génération des suggestions a echoué, veuillez ré-essayer")
         expect(subject).to have_button("Regénérer les suggestions")
       end
@@ -80,17 +88,70 @@ RSpec.describe LLM::SuggestionFormComponent, type: :component do
     context 'when state is accepted' do
       let(:state) { 'accepted' }
 
-      it "si accepté, dire que ca a ete fait mais on peut relancer?" do
-        expect(subject).to have_content("Vous avez déjà accepté des suggestions, vous pouvez les regénérer")
-        expect(subject).to have_button("Regénérer les suggestions")
+      it 'shows accepted message and continue link' do
+        expect(subject).to have_text("Vous avez déjà")
+        expect(subject).to have_text("accepté")
+        expect(subject).to have_link("Poursuivre le parcours d'amélioration")
       end
     end
     context 'when state is skipped' do
       let(:state) { 'skipped' }
 
-      it "si skipé, dire que ca a ete fait mais on peut relancer?" do
-        expect(subject).to have_content("Vous avez déjà ignoré des suggestions, souhaitez-vous en regénérer ?")
-        expect(subject).to have_button("Regénérer les suggestions")
+      it 'shows skipped message and continue link' do
+        expect(subject).to have_text("Vous avez déjà")
+        expect(subject).to have_text("ignoré")
+        expect(subject).to have_link("Poursuivre le parcours d'amélioration")
+      end
+    end
+  end
+
+  describe '#stepper_finished?' do
+    let(:state) { 'accepted' }
+    let(:component) { described_class.new(llm_rule_suggestion: llm_rule_suggestion) }
+
+    context 'when tunnel is complete' do
+      let(:rule) { LLMRuleSuggestion.rules.fetch('cleaner') }
+      let!(:first_step) do
+        create(:llm_rule_suggestion,
+          procedure_revision: procedure.draft_revision,
+          rule: LLMRuleSuggestion::RULE_SEQUENCE.first,
+          state: 'accepted',
+          created_at: 2.days.ago)
+      end
+
+      it 'returns true' do
+        expect(component.stepper_finished?).to be true
+      end
+    end
+
+    context 'when tunnel_first_step is missing' do
+      let(:rule) { LLMRuleSuggestion.rules.fetch('cleaner') }
+
+      it 'returns false' do
+        expect(component.stepper_finished?).to be false
+      end
+    end
+
+    context 'when tunnel_last_step_finished is missing' do
+      let(:rule) { LLMRuleSuggestion.rules.fetch('improve_label') }
+
+      it 'returns false' do
+        expect(component.stepper_finished?).to be false
+      end
+    end
+
+    context 'when not on last rule' do
+      let(:rule) { LLMRuleSuggestion.rules.fetch('improve_label') }
+      let!(:first_step) do
+        create(:llm_rule_suggestion,
+          procedure_revision: procedure.draft_revision,
+          rule: LLMRuleSuggestion::RULE_SEQUENCE.first,
+          state: 'accepted',
+          created_at: 2.days.ago)
+      end
+
+      it 'returns false' do
+        expect(component.stepper_finished?).to be false
       end
     end
   end
