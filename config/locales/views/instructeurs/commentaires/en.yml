@@ -5,3 +5,7 @@ en:
         notice: Your message had been deleted
         alert_acl: "Can not destroy message: it does not belong to you"
         alert_already_discarded: "Can not destroy message: it was already destroyed"
+      cancel_correction:
+        notice: The correction request has been cancelled
+        alert_acl: "Unable to cancel the correction request: this message does not belong to you"
+        alert_no_pending_correction: No pending correction request

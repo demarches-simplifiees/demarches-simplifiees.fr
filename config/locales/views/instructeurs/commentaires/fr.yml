@@ -5,3 +5,7 @@ fr:
         notice: Votre message a été supprimé
         alert_acl: Impossible de supprimer le message, celui-ci ne vous appartient pas
         alert_already_discarded: Ce message a déjà été supprimé
+      cancel_correction:
+        notice: La demande de correction a été annulée
+        alert_acl: Impossible d'annuler la demande de correction, ce message ne vous appartient pas
+        alert_no_pending_correction: Aucune demande de correction en attente
