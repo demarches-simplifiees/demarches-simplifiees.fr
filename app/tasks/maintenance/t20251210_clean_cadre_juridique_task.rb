@@ -19,7 +19,7 @@ module Maintenance
     end
 
     def process(procedure)
-      return unless invalid?(procedure.cadre_juridique)
+      return unless invalid_value?(procedure.cadre_juridique)
 
       Rails.logger.info("Cleaning cadre_juridique for procedure #{procedure.id}, original value: #{procedure.cadre_juridique}")
       procedure.update_column(:cadre_juridique, nil)
@@ -31,7 +31,7 @@ module Maintenance
 
     private
 
-    def invalid?(value)
+    def invalid_value?(value)
       return false if value.blank?
 
       PATTERNS.any? { |pattern| value.match?(pattern) }
