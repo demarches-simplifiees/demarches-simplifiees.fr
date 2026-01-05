@@ -41,13 +41,24 @@ RSpec.describe Instructeurs::InstructionMenuComponent, type: :component do
 
   context 'en_instruction' do
     let(:dossier) { create(:dossier, :en_instruction) }
-
     it 'renders a dropdown' do
       expect(subject).to have_dropdown_title('Instruire le dossier')
       expect(subject).to have_dropdown_items(count: 3)
       expect(subject).to have_dropdown_item('Accepter')
       expect(subject).to have_dropdown_item('Classer sans suite')
       expect(subject).to have_dropdown_item('Refuser')
+      expect(subject).to have_selector('#alert-error-annotation', text: "Les annotations privées n'ont pas été renseignées correctement et sont nécessaire pour apporter une décision sur le dossier.", visible: false)
+    end
+  end
+
+  context 'en_instruction with annotations privees mandatory' do
+    let(:procedure) { create(:procedure, types_de_champ_private:) }
+    let(:dossier) { create(:dossier, :en_instruction, procedure:) }
+    let(:types_de_champ_public) { [] }
+    let(:types_de_champ_private)  { [{ type: :text, mandatory: true }] }
+
+    it 'renders an alert if annotations privees are not valid' do
+      expect(subject).to have_selector('#alert-error-annotation', text: "Les annotations privées n'ont pas été renseignées correctement et sont nécessaire pour apporter une décision sur le dossier.", visible: true)
     end
   end
 end

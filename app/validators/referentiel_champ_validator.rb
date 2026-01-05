@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ReferentielChampValidator < ActiveModel::Validator
-  # case required, delegated to check_mandatory_and_visible_champs
+  # case required, delegated to check_mandatory_and_visible_champs_public
   def validate(record)
     if record.pending? # user filled the field, but background job is still running / pending
       record.errors.add(:value, :api_response_pending)

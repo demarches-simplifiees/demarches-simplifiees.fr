@@ -15,7 +15,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   delegate :type_de_champ, :revision, :procedure, to: :coordinate
 
   def can_be_mandatory?
-    type_de_champ.public? && !type_de_champ.non_fillable?
+    !type_de_champ.non_fillable?
   end
 
   def type_de_champ_path

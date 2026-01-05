@@ -53,6 +53,7 @@ describe ProcedureRevision do
         expect(draft.types_de_champ_private.last).to eq(subject)
         expect(draft.revision_types_de_champ_private.map(&:position)).to eq([0, 1])
         expect(last_coordinate.position).to eq(1)
+        expect(draft.types_de_champ_private.last.mandatory).to be_falsey
       end
     end
 
