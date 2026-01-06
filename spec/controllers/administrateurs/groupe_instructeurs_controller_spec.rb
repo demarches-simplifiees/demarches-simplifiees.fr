@@ -180,16 +180,10 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
           id: gi_1_2.id,
         }
     end
-    def reaffecter_url(group)
-      reaffecter_admin_procedure_groupe_instructeur_path(:id => gi_1_2,
-                                                    :target_group => group)
-    end
 
-    it 'checks response and body content for specific conditions' do
+    it 'checks response and body content' do
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include(reaffecter_url(procedure.defaut_groupe_instructeur))
-      expect(response.body).not_to include(reaffecter_url(gi_1_2))
-      expect(response.body).to include(reaffecter_url(gi_1_3))
+      expect(response.body).to include("Le groupe « deuxième groupe » contient des dossiers. Afin de procéder à sa suppression, vous devez réaffecter ses dossiers à lʼun des 2 autres groupes instructeurs")
     end
   end
 

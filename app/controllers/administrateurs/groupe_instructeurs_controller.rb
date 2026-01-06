@@ -212,8 +212,7 @@ module Administrateurs
     def reaffecter_dossiers
       @procedure = procedure
       @groupe_instructeur = groupe_instructeur
-      @groupes_instructeurs = paginated_groupe_instructeurs
-        .without_group(@groupe_instructeur)
+      @groupes_instructeurs = @groupe_instructeur.other_groupe_instructeurs
     end
 
     def reaffecter
