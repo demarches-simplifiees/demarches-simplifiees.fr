@@ -13,23 +13,15 @@ RSpec.describe LLMRuleSuggestion, type: :model do
     expect(subject).to define_enum_for(:rule).with_values(improve_label: 'improve_label', improve_structure: 'improve_structure', improve_types: 'improve_types', cleaner: 'cleaner').backed_by_column_of_type(:string)
   end
 
-  describe '.next_rule' do
-    it 'returns improve_structure after improve_label' do
-      expect(LLMRuleSuggestion.next_rule('improve_label')).to eq('improve_structure')
+  describe 'LLM::Rule delegation' do
+    it 'delegates next_rule to LLM::Rule' do
+      expect(LLM::Rule.next_rule('improve_label')).to eq('improve_structure')
+      expect(LLM::Rule.next_rule(LLM::Rule::SEQUENCE.last)).to be_nil
     end
 
-    it 'returns nil after cleaner' do
-      expect(LLMRuleSuggestion.next_rule('cleaner')).to be_nil
-    end
-  end
-
-  describe '.last_rule?' do
-    it 'returns false for improve_label' do
-      expect(LLMRuleSuggestion.last_rule?('improve_label')).to be false
-    end
-
-    it 'returns true for cleaner' do
-      expect(LLMRuleSuggestion.last_rule?('cleaner')).to be true
+    it 'delegates last? to LLM::Rule' do
+      expect(LLM::Rule.last?('improve_label')).to be false
+      expect(LLM::Rule.last?(LLM::Rule::SEQUENCE.last)).to be true
     end
   end
 

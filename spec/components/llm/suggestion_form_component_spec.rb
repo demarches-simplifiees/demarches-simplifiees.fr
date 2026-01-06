@@ -110,7 +110,7 @@ RSpec.describe LLM::SuggestionFormComponent, type: :component do
     let(:component) { described_class.new(llm_rule_suggestion: llm_rule_suggestion) }
 
     context 'when tunnel is complete' do
-      let(:rule) { LLMRuleSuggestion.rules.fetch('cleaner') }
+      let(:rule) { LLMRuleSuggestion.rules.fetch(LLM::Rule::SEQUENCE.last) }
       let!(:first_step) do
         create(:llm_rule_suggestion,
           procedure_revision: procedure.draft_revision,
@@ -125,7 +125,7 @@ RSpec.describe LLM::SuggestionFormComponent, type: :component do
     end
 
     context 'when tunnel_first_step is missing' do
-      let(:rule) { LLMRuleSuggestion.rules.fetch('cleaner') }
+      let(:rule) { LLMRuleSuggestion.rules.fetch(LLM::Rule::SEQUENCE.last) }
 
       it 'returns false' do
         expect(component.stepper_finished?).to be false

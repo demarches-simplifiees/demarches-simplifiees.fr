@@ -16,7 +16,7 @@ class LLM::SuggestionFormComponent < ApplicationComponent
   end
 
   def item_component
-    LLMRuleSuggestion.item_component_class_for(rule)
+    LLM::Rule.new(rule).component_class
   end
 
   def prtdcs
@@ -28,7 +28,7 @@ class LLM::SuggestionFormComponent < ApplicationComponent
   end
 
   def next_link
-    helpers.simplify_admin_procedure_types_de_champ_path(procedure, rule: LLMRuleSuggestion.next_rule(rule))
+    helpers.simplify_admin_procedure_types_de_champ_path(procedure, rule: LLM::Rule.next_rule(rule))
   end
 
   def suggestions_count
@@ -36,14 +36,7 @@ class LLM::SuggestionFormComponent < ApplicationComponent
   end
 
   def ordered_llm_rule_suggestion_items
-    case rule
-    when LLMRuleSuggestion.rules.fetch('improve_structure')
-      LLM::SuggestionOrderingService.ordered_structure_suggestions(llm_rule_suggestion)
-    when LLMRuleSuggestion.rules.fetch('improve_label'), LLMRuleSuggestion.rules.fetch('improve_types'), LLMRuleSuggestion.rules.fetch('cleaner')
-      LLM::SuggestionOrderingService.ordered_label_suggestions(llm_rule_suggestion)
-    else
-      raise "Unknown rule: #{rule}"
-    end
+    LLM::Rule.new(rule).ordered_items(llm_rule_suggestion)
   end
 
   def enqueue_button_text
@@ -102,7 +95,7 @@ class LLM::SuggestionFormComponent < ApplicationComponent
   end
 
   def last_rule?
-    LLMRuleSuggestion.last_rule?(llm_rule_suggestion.rule)
+    LLM::Rule.last?(llm_rule_suggestion.rule)
   end
 
   def stepper_finished?

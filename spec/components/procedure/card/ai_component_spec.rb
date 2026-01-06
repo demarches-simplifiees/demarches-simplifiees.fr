@@ -37,13 +37,13 @@ RSpec.describe Procedure::Card::AiComponent, type: :component do
       before do
         create(:llm_rule_suggestion,
           procedure_revision: draft_revision,
-          rule: 'cleaner',
+          rule: LLM::Rule::SEQUENCE.last,
           state: 'accepted',
           schema_hash: schema_hash)
       end
 
       it 'returns cleaner' do
-        expect(subject.next_rule).to eq('cleaner')
+        expect(subject.next_rule).to eq(LLM::Rule::SEQUENCE.last)
       end
     end
 
@@ -58,7 +58,7 @@ RSpec.describe Procedure::Card::AiComponent, type: :component do
       end
 
       it 'returns the next rule in sequence' do
-        expect(subject.next_rule).to eq(LLMRuleSuggestion.next_rule('improve_label'))
+        expect(subject.next_rule).to eq(LLM::Rule.next_rule('improve_label'))
       end
     end
   end
@@ -71,7 +71,7 @@ RSpec.describe Procedure::Card::AiComponent, type: :component do
       before do
         create(:llm_rule_suggestion,
           procedure_revision: draft_revision,
-          rule: 'cleaner',
+          rule: LLM::Rule::SEQUENCE.last,
           state: 'accepted',
           schema_hash: schema_hash)
       end
@@ -85,7 +85,7 @@ RSpec.describe Procedure::Card::AiComponent, type: :component do
       before do
         create(:llm_rule_suggestion,
           procedure_revision: draft_revision,
-          rule: 'cleaner',
+          rule: LLM::Rule::SEQUENCE.last,
           state: 'skipped',
           schema_hash: schema_hash)
       end
@@ -105,7 +105,7 @@ RSpec.describe Procedure::Card::AiComponent, type: :component do
       before do
         create(:llm_rule_suggestion,
           procedure_revision: draft_revision,
-          rule: 'cleaner',
+          rule: LLM::Rule::SEQUENCE.last,
           state: 'completed',
           schema_hash: schema_hash)
       end
@@ -141,7 +141,7 @@ RSpec.describe Procedure::Card::AiComponent, type: :component do
       end
 
       context 'when last rule is not finished' do
-        let(:rule) { 'cleaner' }
+        let(:rule) { LLM::Rule::SEQUENCE.last }
         let(:state) { :completed }
         let!(:first_rule) do
           create(:llm_rule_suggestion,
@@ -155,18 +155,18 @@ RSpec.describe Procedure::Card::AiComponent, type: :component do
         it do
           render_inline(subject)
           expect(page).to have_css('.fr-badge--warning', text: 'À faire')
-          expect(page.all("a").map { it['href'] }).to include(simplify_admin_procedure_types_de_champ_path(procedure, rule: 'cleaner'))
+          expect(page.all("a").map { it['href'] }).to include(simplify_admin_procedure_types_de_champ_path(procedure, rule: LLM::Rule::SEQUENCE.last))
         end
       end
 
       context 'when last rule is done' do
-        let(:rule) { 'cleaner' }
+        let(:rule) { LLM::Rule::SEQUENCE.last }
         let(:state) { :accepted }
 
         it do
           render_inline(subject)
           expect(page).to have_css('.fr-badge--success', text: 'Amélioré')
-          expect(page.all("a").map { it['href'] }).to include(simplify_admin_procedure_types_de_champ_path(procedure, rule: 'cleaner'))
+          expect(page.all("a").map { it['href'] }).to include(simplify_admin_procedure_types_de_champ_path(procedure, rule: LLM::Rule::SEQUENCE.last))
         end
       end
 
@@ -204,7 +204,7 @@ RSpec.describe Procedure::Card::AiComponent, type: :component do
       end
 
       context 'when last rule is queued' do
-        let(:rule) { 'cleaner' }
+        let(:rule) { LLM::Rule::SEQUENCE.last }
         let(:state) { :queued }
 
         it 'shows À faire badge and links to first rule (queued not considered finished)' do

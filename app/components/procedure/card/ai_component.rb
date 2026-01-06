@@ -18,10 +18,10 @@ class Procedure::Card::AiComponent < ApplicationComponent
   def next_rule
     if tunnel_last_llm_rule_suggestion.nil?
       'improve_label'
-    elsif tunnel_last_llm_rule_suggestion&.finished? && tunnel_last_llm_rule_suggestion.rule == 'cleaner'
-      'cleaner'
+    elsif tunnel_last_llm_rule_suggestion&.finished? && tunnel_last_llm_rule_suggestion.rule == LLM::Rule::SEQUENCE.last
+      LLM::Rule::SEQUENCE.last
     else
-      LLMRuleSuggestion.next_rule(tunnel_last_llm_rule_suggestion.rule) || 'improve_label'
+      LLM::Rule.next_rule(tunnel_last_llm_rule_suggestion.rule) || 'improve_label'
     end
   end
 
@@ -32,7 +32,7 @@ class Procedure::Card::AiComponent < ApplicationComponent
   def any_tunnel_finished?
     @any_tunnel_finished ||= procedure
       .llm_rule_suggestions
-      .exists?(rule: LLMRuleSuggestion::RULE_SEQUENCE.last, state: ['accepted', 'skipped'])
+      .exists?(rule: LLM::Rule::SEQUENCE.last, state: ['accepted', 'skipped'])
   end
 
   def tunnel_last_llm_rule_suggestion

@@ -10,7 +10,7 @@
     <%= render LLM::HeaderComponent.new(llm_rule_suggestion: @llm_rule_suggestion) %>
   <% end %>
 
-  <% if LLMRuleSuggestion.last_rule?(@llm_rule_suggestion.rule) || true %>
+  <% if LLM::Rule.last?(@llm_rule_suggestion.rule) || true %>
     <%= render Dsfr::AlertComponent.new(state: :success) do |component| %>
       <% component.with_body do %>
         <p>

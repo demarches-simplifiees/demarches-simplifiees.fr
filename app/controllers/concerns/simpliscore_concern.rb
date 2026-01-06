@@ -21,11 +21,11 @@ module SimpliscoreConcern
       tunnel_complete = tunnel.final_step.present?
 
       if !tunnel_complete && last_completed
-        requested_rule_index = LLMRuleSuggestion::RULE_SEQUENCE.index(rule)
-        last_completed_index = LLMRuleSuggestion::RULE_SEQUENCE.index(last_completed.rule)
+        requested_rule_index = LLM::Rule::SEQUENCE.index(rule)
+        last_completed_index = LLM::Rule::SEQUENCE.index(last_completed.rule)
 
         if requested_rule_index && last_completed_index && requested_rule_index <= last_completed_index
-          next_rule = LLMRuleSuggestion.next_rule(last_completed.rule)
+          next_rule = LLM::Rule.next_rule(last_completed.rule)
           if next_rule
             redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: next_rule) and return
           end
@@ -77,12 +77,12 @@ module SimpliscoreConcern
           end
         end
 
-        next_rule = LLMRuleSuggestion.next_rule(@llm_rule_suggestion.rule)
+        next_rule = LLM::Rule.next_rule(@llm_rule_suggestion.rule)
 
         if next_rule
           redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: next_rule), notice: "Parfait, continuons"
         else
-          redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: LLMRuleSuggestion::RULE_SEQUENCE.last), notice: "Toutes les suggestions ont été examinées"
+          redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: LLM::Rule::SEQUENCE.last), notice: "Toutes les suggestions ont été examinées"
         end
       end
     end

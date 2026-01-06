@@ -464,7 +464,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'accepted', rule: rule) }
 
       it 'redirects to next rule' do
-        expect(subject).to redirect_to(simplify_admin_procedure_types_de_champ_path(procedure, rule: LLMRuleSuggestion.next_rule(llm_rule_suggestion.rule)))
+        expect(subject).to redirect_to(simplify_admin_procedure_types_de_champ_path(procedure, rule: LLM::Rule.next_rule(llm_rule_suggestion.rule)))
       end
     end
 

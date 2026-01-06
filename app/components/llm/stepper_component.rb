@@ -7,16 +7,7 @@ module LLM
     delegate :procedure, to: :procedure_revision
 
     def self.step_title(rule_name)
-      case rule_name
-      when 'improve_label'
-        "Amélioration des libellés"
-      when 'improve_structure'
-        "Amélioration de la structure"
-      when 'improve_types'
-        "Amélioration des types de champs"
-      when 'cleaner'
-        "Nettoyage des champs redondants"
-      end
+      LLM::Rule.new(rule_name).title
     end
 
     def initialize(step_component:)
@@ -40,16 +31,16 @@ module LLM
     end
 
     def next_step_title
-      next_rule = LLMRuleSuggestion.next_rule(rule)
-      step_title(next_rule)
+      next_rule = LLM::Rule.next_rule(rule)
+      step_title(next_rule) rescue ""
     end
 
     def current_step
-      LLMRuleSuggestion.position_for(rule)
+      LLM::Rule.new(rule).position
     end
 
     def step_count
-      LLMRuleSuggestion::RULE_SEQUENCE.count
+      LLM::Rule::SEQUENCE.count
     end
   end
 end

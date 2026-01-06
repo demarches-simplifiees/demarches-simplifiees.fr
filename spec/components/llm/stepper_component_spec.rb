@@ -23,7 +23,7 @@ RSpec.describe LLM::StepperComponent, type: :component do
   end
 
   context 'with the last rule' do
-    let(:rule) { LLMRuleSuggestion.rules.fetch('cleaner') }
+    let(:rule) { LLMRuleSuggestion.rules.fetch(LLM::Rule::SEQUENCE.last) }
     it 'marks the fourth step and shows no further step' do
       expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 4 sur 4')
       expect(rendered_component.css('.fr-stepper__title').text).to include("Nettoyage des champs redondants")
