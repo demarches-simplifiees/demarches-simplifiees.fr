@@ -80,9 +80,8 @@ class Dossiers::MessageComponent < ApplicationComponent
   end
 
   def show_delete_button?
-    # For groupe_gestionnaire, gestionnaires can delete their own messages
-    # For dossiers, only instructeurs can delete their own messages
-    return false if groupe_gestionnaire.nil? && !connected_user.is_a?(Instructeur)
+    return false if groupe_gestionnaire.nil? && !connected_user.is_a?(Instructeur) && !connected_user.is_a?(Expert)
+    return false if groupe_gestionnaire.nil? && commentaire.dossier_correction&.pending?
 
     commentaire.soft_deletable?(connected_user)
   end

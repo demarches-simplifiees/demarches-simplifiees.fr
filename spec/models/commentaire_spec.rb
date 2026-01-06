@@ -146,7 +146,8 @@ describe Commentaire do
     context 'when a pending correction is attached' do
       before { create(:dossier_correction, commentaire: commentaire, dossier: dossier) }
 
-      it { expect(commentaire.soft_deletable?(instructeur)).to be false }
+      # l'api supprime directement la correction quand on supprime le message
+      it { expect(commentaire.soft_deletable?(instructeur)).to be true }
     end
 
     context 'when a cancelled correction is attached' do

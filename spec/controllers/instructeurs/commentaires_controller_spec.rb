@@ -38,9 +38,11 @@ describe Instructeurs::CommentairesController, type: :controller do
         context 'when a pending correction is attached' do
           let!(:correction) { create(:dossier_correction, commentaire:, dossier:) }
 
-          it 'does not allow deleting the message' do
+          it 'allows deleting the message and auto-cancels the correction' do
             expect(subject).to have_http_status(:ok)
-            expect(commentaire.reload).not_to be_discarded
+            expect(subject.body).to include('Message supprimé')
+            expect(commentaire.reload).to be_discarded
+            expect(correction.reload).to be_cancelled
           end
         end
 
@@ -132,14 +134,15 @@ describe Instructeurs::CommentairesController, type: :controller do
     before { sign_in(expert.user) }
 
     describe 'destroy' do
-      context 'when expert tries to delete their own message' do
+      context 'when it works' do
         let(:commentaire) { create(:commentaire, expert: expert, dossier: dossier) }
         subject { delete :destroy, params: { dossier_id: dossier.id, procedure_id: procedure.id, id: commentaire.id, statut: 'a-suivre' }, format: :turbo_stream }
 
-        it 'does not allow deleting the message' do
+        it 'respond with OK and flash' do
           expect(subject).to have_http_status(:ok)
-          expect(subject.body).to include('alert-danger')
-          expect(commentaire.reload.discarded?).to be_falsey
+          expect(subject.body).to include('Message supprimé')
+          expect(subject.body).to include('alert-success')
+          expect(subject.body).to include('Votre message a été supprimé')
         end
       end
     end
