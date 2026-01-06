@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 class FranceConnectService
-  UPDATABLE_FRANCE_CONNECT_CLAIMS = [
-    :birthdate,
-    :birthplace,
-    :email_france_connect,
-    :family_name,
-    :gender,
-    :given_name,
-    :birthcountry,
-  ].freeze
+  UPDATABLE_FRANCE_CONNECT_CLAIMS = {
+    birthdate: 'birthdate',
+    birthplace: 'birthplace',
+    email_france_connect: 'email',
+    family_name: 'family_name',
+    gender: 'gender',
+    given_name: 'given_name',
+    birthcountry: 'birthcountry',
+  }.freeze
 
   def self.enabled?
     ENV.fetch("FRANCE_CONNECT_ENABLED", "enabled") == "enabled"
@@ -32,15 +32,12 @@ class FranceConnectService
   end
 
   def self.find_or_retrieve_france_connect_information(code, nonce)
-    fetched_fci, id_token = retrieve_user_informations(code, nonce)
+    user_info, id_token = retrieve_user_informations(code, nonce)
 
-    fci = FranceConnectInformation.find_or_initialize_by(
-      france_connect_particulier_id: fetched_fci.france_connect_particulier_id
-    )
+    france_connect_particulier_id = user_info['sub']
+    fci = FranceConnectInformation.find_or_initialize_by(france_connect_particulier_id:)
 
-    fci.assign_attributes(fetched_fci.slice(*UPDATABLE_FRANCE_CONNECT_CLAIMS))
-
-    fci.save! if fci.changed?
+    fci.update(UPDATABLE_FRANCE_CONNECT_CLAIMS.transform_values { |fc_claim| user_info[fc_claim] })
 
     [fci, id_token]
   end
@@ -64,18 +61,7 @@ class FranceConnectService
 
     user_info = access_token.userinfo!.raw_attributes
 
-    fci = FranceConnectInformation.new(
-      gender: user_info[:gender],
-      given_name: user_info[:given_name],
-      family_name: user_info[:family_name],
-      email_france_connect: user_info[:email],
-      birthdate: user_info[:birthdate],
-      birthplace: user_info[:birthplace],
-      birthcountry: user_info[:birthcountry],
-      france_connect_particulier_id: user_info[:sub]
-    )
-
-    [fci, access_token.id_token]
+    [user_info, access_token.id_token]
   end
 
   def self.conf
