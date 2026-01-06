@@ -158,6 +158,65 @@ describe Columns::ChampColumn do
   describe '#filtered_ids' do
     subject { column.filtered_ids(dossiers, { operator: 'match', value: search_terms }) }
 
+    context "with a text champ" do
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text, mandatory: false, libelle: "text" }]) }
+      let(:dossier_with_value) { create(:dossier, :en_instruction, procedure:) }
+
+      let(:column) { procedure.find_column(label: "text") }
+      let(:dossiers) { procedure.dossiers }
+
+      before do
+        dossier_with_value.champs.first.update!(value: champ_value)
+      end
+
+      let(:champ_value) { 'olala le text est "là"' }
+
+      context "when searching for a basic value" do
+        let(:search_terms) { ["olala"] }
+
+        it "returns the correct ids" do
+          expect(subject).to match_array([dossier_with_value.id])
+        end
+      end
+
+      context "when searching for a value with quotes" do
+        let(:search_terms) { ['"là"'] }
+        it "returns the correct ids" do
+          expect(subject).to match_array([dossier_with_value.id])
+        end
+      end
+    end
+
+    context "with a multiple_drop_down_list champ" do
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :multiple_drop_down_list, mandatory: false, libelle: "multiple_drop_down_list", options: ["Fromage", 'Fromage "blanc"'] }]) }
+      let(:dossier_with_value) { create(:dossier, :en_instruction, procedure:) }
+
+      let(:column) { procedure.find_column(label: "multiple_drop_down_list") }
+      let(:dossiers) { procedure.dossiers }
+
+      before do
+        dossier_with_value.champs.first.update!(value: champ_value)
+      end
+
+      let(:champ_value) { "[\"Fromage \\\"blanc\\\"\",\"Fromage\"]" }
+
+      context "when searching for a basic value" do
+        let(:search_terms) { ["Fromage"] }
+
+        it "returns the correct ids" do
+          expect(subject).to match_array([dossier_with_value.id])
+        end
+      end
+
+      context "when searching for a value with quotes" do
+        let(:search_terms) { [%{Fromage "blanc"}] }
+
+        it "returns the correct ids" do
+          expect(subject).to match_array([dossier_with_value.id])
+        end
+      end
+    end
+
     context "with a yes no champ not mandatory" do
       let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no, mandatory: false, libelle: "oui/non" }]) }
       let(:dossier_with_yes) { create(:dossier, :en_instruction, procedure:) }
