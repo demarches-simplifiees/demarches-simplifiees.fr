@@ -219,4 +219,80 @@ describe ApplicationController, type: :controller do
       end
     end
   end
+
+  describe 'crisp_config and crisp_segments' do
+    before do
+      allow(ENV).to receive(:enabled?).with("CRISP").and_return(true)
+      allow(ENV).to receive(:fetch).with("CRISP_WEBSITE_ID").and_return("test-website-id")
+    end
+
+    context 'when a simple user is logged in' do
+      let(:user) { create(:user) }
+
+      before do
+        allow(@controller).to receive(:current_user).and_return(user)
+        allow(@controller).to receive(:user_signed_in?).and_return(true)
+        allow(@controller).to receive(:administrateur_signed_in?).and_return(false)
+        allow(@controller).to receive(:instructeur_signed_in?).and_return(false)
+        allow(@controller).to receive(:expert_signed_in?).and_return(false)
+      end
+
+      it 'returns usager segment' do
+        config = @controller.send(:crisp_config)
+        expect(config[:user][:email]).to eq(user.email)
+        expect(config[:user][:segments]).to eq(['usager'])
+      end
+    end
+
+    context 'when an administrateur is logged in' do
+      let(:administrateur) { administrateurs(:default_admin) }
+
+      before do
+        allow(@controller).to receive(:current_user).and_return(administrateur.user)
+        allow(@controller).to receive(:user_signed_in?).and_return(true)
+        allow(@controller).to receive(:administrateur_signed_in?).and_return(true)
+        allow(@controller).to receive(:instructeur_signed_in?).and_return(false)
+        allow(@controller).to receive(:expert_signed_in?).and_return(false)
+      end
+
+      it 'returns administrateur segment' do
+        config = @controller.send(:crisp_config)
+        expect(config[:user][:segments]).to eq(['administrateur'])
+      end
+    end
+
+    context 'when an instructeur is logged in' do
+      let(:instructeur) { create(:instructeur) }
+
+      before do
+        allow(@controller).to receive(:current_user).and_return(instructeur.user)
+        allow(@controller).to receive(:user_signed_in?).and_return(true)
+        allow(@controller).to receive(:administrateur_signed_in?).and_return(false)
+        allow(@controller).to receive(:instructeur_signed_in?).and_return(true)
+        allow(@controller).to receive(:expert_signed_in?).and_return(false)
+      end
+
+      it 'returns instructeur segment' do
+        config = @controller.send(:crisp_config)
+        expect(config[:user][:segments]).to eq(['instructeur'])
+      end
+    end
+
+    context 'when a user has multiple roles' do
+      let(:administrateur) { administrateurs(:default_admin) }
+
+      before do
+        allow(@controller).to receive(:current_user).and_return(administrateur.user)
+        allow(@controller).to receive(:user_signed_in?).and_return(true)
+        allow(@controller).to receive(:administrateur_signed_in?).and_return(true)
+        allow(@controller).to receive(:instructeur_signed_in?).and_return(true)
+        allow(@controller).to receive(:expert_signed_in?).and_return(false)
+      end
+
+      it 'returns all applicable segments' do
+        config = @controller.send(:crisp_config)
+        expect(config[:user][:segments]).to contain_exactly('administrateur', 'instructeur')
+      end
+    end
+  end
 end

@@ -228,7 +228,7 @@ class ApplicationController < ActionController::Base
     gon.matomo = matomo_config
     gon.sentry = sentry_config
 
-    if administrateur_signed_in?
+    if user_signed_in?
       gon.crisp = crisp_config
     end
   end
@@ -385,10 +385,20 @@ class ApplicationController < ActionController::Base
     {
       enabled:,
       websiteId: enabled ? ENV.fetch("CRISP_WEBSITE_ID") : nil,
-      administrateur: {
+      user: {
         email: current_user&.email,
+        segments: crisp_segments,
       },
     }
+  end
+
+  def crisp_segments
+    segments = []
+    segments << 'administrateur' if administrateur_signed_in?
+    segments << 'instructeur' if instructeur_signed_in?
+    segments << 'expert' if expert_signed_in?
+    segments << 'usager' if segments.empty?
+    segments
   end
 
   def current_email
