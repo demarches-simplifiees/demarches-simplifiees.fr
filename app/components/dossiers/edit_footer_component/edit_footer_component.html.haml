@@ -11,11 +11,4 @@
       - if !owner?
         = button_to t('.check_completude'), check_completude_dossier_path(@dossier), class: "fr-btn", method: :post
 
-  - if show_for_user?
-    - if !owner?
-      .fr-pb-2w.invite-cannot-submit
-        = render ::Dsfr::AlertComponent.new(state: :info, title: nil, size: :sm, heading_level: :p, extra_class_names: 'fr-mt-1w') do |c|
-          - c.with_body do
-            %p.fr-pb-0= t('.invite_notice').html_safe
-
     = render partial: "shared/dossiers/submit_is_over", locals: { dossier: @dossier }
