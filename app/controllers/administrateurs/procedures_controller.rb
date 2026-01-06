@@ -395,7 +395,7 @@ module Administrateurs
     end
 
     def close
-      @published_procedures = current_administrateur.procedures.publiees.to_h { |p| ["#{p.libelle} (#{p.id})", p.id] }
+      @published_procedures = current_administrateur.procedures.publiees.where.not(id: @procedure.id).to_h { |p| ["#{p.libelle} (#{p.id})", p.id] }
       @closing_reason_options = Procedure.closing_reasons.values.map { |reason| [I18n.t("activerecord.attributes.procedure.closing_reasons.#{reason}", app_name: Current.application_name), reason] }
     end
 
