@@ -222,6 +222,7 @@ describe ApplicationController, type: :controller do
 
   describe 'crisp_config and crisp_segments' do
     before do
+      Flipper.enable(:chatbot)
       allow(ENV).to receive(:enabled?).with("CRISP").and_return(true)
       allow(ENV).to receive(:fetch).with("CRISP_WEBSITE_ID").and_return("test-website-id")
     end
@@ -293,6 +294,32 @@ describe ApplicationController, type: :controller do
         config = @controller.send(:crisp_config)
         expect(config[:user][:segments]).to contain_exactly('administrateur', 'instructeur')
       end
+    end
+  end
+
+  describe 'chatbot feature flag' do
+    let(:user) { create(:user) }
+
+    before do
+      allow(@controller).to receive(:user_signed_in?).and_return(true)
+      allow(@controller).to receive(:administrateur_signed_in?).and_return(false)
+      allow(@controller).to receive(:current_user).and_return(user)
+    end
+
+    after do
+      Flipper.disable(:chatbot)
+    end
+
+    it 'disables crisp when feature flag is disabled' do
+      expect(@controller).not_to receive(:crisp_config)
+      @controller.send(:setup_tracking)
+    end
+
+    it 'enables crisp when feature flag is enabled' do
+      Flipper.enable(:chatbot)
+
+      expect(@controller).to receive(:crisp_config)
+      @controller.send(:setup_tracking)
     end
   end
 end
