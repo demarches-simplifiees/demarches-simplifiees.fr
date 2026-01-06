@@ -12,9 +12,6 @@ fr:
       index:
         procedures: Démarches
         instructors_group: Groupe d’instructeurs
-        existing_groupe:
-          one: "%{count} groupe existe"
-          other: "%{count} groupes existent"
       add_instructeur:
         wrong_address:
           one: "%{emails} n’est pas une adresse électronique valide"
@@ -22,10 +19,6 @@ fr:
         assignment:
           one: "L’instructeur %{emails} a été affecté au groupe « %{groupe} »."
           other: "Les instructeurs %{emails} ont été affectés au groupe « %{groupe} »."
-      reaffecter_dossiers:
-        existing_groupe:
-          one: "%{count} groupe existe"
-          other: "%{count} groupes existent"
       import:
         groupe:
           one: "%{count} groupe"
