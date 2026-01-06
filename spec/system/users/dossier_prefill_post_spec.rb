@@ -129,6 +129,18 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
       context 'when the user signs up with FranceConnect' do
         it_behaves_like "the user has got a prefilled dossier, owned by themselves" do
           let(:user) { User.last }
+          let(:user_info) do
+            {
+              'sub' => 'blablabla',
+              'given_name' => 'titi',
+              'family_name' => 'toto',
+              'birthdate' => '20150821',
+              'birthplace' => '1234',
+              'birthcountry' => '12345',
+              'gender' => 'M',
+              'email' => 'EMAIL_from_fc@test.com',
+            }
+          end
 
           before do
             state, nonce = ['state', 'nonce']
@@ -139,7 +151,7 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
                 state, nonce,
               ])
 
-            allow(FranceConnectService).to receive(:retrieve_user_informations).and_return([build(:france_connect_information), 'id_token'])
+            allow(FranceConnectService).to receive(:retrieve_user_informations).and_return([user_info, 'id_token'])
 
             page.find('.fr-connect').click
             expect(page).to have_content("Choisissez votre adresse électronique de contact pour finaliser votre connexion")

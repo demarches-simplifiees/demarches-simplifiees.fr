@@ -7,6 +7,7 @@ describe 'France Connect Connexion' do
   let(:given_name) { 'titi' }
   let(:family_name) { 'toto' }
   let(:birthdate) { '20150821' }
+  let(:birthcountry) { '12345' }
   let(:gender) { 'M' }
   let(:birthplace) { '1234' }
   let(:fc_email) { 'plop@plop.com' }
@@ -14,13 +15,14 @@ describe 'France Connect Connexion' do
 
   let(:user_info) do
     {
-      france_connect_particulier_id: france_connect_particulier_id,
-      given_name: given_name,
-      family_name: family_name,
-      birthdate: birthdate,
-      birthplace: birthplace,
-      gender: gender,
-      email_france_connect: fc_email,
+      'sub' => france_connect_particulier_id,
+      'given_name' => given_name,
+      'family_name' => family_name,
+      'birthdate' => birthdate,
+      'birthplace' => birthplace,
+      'birthcountry' => birthcountry,
+      'gender' => gender,
+      'email' => fc_email,
     }
   end
 
@@ -41,7 +43,7 @@ describe 'France Connect Connexion' do
             .and_return([france_connect_callback_path(code:, state:), state, 'nonce'])
 
           allow(FranceConnectService).to receive(:retrieve_user_informations)
-            .and_return([france_connect_information, id_token])
+            .and_return([user_info, id_token])
         end
 
         context 'when no user is linked' do
@@ -136,8 +138,18 @@ describe 'France Connect Connexion' do
         end
 
         context 'when a user is linked' do
+          let(:fci_attributes) do
+            FranceConnectService::UPDATABLE_FRANCE_CONNECT_CLAIMS
+              .transform_values { |fc_claim| user_info[fc_claim] }
+              .merge(
+                france_connect_particulier_id: user_info['sub'],
+                created_at: Time.zone.parse('12/12/2012'),
+                updated_at: Time.zone.parse('12/12/2012')
+              )
+          end
+
           let!(:france_connect_information) do
-            create(:france_connect_information, :with_user, user_info.merge(created_at: Time.zone.parse('12/12/2012'), updated_at: Time.zone.parse('12/12/2012')))
+            create(:france_connect_information, :with_user, fci_attributes)
           end
 
           before { page.find('.fr-connect').click }
