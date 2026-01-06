@@ -1,3 +1,11 @@
+= render Dsfr::NoticeComponent.new(closable: true, data_attributes: { "data-notice-name" => "enquete-satisfaction-2025" }) do |c|
+  - c.with_title do
+    Enquête de satisfaction annuelle !
+  - c.with_desc do
+    Prenez quelques minutes pour répondre : l’enquête est anonyme et chaque réponse nous aide à avancer.
+  - c.with_link do
+    = link_to "Répondre à l’enquête", "https://framaforms.org/enquete-de-satisfaction-2025-pour-les-administrateurs-instructeurs-et-experts-de-demarche-numerique", class: "fr-notice__link", **external_link_attributes
+
 .sub-header
   .fr-container
     %h1.fr-h3 Mes démarches
