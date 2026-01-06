@@ -102,6 +102,17 @@ describe Users::CommencerController, type: :controller do
       end
     end
 
+    context 'when procedure has a replaced_by_procedure pointing to itself (circular reference that should not be allowed in a next fix)' do
+      let(:path) { published_procedure.path }
+
+      it 'does not create an infinite redirect loop and redirects to closing_details instead' do
+        published_procedure.update!(replaced_by_procedure_id: published_procedure.id)
+        published_procedure.close!
+        expect(subject).to redirect_to(closing_details_path(published_procedure.path))
+        expect(subject.status).to eq(302)
+      end
+    end
+
     context 'when a dossier has been prefilled by POST before' do
       let(:dossier) { create(:dossier, :brouillon, :prefilled, user: user) }
       let(:path) { dossier.procedure.path }

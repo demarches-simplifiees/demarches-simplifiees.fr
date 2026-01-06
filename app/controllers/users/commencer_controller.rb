@@ -152,7 +152,7 @@ module Users
     def procedure_not_found
       procedure = Procedure.find_with_path(params[:path]).first
 
-      if procedure&.replaced_by_procedure
+      if procedure&.replaced_by_procedure && procedure.replaced_by_procedure != procedure
         redirect_to commencer_path(procedure.replaced_by_procedure.path, **extra_query_params)
         return
       elsif procedure&.close?
