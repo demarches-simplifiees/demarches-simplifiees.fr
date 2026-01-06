@@ -254,6 +254,7 @@ class Procedure < ApplicationRecord
   validate :check_juridique, on: [:create, :publication]
 
   validates :replaced_by_procedure_id, presence: true, if: :closing_reason_internal_procedure?
+  validate :check_replaced_by_procedure_not_self, if: :closing_reason_internal_procedure?
 
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false,
                                                   numericality: {
@@ -702,6 +703,12 @@ class Procedure < ApplicationRecord
   def check_juridique
     if juridique_required? && (cadre_juridique.blank? && !deliberation.attached?)
       errors.add(:cadre_juridique, " : veuillez remplir le texte de loi ou la délibération")
+    end
+  end
+
+  def check_replaced_by_procedure_not_self
+    if replaced_by_procedure_id == id
+      errors.add(:replaced_by_procedure_id, "ne peut pas être la procédure elle-même")
     end
   end
 
