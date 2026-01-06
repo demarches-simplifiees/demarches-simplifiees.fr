@@ -16,6 +16,22 @@ module SimpliscoreConcern
     end
 
     def simplify
+      tunnel = LLM::TunnelFinder.new(draft.id)
+      last_completed = tunnel.last_completed_step
+      tunnel_complete = tunnel.final_step.present?
+
+      if !tunnel_complete && last_completed
+        requested_rule_index = LLMRuleSuggestion::RULE_SEQUENCE.index(rule)
+        last_completed_index = LLMRuleSuggestion::RULE_SEQUENCE.index(last_completed.rule)
+
+        if requested_rule_index && last_completed_index && requested_rule_index <= last_completed_index
+          next_rule = LLMRuleSuggestion.next_rule(last_completed.rule)
+          if next_rule
+            redirect_to simplify_admin_procedure_types_de_champ_path(@procedure, rule: next_rule) and return
+          end
+        end
+      end
+
       @llm_rule_suggestion = llm_rule_suggestion_scope
         .where(rule:, schema_hash: current_schema_hash)
         .includes(:llm_rule_suggestion_items)
@@ -91,7 +107,7 @@ module SimpliscoreConcern
       scope = LLMRuleSuggestion.where(procedure_revision_id: draft.id)
 
       if tunnel_started_at
-        scope = scope.where("created_at >= ?", tunnel_started_at)
+        scope = scope.where(created_at: tunnel_started_at..)
       end
       scope
     end
@@ -101,13 +117,7 @@ module SimpliscoreConcern
     end
 
     def first_rule_suggestion
-      @tunnel_first_step ||= LLMRuleSuggestion
-        .where(
-          procedure_revision_id: draft.id,
-          rule: LLMRuleSuggestion::RULE_SEQUENCE.first
-        )
-        .order(created_at: :desc)
-        .first
+      @first_rule_suggestion ||= LLM::TunnelFinder.new(draft.id).first_step
     end
 
     def suggestion_items_attributes

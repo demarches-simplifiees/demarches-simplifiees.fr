@@ -463,7 +463,7 @@ describe Administrateurs::TypesDeChampController, type: :controller do
     context 'with accepted suggestion' do
       let(:llm_rule_suggestion) { create(:llm_rule_suggestion, procedure_revision:, schema_hash:, state: 'accepted', rule: rule) }
 
-      xit 'renders' do
+      it 'redirects to next rule' do
         expect(subject).to redirect_to(simplify_admin_procedure_types_de_champ_path(procedure, rule: LLMRuleSuggestion.next_rule(llm_rule_suggestion.rule)))
       end
     end
@@ -903,10 +903,10 @@ describe Administrateurs::TypesDeChampController, type: :controller do
           end
         end
 
-        xit 'allows access to first step (already finished)' do
+        it 'redirects from first step (already finished) to next incomplete step' do
           get :simplify, params: { procedure_id: procedure.id, rule: 'improve_label' }
 
-          expect(response).not_to have_http_status(:ok)
+          expect(response).to redirect_to(simplify_admin_procedure_types_de_champ_path(procedure, rule: 'cleaner'))
         end
       end
     end
