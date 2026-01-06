@@ -22,6 +22,7 @@ features = [
   :administrateur_web_hook,
   :api_particulier,
   :blocking_pending_correction,
+  :chatbot,
   :cojo_type_de_champ,
   :dossier_pdf_vide,
   :engagement_juridique_type_de_champ,

@@ -52,12 +52,14 @@ const Gon = s.defaulted(
       s.type({
         websiteId: nullish(s.string()),
         enabled: s.defaulted(s.boolean(), false),
-        administrateur: s.defaulted(
+        user: s.defaulted(
           s.type({
-            email: s.string()
+            email: s.string(),
+            segments: s.defaulted(s.array(s.string()), [])
           }),
           {
-            email: ''
+            email: '',
+            segments: []
           }
         )
       }),

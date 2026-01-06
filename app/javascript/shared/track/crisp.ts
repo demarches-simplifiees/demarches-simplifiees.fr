@@ -1,6 +1,6 @@
 import { getConfig } from '@utils';
 const {
-  crisp: { websiteId, enabled, administrateur },
+  crisp: { websiteId, enabled, user },
   locale
 } = getConfig();
 
@@ -31,8 +31,8 @@ if (enabled) {
   script.src = 'https://client.crisp.chat/l.js';
   firstScript.parentNode?.insertBefore(script, firstScript);
 
-  window.$crisp.push(['set', 'user:email', [administrateur.email]]);
-  window.$crisp.push(['set', 'session:segments', [['administrateur']]]);
+  window.$crisp.push(['set', 'user:email', [user.email]]);
+  window.$crisp.push(['set', 'session:segments', [user.segments]]);
 
   // Prevent Crisp to log warnings about Sentry overriding document.addEventListener
   window.$crisp.push(['safe', true]);

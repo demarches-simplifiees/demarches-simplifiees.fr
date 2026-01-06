@@ -51,8 +51,8 @@
     <%= vite_client_tag %>
     <%= vite_react_refresh_tag %>
     <%= vite_javascript_tag 'application' %>
-    <% if administrateur_signed_in? %>
-      <%= vite_javascript_tag 'track-admin' %>
+    <% if administrateur_signed_in? || (user_signed_in? && feature_enabled?(:chatbot)) %>
+      <%= vite_javascript_tag 'chatbot' %>
     <% end %>
 
     <%= preload_link_tag(asset_url("Marianne-Regular.woff2")) %>
