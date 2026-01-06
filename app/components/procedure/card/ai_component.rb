@@ -25,6 +25,10 @@ class Procedure::Card::AiComponent < ApplicationComponent
     end
   end
 
+  def tunnel(procedure_revision_id: procedure.draft_revision.id)
+    LLM::TunnelFinder.new(procedure_revision_id)
+  end
+
   def any_tunnel_finished?
     @any_tunnel_finished ||= procedure
       .llm_rule_suggestions
@@ -36,23 +40,10 @@ class Procedure::Card::AiComponent < ApplicationComponent
   end
 
   def tunnel_first_step(procedure_revision_id:)
-    @tunnel_first_step ||= procedure
-      .llm_rule_suggestions
-      .where(procedure_revision_id: procedure_revision_id, rule: LLMRuleSuggestion::RULE_SEQUENCE.first)
-      .order(created_at: :desc)
-      .first
+    tunnel(procedure_revision_id: procedure_revision_id).first_step
   end
 
   def tunnel_last_step_finished(procedure_revision_id:)
-    base = procedure
-      .llm_rule_suggestions
-      .where(procedure_revision_id: procedure_revision_id)
-      .where(state: ['accepted', 'skipped'])
-
-    if !tunnel_first_step(procedure_revision_id: procedure_revision_id).nil?
-      base = base.where(created_at: tunnel_first_step(procedure_revision_id: procedure_revision_id).created_at..)
-    end
-
-    @tunnel_last_step_finished ||= base.order(created_at: :desc).first
+    tunnel(procedure_revision_id: procedure_revision_id).last_completed_step
   end
 end

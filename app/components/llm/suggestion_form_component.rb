@@ -89,24 +89,16 @@ class LLM::SuggestionFormComponent < ApplicationComponent
     ])
   end
 
+  def tunnel
+    @tunnel ||= LLM::TunnelFinder.new(llm_rule_suggestion.procedure_revision_id)
+  end
+
   def tunnel_first_step
-    @tunnel_first_step ||= LLMRuleSuggestion
-      .where(
-        procedure_revision_id: llm_rule_suggestion.procedure_revision_id,
-        rule: LLMRuleSuggestion::RULE_SEQUENCE.first
-      )
-      .order(created_at: :desc)
-      .first
+    tunnel.first_step
   end
 
   def tunnel_last_step_finished
-    @tunnel_last_step ||= LLMRuleSuggestion
-      .where(procedure_revision_id: llm_rule_suggestion.procedure_revision_id)
-      .where(rule: 'cleaner')
-      .where(state: ['accepted', 'skipped'])
-      .where('created_at > ?', tunnel_first_step.created_at)
-      .order(created_at: :desc)
-      .first
+    tunnel.final_step
   end
 
   def last_rule?

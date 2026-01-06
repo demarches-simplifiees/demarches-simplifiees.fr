@@ -91,7 +91,7 @@ RSpec.describe LLM::SuggestionFormComponent, type: :component do
       it 'shows accepted message and continue link' do
         expect(subject).to have_text("Vous avez déjà")
         expect(subject).to have_text("accepté")
-        expect(subject).to have_link("Poursuivre le parcours d'amélioration")
+        expect(subject).to have_link("Poursuivre le parcours d’amélioration")
       end
     end
     context 'when state is skipped' do
@@ -100,7 +100,7 @@ RSpec.describe LLM::SuggestionFormComponent, type: :component do
       it 'shows skipped message and continue link' do
         expect(subject).to have_text("Vous avez déjà")
         expect(subject).to have_text("ignoré")
-        expect(subject).to have_link("Poursuivre le parcours d'amélioration")
+        expect(subject).to have_link("Poursuivre le parcours d’amélioration")
       end
     end
   end
