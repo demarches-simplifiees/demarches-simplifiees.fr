@@ -3,22 +3,24 @@
 = render partial: "header", locals: { dossier: @dossier, gallery_attachments: @gallery_attachments, procedure_presentation: @procedure_presentation, notifications: @notifications, notifications_sticker: @notifications_sticker }
 
 .container.groupe-instructeur
+  .tab-title.fr-mb-1w Réaffecter le dossier n° #{@dossier.id} à un autre groupe instructeur
+  %span.fr-hint-text
+    Ce dossier est affecté au groupe « #{@groupe_instructeur.label} ». Vous pouvez le réaffecter à lʼun des #{@groupes_instructeurs.count} autres groupes instructeurs
 
-  .card
-    .card-title Réaffectation du dossier n° #{@dossier.id} du groupe « #{@groupe_instructeur.label} »
-    %p
-      Vous pouvez réaffecter le dossier n° #{@dossier.id} à l’un des groupes d’instructeurs suivants.
-    %table.table.mt-2
-      %thead
-        %tr
-          %th{ colspan: 2 }= t("instructeurs.dossiers.existing_groupe", count: @groupes_instructeurs.total_count)
-      %tbody
-        - @groupes_instructeurs.each do |group|
-          .flex.justify-between.align-center.fr-mb-2w
-            %p.fr-mb-0= group.label
-            = button_to 'Réaffecter le dossier à ce groupe',
-              reaffecter_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, groupe_instructeur_id: group.id),
-              { class: 'fr-btn fr-btn--secondary fr-btn--sm',
-                data: { confirm: "Êtes-vous sûr de vouloir réaffecter le dossier n° #{@dossier.id} du groupe « #{@groupe_instructeur.label} » vers le groupe  « #{group.label} » ?" } }
-
-    = paginate @groupes_instructeurs, views_prefix: 'shared'
+  = form_with url: reaffecter_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id), method: :post, local: true, data: { controller: 'enable-submit-if-filled', action: 'change->enable-submit-if-filled#fillCombobox' } do |form|
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--bottom
+      .fr-col-8
+        .fr-select-group
+          %react-fragment
+            = render ReactComponent.new "ComboBox/SingleComboBox",
+              id: 'groupe_instructeur_id',
+              name: 'groupe_instructeur_id',
+              placeholder: 'Sélectionner',
+              items: @groupes_instructeurs.map { |g| { label: g.label, value: g.id.to_s } },
+              class: 'fr-mt-1w',
+              data: { enable_submit_if_filled_target: 'input' }
+      .fr-col-4
+        = form.submit 'Réaffecter le dossier à ce groupe',
+          class: 'fr-btn',
+          data: { enable_submit_if_filled_target: 'submit', confirm: "Êtes-vous sûr de vouloir réaffecter le dossier n° #{@dossier.id} du groupe « #{@groupe_instructeur.label} » ?" },
+          disabled: true

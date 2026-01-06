@@ -416,9 +416,7 @@ module Instructeurs
 
       @groupe_instructeur = @dossier.groupe_instructeur
 
-      @groupes_instructeurs = Kaminari.paginate_array(@groupe_instructeur.other_groupe_instructeurs)
-        .page(params[:page])
-        .per(ITEMS_PER_PAGE)
+      @groupes_instructeurs = @groupe_instructeur.other_groupe_instructeurs
     end
 
     def reaffecter
