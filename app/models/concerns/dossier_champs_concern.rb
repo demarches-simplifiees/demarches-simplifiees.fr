@@ -469,7 +469,7 @@ module DossierChampsConcern
   end
 
   def check_valid_row_id_on_read?(type_de_champ, row_id)
-    if type_de_champ.child?(revision)
+    if type_de_champ.child?(revision) && revision.parent_of(type_de_champ).repetition?
       if row_id.blank?
         raise "type_de_champ #{type_de_champ.stable_id} in revision #{revision_id} must have a row_id because it is part of a repetition"
       end

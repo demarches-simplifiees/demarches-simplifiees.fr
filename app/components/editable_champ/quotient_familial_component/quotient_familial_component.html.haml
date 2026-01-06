@@ -1,0 +1,82 @@
+- if for_preview?
+  .fr-fieldset
+    .fr-fieldset__legend--regular.fr-fieldset__legend Sélectionnez le cas de figure que vous souhaitez visualiser :
+    .fr-fieldset__element.fr-fieldset__element--inline
+      .fr-radio-group.fr-radio-rich
+        = @form.radio_button :recovered_qf_data, true, id: "#{@champ.stable_id}_recovered", aria: labelledby_id_attr(input_label_id(@champ, :recovered))
+        %label.fr-label{ for: "#{@champ.stable_id}_recovered", id: input_label_id(@champ, :recovered) }
+          Usager connecté via FranceConnect et QF récupéré
+
+    .fr-fieldset__element.fr-fieldset__element--inline
+      .fr-radio-group.fr-radio-rich
+        = @form.radio_button :recovered_qf_data, false, id: "#{@champ.stable_id}_not_recovered", aria: labelledby_id_attr(input_label_id(@champ, :not_recovered))
+        %label.fr-label{ for: "#{@champ.stable_id}_not_recovered", id: input_label_id(@champ, :not_recovered) }
+          Usager non connecté via FranceConnect ou QF non récupéré
+
+- if render_automatic_qf_tdc?
+  - if for_preview?
+    %p Simulation de données pour 1 parent et 1 enfant à charge :
+
+  .fr-callout
+    .fr-callout__title
+      Vos données d'identité, celles de vos enfants et votre quotient familial (QF) ont été récupérés de façon sécurisée via FranceConnect
+
+    %ul.fr-callout__text
+      - if qf_data["quotient_familial"].present?
+        - qf = qf_data["quotient_familial"]
+        %li
+          .fr-text--bold Quotient familial #{qf["fournisseur"]}
+          %ul
+            %li.fr-text QF : #{qf["valeur"]}
+            %li.fr-text Mois et année du QF : #{qf["mois"]}/#{qf["annee"]}
+
+      - if qf_data["allocataires"].present?
+        %li
+          .fr-text--bold Allocataire(s)
+          %ul
+            - qf_data["allocataires"].each do |a|
+              %li.fr-text
+                #{a["prenoms"]} #{a["nom_usage"]} (#{a["sexe"]}), né(e) le #{a["date_naissance"]}
+
+      - if qf_data["enfants"].present?
+        %li
+          .fr-text--bold Enfant(s)
+          %ul
+            - qf_data["enfants"].each do |e|
+              %li.fr-text
+                #{e["prenoms"]} #{e["nom_usage"]} (#{e["sexe"]}), né(e) le #{e["date_naissance"]}
+
+      - if qf_data["adresse"].present?
+        %li
+          .fr-text--bold Adresse de la famille
+          %ul
+            - adresse = qf_data["adresse"]
+            %li.fr-text Identité du destinataire : #{adresse["destinataire"]}
+            %li.fr-text Adresse : #{adresse["numero_libelle_voie"]} #{adresse["code_postal_ville"]} - #{adresse["pays"]}
+            - if adresse["complement_information"].present?
+              %li.fr-text Complément : #{adresse["complement_information"]}
+
+  .fr-fieldset
+    .fr-fieldset__legend--regular.fr-fieldset__legend
+      Ces informations sont-elles correctes ?
+      -# TODO : gérer l'obligation de ce fieldset
+      = render EditableChamp::AsteriskMandatoryComponent.new
+    .fr-fieldset__element.fr-fieldset__element--inline
+      .fr-radio-group
+        = @form.radio_button :correct_qf_data, true, id: "#{@champ.stable_id}_correct", aria: labelledby_id_attr(input_label_id(@champ, :correct))
+        %label.fr-label{ for: "#{@champ.stable_id}_correct", id: input_label_id(@champ, :correct) }
+          Oui
+
+    .fr-fieldset__element.fr-fieldset__element--inline
+      .fr-radio-group
+        = @form.radio_button :correct_qf_data, false, id: "#{@champ.stable_id}_incorrect", aria: labelledby_id_attr(input_label_id(@champ, :incorrect))
+        %label.fr-label{ for: "#{@champ.stable_id}_incorrect", id: input_label_id(@champ, :incorrect) }
+          Non
+
+  - if incorrect_qf_data?
+    .fr-callout.fr-callout--yellow-moutarde
+      .fr-callout__text
+        Nous n'utiliserons pas ces données pour excaminer votre dossier. Vous devez joindre un justificatif de quotient familial.
+
+- if render_substitution_qf_tdc?
+  = render substitution_champ_component
