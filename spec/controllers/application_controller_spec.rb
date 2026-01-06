@@ -167,6 +167,7 @@ describe ApplicationController, type: :controller do
       allow(@controller).to receive(:get_stored_location_for).and_return(nil)
       allow(@controller).to receive(:store_location_for)
       allow(IPService).to receive(:ip_trusted?).and_return(ip_trusted)
+      allow(@controller).to receive(:pro_connect_mfa?).and_return(pro_connect_mfa)
     end
 
     subject { @controller.send(:redirect_if_untrusted) }
@@ -187,20 +188,47 @@ describe ApplicationController, type: :controller do
           context 'when the device is trusted' do
             let(:trusted_device) { true }
 
-            before { subject }
+            context 'when the user used mfa' do
+              let(:pro_connect_mfa) { true }
 
-            it { expect(@controller).not_to have_received(:redirect_to) }
+              before { subject }
+
+              it { expect(@controller).not_to have_received(:redirect_to) }
+            end
+
+            context 'when the user does not used mfa' do
+              let(:pro_connect_mfa) { false }
+
+              before { subject }
+
+              it { expect(@controller).not_to have_received(:redirect_to) }
+            end
           end
 
           context 'when the device is not trusted' do
             let(:trusted_device) { false }
 
-            before { subject }
+            context 'when the user used mfa' do
+              let(:pro_connect_mfa) { true }
 
-            it do
-              expect(@controller).to have_received(:redirect_to)
-              expect(@controller).to have_received(:send_login_token_or_bufferize)
-              expect(@controller).to have_received(:store_location_for)
+              before { subject }
+
+              it do
+                expect(@controller).not_to have_received(:redirect_to)
+                expect(response).to have_http_status(:ok)
+              end
+            end
+
+            context 'when the user did not use mfa' do
+              let(:pro_connect_mfa) { false }
+
+              before { subject }
+
+              it do
+                expect(@controller).to have_received(:redirect_to)
+                expect(@controller).to have_received(:send_login_token_or_bufferize)
+                expect(@controller).to have_received(:store_location_for)
+              end
             end
           end
         end
@@ -208,8 +236,9 @@ describe ApplicationController, type: :controller do
         context 'when the ip is trusted' do
           let(:ip_trusted) { true }
 
-          context 'when the device is not trusted' do
+          context 'when the device is not trusted and the user does not uses mfa' do
             let(:trusted_device) { false }
+            let(:pro_connect_mfa) { false }
 
             before { subject }
 

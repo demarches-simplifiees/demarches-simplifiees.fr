@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   include Devise::StoreLocationExtension
   include MigrateCsrfToken
   include ApplicationController::ErrorHandling
+  include ProConnectSessionConcern
 
   MAINTENANCE_MESSAGE = 'Le site est actuellement en maintenance. Il sera à nouveau disponible dans un court instant.'
 
@@ -310,7 +311,8 @@ class ApplicationController < ActionController::Base
         sensitive_path &&
         !current_instructeur.bypass_email_login_token &&
         !IPService.ip_trusted?(request.headers['X-Forwarded-For']) &&
-        !trusted_device?
+        !trusted_device? &&
+        !pro_connect_mfa?
 
       # return at this location
       # after the device is trusted
