@@ -108,3 +108,10 @@
                 %span.icon.unarchive
                 .dropdown-description
                   %h4= t('administrateurs.dropdown_actions.restore')
+
+          - if procedure.locked? && !procedure.close?
+            - menu.with_item do
+              = link_to admin_procedure_close_path(procedure.id), role: 'menuitem' do
+                = dsfr_icon('fr-icon-calendar-close-fill')
+                .dropdown-description
+                  %h4= t('administrateurs.dropdown_actions.to_close')
