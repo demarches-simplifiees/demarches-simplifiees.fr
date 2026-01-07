@@ -236,6 +236,7 @@ class TypeDeChamp < ApplicationRecord
   before_validation :normalize_libelle
   before_validation :set_drop_down_list_options, if: -> { type_champ_changed? }
   before_validation :reset_pj_format_options_if_forced_nature
+  before_validation :create_substitution_champ_for_quotient_familial, if: -> { type_champ_changed? }
 
   before_save :remove_attachment, if: -> { type_champ_changed? }
 
@@ -906,5 +907,11 @@ class TypeDeChamp < ApplicationRecord
       self.pj_limit_formats = nil
       self.pj_format_families = []
     end
+  end
+
+  def create_substitution_champ_for_quotient_familial
+    return if !quotient_familial?
+
+    TypesDeChamp::QuotientFamilialTypeDeChamp.new(self).create_substitution_champ
   end
 end
