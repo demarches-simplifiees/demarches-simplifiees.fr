@@ -383,7 +383,8 @@ prawn_document(page_size: "A4") do |pdf|
 
   if @acls[:include_messagerie] && @dossier.commentaires.present?
     add_title(pdf, 'Messagerie')
-    @dossier.commentaires_chronological.each do |commentaire|
+    # use preloaded association
+    @dossier.commentaires.sort_by(&:created_at).each do |commentaire|
       add_message(pdf, commentaire)
     end
   end
