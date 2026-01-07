@@ -1,15 +1,20 @@
-.dossier-edit-sticky-footer
-  .send-dossier-actions-bar
-    = render Dossiers::AutosaveFooterComponent.new(dossier: @dossier, annotation: annotation?, owner: owner?)
+.padded-fixed-footer.dossier-edit-footer
+  .fixed-footer
+    .fr-container
+      .send-dossier-actions-bar.flex.justify-end.no-flex-md.align-baseline
+        = render Dossiers::AutosaveFooterComponent.new(dossier: @dossier, annotation: annotation?, owner: owner?)
 
-    - if show_for_user?
-      - if can_submit? && owner?
-        - if !can_passer_en_construction?
-          = link_to t('.submit_disabled'), "#", disabled_submit_button_options
-        = button_to submit_button_label, submit_button_path, submit_button_options
+        %ul.fr-btns-group.fr-btns-group--inline-lg.fr-ml-0
 
-      - if !owner?
-        = button_to t('.check_completude'), check_completude_dossier_path(@dossier), class: "fr-btn", method: :post
-        = button_to t('.notify_owner_for_changes'), notify_owner_for_changes_dossier_path(@dossier), class: "fr-btn", method: :post, data: { confirm: t('.notify_owner_for_changes_alert')}
+          - if show_for_user?
+            - if can_submit? && owner?
+              - if !can_passer_en_construction?
+                %li= link_to t('.submit_disabled'), "#", disabled_submit_button_options
 
-    = render partial: "shared/dossiers/submit_is_over", locals: { dossier: @dossier }
+              %li= button_to submit_button_label, submit_button_path, submit_button_options
+
+            - if !owner?
+              %li= button_to t('.check_completude'), check_completude_dossier_path(@dossier), class: "fr-btn", method: :post
+              %li= button_to t('.notify_owner_for_changes'), notify_owner_for_changes_dossier_path(@dossier), class: "fr-btn", method: :post, data: { confirm: t('.notify_owner_for_changes_alert')}
+
+      = render partial: "shared/dossiers/submit_is_over", locals: { dossier: @dossier }
