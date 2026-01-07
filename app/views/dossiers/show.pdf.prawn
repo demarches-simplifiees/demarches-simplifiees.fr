@@ -290,7 +290,7 @@ def add_etats_dossier(pdf, dossier)
   end
 
   if dossier.pending_correction?
-    format_in_2_columns(pdf, "Correction demandée le", try_format_date(dossier.pending_correction.created_at))
+    format_in_2_columns(pdf, "Correction demandée le", try_format_date(dossier.pending_corrections.first.created_at))
   end
 
   if dossier.en_instruction_at.present?

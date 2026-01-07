@@ -47,4 +47,59 @@ describe DossierPreloader do
       expect(count).to eq(0)
     end
   end
+
+  describe 'in_batches_with_block' do
+    let(:instructeur) { create(:instructeur) }
+    let(:expert) { create(:expert) }
+    let(:experts_procedure) { create(:experts_procedure, expert:, procedure:) }
+    let(:procedure) { create(:procedure, :published, :for_individual, instructeurs: [instructeur]) }
+
+    let!(:dossiers) do
+      Array.new(3) do
+        dossier = create(:dossier, :en_instruction, :with_individual, procedure:)
+
+        create(:traitement, dossier:, state: :en_instruction)
+        create(:commentaire, dossier:, instructeur:)
+        create(:commentaire, dossier:, expert:)
+        create(:avis, dossier:, claimant: instructeur, experts_procedure:)
+
+        correction_commentaire = create(:commentaire, dossier:, instructeur:)
+        create(:dossier_correction, :resolved, dossier:, commentaire: correction_commentaire)
+
+        dossier
+      end
+    end
+
+    it 'preloads associations for PDF export without N+1' do
+      all_dossiers = Dossier.where(id: dossiers.map(&:id))
+      loaded_dossiers = []
+
+      DossierPreloader.new(all_dossiers).in_batches_with_block do |batch|
+        loaded_dossiers = batch
+      end
+
+      count = 0
+      callback = lambda { |*_args| count += 1 }
+
+      ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+        loaded_dossiers.each do |dossier|
+          # Access associations that are used in PDF export
+          expect(dossier.individual).to be_present
+          expect(dossier.traitement).to be_present
+          expect(dossier.association(:pending_corrections).loaded?).to be true
+          expect(dossier.commentaires).to be_present
+          dossier.commentaires.each do |c|
+            c.instructeur&.email
+            c.expert&.email
+          end
+          expect(dossier.avis).to be_present
+          dossier.avis.each do |a|
+            a.expert&.email
+          end
+        end
+      end
+
+      expect(count).to eq(0)
+    end
+  end
 end
