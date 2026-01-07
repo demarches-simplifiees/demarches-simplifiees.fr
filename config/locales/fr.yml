@@ -943,6 +943,8 @@ fr:
       check_completude:
         success: Le dossier est complet et correctement rempli.
         error: Le dossier n'est pas correctement rempli.
+      notify_owner_for_changes:
+        success: Le titulaire a bien été informé par mail de vos modifications
       restore: "Votre dossier a bien été restauré"
       etablissement:
         no_establishment: "Aucun établissement n’est associé à ce dossier"

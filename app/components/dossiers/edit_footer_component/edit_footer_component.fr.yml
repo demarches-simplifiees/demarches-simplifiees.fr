@@ -4,4 +4,6 @@ fr:
   submit_changes: Déposer les modifications
   submit_disabled: Pourquoi je ne peux pas déposer mon dossier ?
   check_completude: Vérifier le dossier
+  notify_owner_for_changes: Prévenir le titulaire de vos modifications
+  notify_owner_for_changes_alert: Le titulaire va être informé par email que vous avez effectué des modifications sur son dossier. Confirmez-vous l'envoi du message ?
   submitting: Envoi en cours…

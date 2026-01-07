@@ -185,6 +185,16 @@ class DossierMailer < ApplicationMailer
     end
   end
 
+  def notify_owner_for_changes(dossier, invite)
+    I18n.with_locale(dossier.user_locale) do
+      @dossier = dossier
+      @invite = invite
+      @subject = default_i18n_subject(dossier_id: dossier.id, email_invite: invite.email)
+
+      mail(to: dossier.user.email, subject: @subject)
+    end
+  end
+
   def self.critical_email?(action_name)
     false
   end

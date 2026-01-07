@@ -1,0 +1,9 @@
+fr:
+  dossier_mailer:
+    notify_owner_for_changes:
+      subject: Votre dossier n° %{dossier_id} a été modifié par %{email_invite}
+      body_html: "%{email_invite}, invité⸱e à compléter votre dossier, souhaite vous informer qu’il⸱elle <b>a effectué des modifications</b> sur votre dossier."
+      link_html: |
+        Vous pouvez <b>retrouver votre dossier</b> en cliquant sur le bouton ci-dessous :
+      submit_before: Vous pouvez déposer votre dossier / ses modifications jusqu’au %{before}.
+      access_file: Afficher votre dossier

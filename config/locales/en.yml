@@ -939,6 +939,8 @@ en:
       check_completude:
         success: The file is complete and correctly filled out.
         error: The file is not correctly filled out.
+      notify_owner_for_changes:
+        success: The account holder has been duly informed of your changes by email.
       restore: "Your file has been successfully restored"
       etablissement:
         no_establishment: "There is no establishment tied to this file"
