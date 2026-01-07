@@ -225,9 +225,13 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       }
       before do
         dossier12.reload
+        subject
       end
 
-      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+      it do
+        expect(response).to redirect_to(reaffecter_dossiers_admin_procedure_groupe_instructeur_path(procedure, gi_1_1))
+        expect(flash.alert).to eq "Veuillez sélectionner un groupe instructeur dans la liste ci-dessous"
+      end
     end
   end
 

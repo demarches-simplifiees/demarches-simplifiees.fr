@@ -424,12 +424,17 @@ module Instructeurs
 
       new_group = dossier
         .procedure
-        .groupe_instructeurs.find(params[:groupe_instructeur_id])
+        .groupe_instructeurs.find_by(id: params[:groupe_instructeur_id])
 
-      dossier.assign_to_groupe_instructeur(new_group, DossierAssignment.modes.fetch(:manual), current_instructeur)
+      if new_group.present?
+        dossier.assign_to_groupe_instructeur(new_group, DossierAssignment.modes.fetch(:manual), current_instructeur)
 
-      flash.notice = t('instructeurs.dossiers.reaffectation', dossier_id: dossier.id, label: new_group.label)
-      redirect_to instructeur_procedure_path(procedure)
+        flash.notice = t('instructeurs.dossiers.reaffectation.success', dossier_id: dossier.id, label: new_group.label)
+        redirect_to instructeur_procedure_path(procedure)
+      else
+        flash.alert = t('instructeurs.dossiers.reaffectation.error')
+        redirect_to reaffectation_instructeur_dossier_path(dossier.procedure, dossier)
+      end
     end
 
     def pieces_jointes
