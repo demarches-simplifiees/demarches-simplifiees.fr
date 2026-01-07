@@ -29,9 +29,11 @@ describe ProConnectController, type: :controller do
         'email' => email,
         'given_name' => 'given',
         'usual_name' => 'usual',
+        'idp_id' => idp_id,
       }
     end
     let(:amr) { [] }
+    let(:idp_id) { 'an_id' }
     subject { get :callback, params: { code: code, state: state } }
 
     before do
@@ -83,14 +85,16 @@ describe ProConnectController, type: :controller do
           let!(:user) { create(:user, email: email) }
           let(:initial_instructeur_count) { Instructeur.count }
 
-          before do
-            expect(controller).to receive(:sign_in)
-          end
+          context 'and the instructeur is not using mon compte pro' do
+            before do
+              expect(controller).to receive(:sign_in)
+            end
 
-          it 'does not create an instructeur' do
-            expect { subject }.to change { User.count }.by(0).and change { Instructeur.count }.by(0)
-            expect(response).to redirect_to(root_path)
-            expect(Instructeur.count).to eq(initial_instructeur_count)
+            it 'does not create an instructeur' do
+              expect { subject }.to change { User.count }.by(0).and change { Instructeur.count }.by(0)
+              expect(response).to redirect_to(root_path)
+              expect(Instructeur.count).to eq(initial_instructeur_count)
+            end
           end
         end
 
@@ -98,28 +102,60 @@ describe ProConnectController, type: :controller do
           let!(:instructeur) { create(:instructeur, email: email) }
           let(:initial_instructeur_count) { Instructeur.count }
 
-          before do
-            expect(controller).to receive(:sign_in)
+          context 'and the instructeur is not using mon compte pro' do
+            before do
+              expect(controller).to receive(:sign_in)
+            end
+
+            it 'updates the instructeur pro_connect information' do
+              expect { subject }.to change { User.count }.by(0).and change { Instructeur.count }.by(0)
+              instructeur.reload
+
+              expect(instructeur.pro_connect_id_token).to eq('id_token')
+              expect(instructeur.user.pro_connect_informations.first.sub).to eq('sub')
+              expect(instructeur.user.pro_connect_informations.first.given_name).to eq('given')
+              expect(instructeur.user.pro_connect_informations.first.usual_name).to eq('usual')
+              expect(response).to redirect_to(root_path)
+              expect(Instructeur.count).to eq(initial_instructeur_count)
+            end
+
+            it "sets user values and cookies" do
+              expect { subject }.to change { instructeur.user.reload.email_verified_at }.from(nil)
+              expect(instructeur.user.preferred_domain_demarche_numerique_gouv_fr?).to be_truthy
+
+              expect(cookies.encrypted[ProConnectSessionConcern::SESSION_INFO_COOKIE_NAME]).to eq({ user_id: instructeur.user.id, mfa: false }.to_json)
+            end
           end
 
-          it 'updates the instructeur pro_connect information' do
-            expect { subject }.to change { User.count }.by(0).and change { Instructeur.count }.by(0)
-            instructeur.reload
+          context 'and the instructeur uses Mon Compte Pro without MFA' do
+            let(:amr) { ['pwd'] }
+            let(:idp_id) { ProConnectController::MON_COMPTE_PRO_IDP_ID }
+            let(:uri) { 'https://mfa.proconnect.gouv.fr' }
 
-            expect(instructeur.pro_connect_id_token).to eq('id_token')
-            expect(instructeur.user.pro_connect_informations.first.sub).to eq('sub')
-            expect(instructeur.user.pro_connect_informations.first.given_name).to eq('given')
-            expect(instructeur.user.pro_connect_informations.first.usual_name).to eq('usual')
-            expect(response).to redirect_to(root_path)
-            expect(Instructeur.count).to eq(initial_instructeur_count)
+            it 'redirects to Pro Connect login with MFA enforced' do
+              expect(ProConnectService).to receive(:authorization_uri)
+                .with(force_mfa: true, login_hint: email)
+                .and_return([uri, original_state, nonce])
+
+              subject
+
+              expect(response).to redirect_to('https://mfa.proconnect.gouv.fr')
+              expect(state_cookie).to eq(original_state)
+              expect(nonce_cookie).to eq(nonce)
+            end
           end
 
-          it "sets user values and cookies" do
-            expect { subject }.to change { instructeur.user.reload.email_verified_at }.from(nil)
-            expect(instructeur.user.preferred_domain_demarche_numerique_gouv_fr?).to be_truthy
+          context 'and the user uses Mon Compte Pro with MFA' do
+            let(:amr) { ['pwd', 'totp', 'mfa'] }
+            let(:idp_id) { ProConnectController::MON_COMPTE_PRO_IDP_ID }
 
-            # sets the pro_connect_session_info cookie
-            expect(cookies.encrypted[ProConnectSessionConcern::SESSION_INFO_COOKIE_NAME]).to eq({ user_id: instructeur.user.id, mfa: false }.to_json)
+            it 'logs in the user' do
+              expect(controller).to receive(:sign_in)
+
+              subject
+
+              expect(cookies.encrypted[ProConnectSessionConcern::SESSION_INFO_COOKIE_NAME]).to eq({ user_id: instructeur.user.id, mfa: true }.to_json)
+            end
           end
         end
       end

@@ -17,27 +17,51 @@ describe ProConnectService do
     end
   end
 
-  xdescribe '.email_domain_is_in_mandatory_list?' do
-    subject { described_class.email_domain_is_in_mandatory_list?(email) }
+  describe '.authorization_uri' do
+    let(:force_mfa) { false }
+    let(:login_hint) { nil }
 
-    context 'when email domain is beta.gouv.fr' do
-      let(:email) { 'user@beta.gouv.fr' }
-      it { is_expected.to be true }
+    before do
+      allow(described_class).to receive(:conf).and_return({
+        client_id: 'client_id',
+        identifier: 'client_id',
+        client_secret: 'client_secret',
+        redirect_uri: 'https://app.example.com/pro_connect/callback',
+        authorization_endpoint: 'https://www.proconnect.gouv.fr/authorize',
+      })
     end
 
-    context 'when email domain is modernisation.gouv.fr' do
-      let(:email) { 'user@modernisation.gouv.fr' }
-      it { is_expected.to be true }
+    subject { described_class.authorization_uri(force_mfa:, login_hint:) }
+
+    it 'returns uri, state and nonce' do
+      uri, state, nonce = subject
+      expect(uri).to be_a(String)
+      expect(uri).not_to include('eidas2')
+      expect(uri).not_to include('login_hint')
+
+      expect(state).to be_a(String)
+      expect(nonce).to be_a(String)
     end
 
-    context 'when email domain is not in the mandatory list' do
-      let(:email) { 'user@example.com' }
-      it { is_expected.to be false }
+    describe 'with force_mfa true' do
+      let(:force_mfa) { true }
+
+      it 'includes various acr values in the authorization uri' do
+        uri, _state, _nonce = subject
+        expect(uri).to include('eidas2')
+        expect(uri).to include('eidas3')
+        expect(uri).to include('self-asserted-2fa')
+        expect(uri).to include('consistency-checked-2fa')
+      end
     end
 
-    context 'when email contains whitespace' do
-      let(:email) { ' user@beta.gouv.fr ' }
-      it { is_expected.to be true }
+    describe 'with login_hint' do
+      let(:login_hint) { 'toto@a.com' }
+
+      it 'includes the login_hint in the authorization uri' do
+        uri, _state, _nonce = subject
+        expect(uri).to include('login_hint=toto%40a.com')
+      end
     end
   end
 end
