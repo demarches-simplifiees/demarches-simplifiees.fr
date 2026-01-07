@@ -37,3 +37,13 @@ fr:
         routing_alert_with_invalid_rules_html: "Il y a <strong>%{count} dossiers</strong> déposés et en attente de traitement sur cette démarche. Ces dossiers n’ont <strong>pas encore été routés</strong>. Une fois que vous aurez configuré vos règles de routage, vous devrez lancer le routage pour les répartir dans les différents groupes."
         bulk_route: Lancer le routage
         bulk_routing_confirm: "Êtes-vous sûr de vouloir lancer le routage pour les dossiers déposés et en attente de traitement ?"
+      reaffectation:
+        title: "Réaffectation des dossiers du groupe « %{label} »"
+        hint:
+          one: "Le groupe « %{label} » contient des dossiers. Afin de procéder à sa suppression, vous devez réaffecter ses dossiers à lʼautre groupe instructeur"
+          other: "Le groupe « %{label} » contient des dossiers. Afin de procéder à sa suppression, vous devez réaffecter ses dossiers à lʼun des %{count} autres groupes instructeurs"
+        select: Sélectionner
+        submit: Réaffecter les dossiers à ce groupe
+        confirm: "Êtes-vous sûr de vouloir réaffecter les dossiers du groupe « %{label} » ?"
+        success: "Les dossiers du groupe « %{group_label} » ont été réaffectés au groupe « %{target_group_label} »"
+        error: "Veuillez sélectionner un groupe instructeur dans la liste ci-dessous"

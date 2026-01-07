@@ -3,9 +3,8 @@
 = render partial: "header", locals: { dossier: @dossier, gallery_attachments: @gallery_attachments, procedure_presentation: @procedure_presentation, notifications: @notifications, notifications_sticker: @notifications_sticker }
 
 .container.groupe-instructeur
-  .tab-title.fr-mb-1w Réaffecter le dossier n° #{@dossier.id} à un autre groupe instructeur
-  %span.fr-hint-text
-    Ce dossier est affecté au groupe « #{@groupe_instructeur.label} ». Vous pouvez le réaffecter à lʼun des #{@groupes_instructeurs.count} autres groupes instructeurs
+  .tab-title.fr-mb-1w= t('instructeurs.dossiers.reaffectation.title', dossier_id: @dossier.id)
+  %span.fr-hint-text= t('instructeurs.dossiers.reaffectation.hint', label: @groupe_instructeur.label, count: @groupes_instructeurs.count)
 
   = form_with url: reaffecter_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id), method: :post, local: true, data: { controller: 'enable-submit-if-filled', action: 'change->enable-submit-if-filled#fillCombobox' } do |form|
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--bottom
@@ -15,12 +14,12 @@
             = render ReactComponent.new "ComboBox/SingleComboBox",
               id: 'groupe_instructeur_id',
               name: 'groupe_instructeur_id',
-              placeholder: 'Sélectionner',
+              placeholder: t('instructeurs.dossiers.reaffectation.select'),
               items: @groupes_instructeurs.map { |g| { label: g.label, value: g.id.to_s } },
               class: 'fr-mt-1w',
               data: { enable_submit_if_filled_target: 'input' }
       .fr-col-4
-        = form.submit 'Réaffecter le dossier à ce groupe',
+        = form.submit t('instructeurs.dossiers.reaffectation.submit'),
           class: 'fr-btn',
-          data: { enable_submit_if_filled_target: 'submit', confirm: "Êtes-vous sûr de vouloir réaffecter le dossier n° #{@dossier.id} du groupe « #{@groupe_instructeur.label} » ?" },
+          data: { enable_submit_if_filled_target: 'submit', confirm: t('instructeurs.dossiers.reaffectation.confirm', dossier_id: @dossier.id, label: @groupe_instructeur.label) },
           disabled: true

@@ -25,5 +25,12 @@ fr:
       archived_block:
         archived: 'Ce dossier a été déplacé dans « à archiver » le %{date} par %{email}'
       reaffectation:
+        title: "Réaffecter le dossier n° %{dossier_id} à un autre groupe instructeur"
+        hint:
+          one: "Ce dossier est affecté au groupe « %{label} ». Vous pouvez le réaffecter à lʼautre groupe instructeur"
+          other: "Ce dossier est affecté au groupe « %{label} ». Vous pouvez le réaffecter à lʼun des %{count} autres groupes instructeurs"
         success: "Le dossier n° %{dossier_id} a été réaffecté au groupe d’instructeurs « %{label} »."
-        error: "Veuillez sélectionner un groupe instructeur dans la liste ci-dessous"
+        error: Veuillez sélectionner un groupe instructeur dans la liste ci-dessous
+        submit: Réaffecter le dossier à ce groupe
+        select: Sélectionner
+        confirm: "Êtes-vous sûr de vouloir réaffecter le dossier n° %{dossier_id} du groupe « %{label} » ?"

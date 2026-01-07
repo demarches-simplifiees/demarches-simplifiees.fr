@@ -223,10 +223,10 @@ module Administrateurs
           dossier.assign_to_groupe_instructeur(target_group, DossierAssignment.modes.fetch(:manual), current_administrateur)
         end
 
-        flash[:notice] = "Les dossiers du groupe « #{groupe_instructeur.label} » ont été réaffectés au groupe « #{target_group.label} »."
+        flash[:notice] = t('administrateurs.groupe_instructeurs.reaffectation.success', group_label: groupe_instructeur.label, target_group_label: target_group.label)
         redirect_to admin_procedure_groupe_instructeurs_path(procedure)
       else
-        flash[:alert] = "Veuillez sélectionner un groupe instructeur dans la liste ci-dessous"
+        flash[:alert] = t('administrateurs.groupe_instructeurs.reaffectation.error')
         redirect_to reaffecter_dossiers_admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur)
       end
     end
