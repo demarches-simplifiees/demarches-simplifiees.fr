@@ -1308,6 +1308,83 @@ describe ProcedureRevision do
       end
     end
 
+    context 'from LLM::TypesImprover' do
+      context 'with type_champ update' do
+        let(:types_de_champ_public) { [{ type: :text, libelle: "Email du contact", stable_id: 10 }] }
+
+        it "can update type_champ from text to email" do
+          llm_rule_suggestion = create(:llm_rule_suggestion, procedure_revision: revision, rule: 'improve_types', schema_hash:)
+          create(:llm_rule_suggestion_item, llm_rule_suggestion:, verify_status: 'accepted', stable_id: 10, op_kind: 'update', payload: { 'stable_id' => 10, 'type_champ' => 'email' })
+
+          revision.apply_llm_rule_suggestion_items(llm_rule_suggestion.changes_to_apply)
+          revision.reload
+
+          tdc = revision.types_de_champ_public.find { |t| t.stable_id == 10 }
+          expect(tdc.type_champ).to eq('email')
+          expect(tdc.libelle).to eq("Email du contact")
+        end
+      end
+
+      context 'with type_champ update and options' do
+        let(:types_de_champ_public) { [{ type: :text, libelle: "Code postal", stable_id: 10 }] }
+
+        it "can update type_champ to formatted with options" do
+          llm_rule_suggestion = create(:llm_rule_suggestion, procedure_revision: revision, rule: 'improve_types', schema_hash:)
+          create(:llm_rule_suggestion_item,
+            llm_rule_suggestion:,
+            verify_status: 'accepted',
+            stable_id: 10,
+            op_kind: 'update',
+            payload: {
+              'stable_id' => 10,
+              'type_champ' => 'formatted',
+              'options' => {
+                'letters_accepted' => false,
+                'numbers_accepted' => true,
+                'special_characters_accepted' => false,
+                'min_character_length' => 5,
+                'max_character_length' => 5,
+              },
+            })
+
+          revision.apply_llm_rule_suggestion_items(llm_rule_suggestion.changes_to_apply)
+          revision.reload
+
+          tdc = revision.types_de_champ_public.find { |t| t.stable_id == 10 }
+          expect(tdc.type_champ).to eq('formatted')
+          expect(tdc.options['letters_accepted']).to eq(false)
+          expect(tdc.options['numbers_accepted']).to eq(true)
+          expect(tdc.options['special_characters_accepted']).to eq(false)
+          expect(tdc.options['min_character_length']).to eq(5)
+          expect(tdc.options['max_character_length']).to eq(5)
+        end
+      end
+    end
+
+    context 'from LLM::CleanerImprover' do
+      context 'with destroy operation' do
+        let(:types_de_champ_public) do
+          [
+            { type: :text, libelle: "Adresse", stable_id: 20 },
+            { type: :communes, libelle: "Commune", stable_id: 21 },
+          ]
+        end
+
+        it "can destroy a redundant field" do
+          llm_rule_suggestion = create(:llm_rule_suggestion, procedure_revision: revision, rule: 'cleaner', schema_hash:)
+          create(:llm_rule_suggestion_item, llm_rule_suggestion:, verify_status: 'accepted', stable_id: 21, op_kind: 'destroy', payload: { 'stable_id' => 21 })
+
+          expect(revision.types_de_champ_public.map(&:stable_id)).to include(21)
+
+          revision.apply_llm_rule_suggestion_items(llm_rule_suggestion.changes_to_apply)
+          revision.reload
+
+          expect(revision.types_de_champ_public.map(&:stable_id)).not_to include(21)
+          expect(revision.types_de_champ_public.map(&:stable_id)).to include(20)
+        end
+      end
+    end
+
     describe '#apply_llm_rule_suggestion_items for structure improver' do
       let(:procedure) do
         create(:procedure,

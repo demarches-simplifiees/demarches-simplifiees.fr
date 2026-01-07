@@ -112,7 +112,7 @@ module LLM
       TXT
     end
 
-    def build_item(args)
+    def build_item(args, tdc_index: {})
       if args['add']
         build_add_item(args)
       elsif args['update']

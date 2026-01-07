@@ -77,20 +77,22 @@
     <% component.with_body do %>
       <p>
         <strong>Ce parcours d’amélioration de la qualité du formulaire est terminé.</strong>
-        Vous pourrez obtenir de nouvelles suggestions une fois que vous aurez
-        modifié le formulaire.
+        Vous pourrez obtenir de nouvelles suggestions en recommençant le
+        parcours.
       </p>
 
       <p class="fr-mt-1w">
-        <%= link_to("Revenir à l’écran de gestion", back_link, class: "fr-btn") %>
+        <%= link_to("Recommencer le parcours", restart_link, class: "fr-btn") %>
       </p>
     <% end %>
   <% end %>
-<% else %>
+<% elsif llm_rule_suggestion.state.in?(['pending', 'queued', 'running', 'failed']) %>
   <div
     data-controller="<%= poll_controller_data %>"
     data-turbo-poll-url-value="<%= poll_url if should_poll? %>"
-    data-turbo-poll-interval-value="3000"
+    data-turbo-poll-interval-value="4000"
+    <%# max attempts is hardcoded to 20 %>
+    data-turbo-poll-strategy-value="fixed"
   >
     <%= display_message %>
 
@@ -103,4 +105,16 @@
       <p><%= button %></p>
     <% end %>
   </div>
+<% elsif llm_rule_suggestion.state.in?(['accepted', 'skipped']) %>
+  <p>
+    Vous avez déjà <%= llm_rule_suggestion.accepted? ? "accepté" : "ignoré" %>
+    des suggestions
+  </p>
+  <p class="fr-mt-1w">
+    <% if last_rule? %>
+      <%= link_to("Revenir à l’écran de gestion", back_link, class: "fr-link") %>
+    <% else %>
+      <%= link_to("Poursuivre le parcours d’amélioration", next_link, class: "fr-link") %>
+    <% end %>
+  </p>
 <% end %>

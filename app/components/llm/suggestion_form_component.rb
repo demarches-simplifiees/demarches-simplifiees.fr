@@ -16,15 +16,19 @@ class LLM::SuggestionFormComponent < ApplicationComponent
   end
 
   def item_component
-    LLMRuleSuggestion.item_component_class_for(rule)
+    LLM::Rule.new(rule).component_class
   end
 
   def prtdcs
     procedure_revision.types_de_champ.index_by(&:stable_id)
   end
 
-  def back_link
-    helpers.admin_procedure_path(procedure)
+  def restart_link
+    helpers.simplify_admin_procedure_types_de_champ_path(procedure, rule: 'improve_label')
+  end
+
+  def next_link
+    helpers.simplify_admin_procedure_types_de_champ_path(procedure, rule: LLM::Rule.next_rule(rule))
   end
 
   def suggestions_count
@@ -32,14 +36,7 @@ class LLM::SuggestionFormComponent < ApplicationComponent
   end
 
   def ordered_llm_rule_suggestion_items
-    case rule
-    when LLMRuleSuggestion.rules.fetch('improve_structure')
-      LLM::SuggestionOrderingService.ordered_structure_suggestions(llm_rule_suggestion)
-    when LLMRuleSuggestion.rules.fetch('improve_label')
-      LLM::SuggestionOrderingService.ordered_label_suggestions(llm_rule_suggestion)
-    else
-      raise "Unknown rule: #{rule}"
-    end
+    LLM::Rule.new(rule).ordered_items(llm_rule_suggestion)
   end
 
   def enqueue_button_text
@@ -75,18 +72,34 @@ class LLM::SuggestionFormComponent < ApplicationComponent
     t(".states.#{llm_rule_suggestion.state}")
   end
 
+  def back_link
+    helpers.admin_procedure_path(procedure)
+  end
+
   def display_message
     safe_join([
       llm_rule_suggestion.state.in?(['pending', 'failed', 'accepted', 'skipped']) ? tag.p(class: '') { t(".states.#{llm_rule_suggestion.state}") } : nil,
     ])
   end
 
+  def tunnel
+    @tunnel ||= LLM::TunnelFinder.new(llm_rule_suggestion.procedure_revision_id)
+  end
+
+  def tunnel_first_step
+    tunnel.first_step
+  end
+
+  def tunnel_last_step_finished
+    tunnel.final_step
+  end
+
   def last_rule?
-    LLMRuleSuggestion.last_rule?(llm_rule_suggestion.rule)
+    LLM::Rule.last?(llm_rule_suggestion.rule)
   end
 
   def stepper_finished?
-    llm_rule_suggestion.finished? && last_rule?
+    tunnel_first_step.present? && tunnel_last_step_finished.present? && last_rule?
   end
 
   def should_poll?

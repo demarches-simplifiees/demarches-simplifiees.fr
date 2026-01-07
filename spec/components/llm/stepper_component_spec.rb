@@ -16,17 +16,17 @@ RSpec.describe LLM::StepperComponent, type: :component do
   context 'with the label improvement rule' do
     let(:rule) { LLMRuleSuggestion.rules.fetch('improve_label') }
     it 'shows the first step and the correct next step' do
-      expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 1 sur 2')
+      expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 1 sur 4')
       expect(rendered_component.css('.fr-stepper__title').text).to include("Amélioration des libellés")
       expect(rendered_component.css('.fr-stepper__details').text).to include("Amélioration de la structure")
     end
   end
 
-  context 'with the structure rule' do
-    let(:rule) { LLMRuleSuggestion.rules.fetch('improve_structure') }
-    it 'marks the second step and shows no further step' do
-      expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 2 sur 2')
-      expect(rendered_component.css('.fr-stepper__title').text).to include("Amélioration de la structure")
+  context 'with the last rule' do
+    let(:rule) { LLMRuleSuggestion.rules.fetch(LLM::Rule::SEQUENCE.last) }
+    it 'marks the fourth step and shows no further step' do
+      expect(rendered_component.css('.fr-stepper__state').text).to eq('Étape 4 sur 4')
+      expect(rendered_component.css('.fr-stepper__title').text).to include("Nettoyage des champs redondants")
     end
   end
 end
