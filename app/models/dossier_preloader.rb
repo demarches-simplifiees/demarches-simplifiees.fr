@@ -2,7 +2,7 @@
 
 class DossierPreloader
   DEFAULT_BATCH_SIZE = 2000
-  MAX_CHAMPS_PER_BATCH = 200_000
+  MAX_CHAMPS_PER_BATCH = 140_000
 
   def initialize(dossiers, includes_for_champ: [], includes_for_etablissement: [])
     @dossiers = dossiers
