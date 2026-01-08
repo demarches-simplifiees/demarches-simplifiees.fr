@@ -49,6 +49,11 @@ def format_with_checkbox(pdf, option, offset = 0)
   end
 
   pdf.font 'marianne', size: 9 do
+    # Ensure enough space for checkbox + text to avoid orphaned checkboxes at page breaks
+    if pdf.cursor < (pdf.bounds.bottom + 40)
+      pdf.start_new_page
+    end
+
     pdf.stroke_rectangle [0 + offset, pdf.cursor], 10, 10
     render_expanding_text_box(pdf, label, at: [15, pdf.cursor])
 
