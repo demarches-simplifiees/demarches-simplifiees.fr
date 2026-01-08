@@ -30,21 +30,35 @@ fr:
       email_preferences:
         flash_notice: Vos préférences pour les notifications par email sont enregistrées.
         subtitle: Configurez sur cette page les notifications que vous souhaitez recevoir par email pour cette démarche.
-        for_each_file_submitted:
-          title: Recevoir un email à chaque dossier déposé
-          notice: Cet email vous signale le dépôt d’un nouveau dossier. Il est envoyé à chaque fois qu’un usager dépose un dossier.
-        for_each_message_submitted:
-          title: Recevoir un email à chaque message déposé
-          notice: Cet email vous signale le dépôt d’un nouveau message sur vos dossiers suivis. Il est envoyé à chaque fois qu’un usager dépose un message.
-        daily_notifications:
+        instant_email_new_dossier:
+          title: Recevoir un email à chaque dossier déposé par l'usager
+          notice: Cet email vous signale le dépôt d’un nouveau dossier par un usager sur cette démarche.
+        instant_email_new_message:
+          title: Recevoir un email à chaque message envoyé par l'usager
+          notice: Cet email vous signale l'envoi d'un nouveau message par un usager, uniquement sur les dossiers que vous suivez.
+        daily_email_summary:
           title: Recevoir un récapitulatif quotidien
-          notice: Cet email vous signale le dépôt de nouveaux dossiers sur cette démarche, ou des changements sur vos dossiers suivis. Il est envoyé une fois par jour, du lundi au samedi, vers 10 h du matin.
-        hebdo_recap:
+          notice: Cet email récapitule la situation à date des dossiers de cette démarche. Il est envoyé une fois par jour, du lundi au vendredi.
+        weekly_email_summary:
           title: Recevoir un récapitulatif hebdomadaire
-          notice: Cet email récapitule l’activité de la semaine sur l’ensemble de vos démarches. Il est envoyé chaque semaine le lundi matin.
-        avis_notifications:
+          notice: Cet email récapitule l'activité de la semaine sur les dossiers de cette démarche. Il est envoyé chaque semaine le lundi matin.
+        instant_email_new_expert_avis:
           title: Recevoir un email pour chaque avis rendu par un expert
-          notice: Cet email vous signale un nouvel avis posté par un expert que vous avez sollicité sur un dossier. Il est envoyé à chaque fois qu’un expert rend un avis.
+          notice: Cet email vous signale qu'un nouvel avis a été envoyé par un expert que vous avez sollicité sur un dossier.
+        instant_email_dossier_expiration:
+          title: Recevoir un email m'alertant que des dossiers vont bientôt expirer
+          notice: Cet email vous informe qu'un ou plusieurs dossiers vont bientôt expirer. Il est envoyé 14 jours avant l'atteinte du délai maximal de conservation d'un dossier.
+        instant_email_dossier_expired:
+          title: Recevoir un email m'alertant que des dossiers expirés vont bientôt être supprimés
+          notice: Cet email vous informe qu'un ou plusieurs dossiers ont atteint leur délai maximal de conservation et ont été mis à la corbeille. Il est envoyé 14 jours avant la suppression définitive d'un dossier. Nous vous recommandons dans l'intervalle de télécharger ces dossiers ou d'étendre leur durée de conservation.
+        instant_email_dossier_deletion:
+          title: Recevoir un email m'informant qu'un usager a supprimé son dossier
+          notice: Cet email vous informe qu'un dossier « en construction » que vous suiviez a été supprimé à la demande de l'usager. Vous n'y aurez donc plus accès.
+        warning_notice:
+          title: Attention
+          desc_expiration: Lorsque cette option est désactivée, vous ne recevez plus aucune alerte concernant l'expiration des dossiers avant leur mise à la corbeille automatique.
+          desc_expired: Lorsque cette option est désactivée, vous ne recevez plus aucune alerte concernant la suppression définitive à venir des dossiers. Veillez à les télécharger ou à étendre leur durée de conservation avant qu'ils ne soient supprimés définitivement.
+
       apercu:
         title_with_libelle: Prévisualisation de « %{libelle} »
         title: Prévisualisation de la démarche
