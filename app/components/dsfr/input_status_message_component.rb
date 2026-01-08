@@ -17,6 +17,7 @@ module Dsfr
       siret_support_status? ||
       rna_support_statut? ||
       referentiel_support_statut? ||
+      dossier_link_support_statut? ||
       prefilled? ||
       pjs_statut?
     end
@@ -37,6 +38,10 @@ module Dsfr
       @champ.RIB? && !@champ.idle?
     end
 
+    def dossier_link_support_statut?
+      type_de_champ.dossier_link? && @champ.value.present?
+    end
+
     def statut_message
       case @champ.type_de_champ.type_champ
       when TypeDeChamp.type_champs[:siret]
@@ -52,6 +57,11 @@ module Dsfr
         end
       when TypeDeChamp.type_champs[:rna]
         { state: :info, text: t(".rna.data_fetched", title: @champ.title, address: @champ.full_address) }
+      when TypeDeChamp.type_champs[:dossier_link]
+        dossier = Dossier.visible_by_administration.find_by(id: @champ.value)
+        if dossier.present?
+          { state: :info, text: dossier.text_summary }
+        end
       when TypeDeChamp.type_champs[:referentiel]
         if @champ.pending?
           { state: :info, text: t(".referentiel.fetching") }
