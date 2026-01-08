@@ -5,11 +5,11 @@
         %div{ id: dom_id(attachment, :persisted_row) }
           .flex.flex-gap-2{ class: class_names("attachment-error": attachment.virus_scanner_error?) }
             - if user_can_destroy?
-              = render NestedForms::OwnedButtonComponent.new(formaction: destroy_attachment_path, http_method: :delete, opt: {class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-delete-line", title: t(".delete_file", filename: attachment.filename)}) do
-                = t('.delete_file', filename: attachment.filename)
-
               - if downloadable?(attachment)
                 = render Dsfr::DownloadComponent.new(attachment: attachment)
+
+              = render NestedForms::OwnedButtonComponent.new(formaction: destroy_attachment_path, http_method: :delete, opt: {class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-delete-line order-first", title: t(".delete_file", filename: attachment.filename)}) do
+                = t('.delete_file', filename: attachment.filename)
             - else
               .fr-py-1v
                 %span.attachment-filename.fr-mr-1w= link_to_if(viewable?(attachment), attachment.filename.to_s, helpers.url_for(attachment.blob), title: t(".open_file", filename: attachment.filename), **helpers.external_link_attributes)
@@ -22,10 +22,6 @@
     - if persisted?
       %div{ id: dom_id(attachment, :persisted_row) }
         .flex.flex-gap-2{ class: class_names("attachment-error": attachment.virus_scanner_error?) }
-          - if user_can_destroy?
-            = render NestedForms::OwnedButtonComponent.new(formaction: destroy_attachment_path, http_method: :delete, opt: {class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-delete-line", title: t(".delete_file", filename: attachment.filename)}) do
-              = t('.delete_file', filename: attachment.filename)
-
           - if downloadable?(attachment)
             = render Dsfr::DownloadComponent.new(attachment:)
           - else
@@ -33,6 +29,10 @@
               %span.attachment-filename.fr-mr-1w= link_to_if(viewable?(attachment), attachment.filename.to_s, helpers.url_for(attachment.blob), title: t(".open_file", filename: attachment.filename), **helpers.external_link_attributes)
 
             = render Attachment::ProgressComponent.new(attachment: attachment, ignore_antivirus: true)
+
+          - if user_can_destroy?
+            = render NestedForms::OwnedButtonComponent.new(formaction: destroy_attachment_path, http_method: :delete, opt: {class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-delete-line order-first", title: t(".delete_file", filename: attachment.filename)}) do
+              = t('.delete_file', filename: attachment.filename)
 
         - if error?(attachment)
           %p.fr-error-text= error_message(attachment)
