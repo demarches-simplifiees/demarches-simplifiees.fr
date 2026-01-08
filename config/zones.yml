@@ -125,6 +125,9 @@ ministeres:
     tchap_hs:
       - agent.pm.tchap.gouv.fr
       - agent.dinum.tchap.gouv.fr
+  - MTR:
+    labels:
+      - '2025-10-05': "Ministère des Transports"
   - OM:
     labels:
       - '2025-07-30': "Ministère des Outre-mer"
