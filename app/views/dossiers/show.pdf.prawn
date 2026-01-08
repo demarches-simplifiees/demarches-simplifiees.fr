@@ -290,7 +290,7 @@ def add_etats_dossier(pdf, dossier)
   end
 
   if dossier.pending_correction?
-    format_in_2_columns(pdf, "Correction demandée le", try_format_date(dossier.pending_correction.created_at))
+    format_in_2_columns(pdf, "Correction demandée le", try_format_date(dossier.pending_corrections.first.created_at))
   end
 
   if dossier.en_instruction_at.present?
@@ -383,7 +383,8 @@ prawn_document(page_size: "A4") do |pdf|
 
   if @acls[:include_messagerie] && @dossier.commentaires.present?
     add_title(pdf, 'Messagerie')
-    @dossier.commentaires_chronological.each do |commentaire|
+    # use preloaded association
+    @dossier.commentaires.sort_by(&:created_at).each do |commentaire|
       add_message(pdf, commentaire)
     end
   end

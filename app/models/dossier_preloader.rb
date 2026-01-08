@@ -19,7 +19,7 @@ class DossierPreloader
 
   def in_batches_with_block(&block)
     @dossiers.in_batches(of: adaptive_batch_size(@dossiers)) do |batch|
-      data = Dossier.where(id: batch.ids).includes(:individual, :traitement, :etablissement, user: :france_connect_informations, avis: :expert, commentaires: [:instructeur, :expert])
+      data = Dossier.where(id: batch.ids).includes(:individual, :traitement, :etablissement, :pending_corrections, user: :france_connect_informations, avis: :expert, commentaires: [:instructeur, :expert])
 
       dossiers = data.to_a
       load_dossiers(dossiers)
