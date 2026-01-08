@@ -44,19 +44,14 @@ def format_with_checkbox(pdf, option, offset = 0)
   label = option.is_a?(String) ? option : option.first
   value = option.is_a?(String) ? option : option.last
 
-  # Skip empty options to avoid orphaned checkboxes
-  return if label.blank?
-
   if value == Champs::DropDownListChamp::OTHER
     label += " : "
   end
 
   pdf.font 'marianne', size: 9 do
-    # Simple page break check: ensure at least 40 points for checkbox + text + header spacing
+    # Ensure enough space for checkbox + text to avoid orphaned checkboxes at page breaks
     if pdf.cursor < (pdf.bounds.bottom + 40)
       pdf.start_new_page
-      # Move cursor down to avoid header overlap on new pages
-      pdf.move_down(25)
     end
 
     pdf.stroke_rectangle [0 + offset, pdf.cursor], 10, 10
