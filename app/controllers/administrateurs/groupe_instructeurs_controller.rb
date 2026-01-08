@@ -212,18 +212,23 @@ module Administrateurs
     def reaffecter_dossiers
       @procedure = procedure
       @groupe_instructeur = groupe_instructeur
-      @groupes_instructeurs = paginated_groupe_instructeurs
-        .without_group(@groupe_instructeur)
+      @groupes_instructeurs = @groupe_instructeur.other_groupe_instructeurs
     end
 
     def reaffecter
-      target_group = procedure.groupe_instructeurs.find(params[:target_group])
-      groupe_instructeur.dossiers.find_each do |dossier|
-        dossier.assign_to_groupe_instructeur(target_group, DossierAssignment.modes.fetch(:manual), current_administrateur)
-      end
+      target_group = procedure.groupe_instructeurs.find_by(id: params[:target_group])
 
-      flash[:notice] = "Les dossiers du groupe « #{groupe_instructeur.label} » ont été réaffectés au groupe « #{target_group.label} »."
-      redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+      if target_group.present?
+        groupe_instructeur.dossiers.find_each do |dossier|
+          dossier.assign_to_groupe_instructeur(target_group, DossierAssignment.modes.fetch(:manual), current_administrateur)
+        end
+
+        flash[:notice] = t('administrateurs.groupe_instructeurs.reaffectation.success', group_label: groupe_instructeur.label, target_group_label: target_group.label)
+        redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+      else
+        flash[:alert] = t('administrateurs.groupe_instructeurs.reaffectation.error')
+        redirect_to reaffecter_dossiers_admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur)
+      end
     end
 
     def reaffecter_all_dossiers_to_defaut_groupe

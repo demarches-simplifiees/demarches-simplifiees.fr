@@ -15,12 +15,18 @@ en:
         assignment:
           one: "The instructor %{emails} was assigned to the group « %{groupe} »."
           other: "The instructors %{emails} were assigned to the group « %{groupe} »."
-      reaffecter_dossiers:
-        existing_groupe:
-          one: "%{count} group exist"
-          other: "%{count} groups exist"
       routing_alert_sticky_header:
         routing_alert_html: "<strong>%{count} files</strong> have been deposited and are waiting to be processed on this procedure. These files have <strong>not been routed according to the configured routing</strong>. You must launch the routing to distribute them to the different groups."
         routing_alert_with_invalid_rules_html: "<strong>%{count} files</strong> have been deposited and are waiting to be processed on this procedure. These files have <strong>not yet been routed</strong>. Once you have configured your routing rules, you will need to launch the routing to distribute them to the different groups."
         bulk_route: Launch routing
         bulk_routing_confirm: "Are you sure you want to launch the routing for the deposited files waiting to be processed ?"
+      reaffectation:
+        title: "Reassign files from group « %{label} »"
+        hint:
+          one: "The group « %{label} » has files. In order to delete it, you have to reassign them to the other group"
+          other: "The group « %{label} » has files. In order to delete it, you have to reassign them to one of the %{count} other groups"
+        select: Select
+        submit: Reassign files to this group
+        confirm: "Are you sure you want to reassign files from the group « %{label} » ?"
+        success: "Files from group « %{group_label} » have been reassigned to group « %{target_group_label} »"
+        error: "Please select a group in the list below"
