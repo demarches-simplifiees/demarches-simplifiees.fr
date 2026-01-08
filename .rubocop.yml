@@ -55,6 +55,12 @@ DS/FrenchApostrophe:
   Exclude:
     - 'lib/cops/*.rb'
     - 'spec/**/*'
+    - 'lib/tasks/adresse_electronique_lint.rake'
+    - 'lib/tasks/support.rake'
+    - 'app/models/concerns/dossier_champs_concern.rb' # English error message
+    - 'app/models/prefill_description.rb' # curl command example
+    - 'app/models/procedure.rb' # SQL CASE statement
+    - 'app/models/concerns/procedure_sva_svr_concern.rb' # SQL query
 
 DS/Unscoped:
   Enabled: true
