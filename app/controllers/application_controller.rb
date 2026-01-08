@@ -229,9 +229,18 @@ class ApplicationController < ActionController::Base
     gon.matomo = matomo_config
     gon.sentry = sentry_config
 
-    if administrateur_signed_in? || (user_signed_in? && feature_enabled?(:chatbot))
+    if !chatbot_disabled_page? && (administrateur_signed_in? || (user_signed_in? && feature_enabled?(:chatbot)))
       gon.crisp = crisp_config
     end
+  end
+
+  CHATBOT_DISABLED_PAGES = [
+    ['users/dossiers', 'brouillon'],
+    ['users/dossiers', 'modifier'],
+  ].freeze
+
+  def chatbot_disabled_page?
+    CHATBOT_DISABLED_PAGES.include?([controller_path, action_name])
   end
 
   def current_user_roles
