@@ -68,13 +68,14 @@ class DossierNotification < ApplicationRecord
   def self.create_notifications_for_non_customisable_type(dossiers, notification_type)
     return unless NON_CUSTOMISABLE_TYPE.include?(notification_type)
 
-    instructeur_ids_by_dossier_id = Dossier
-      .where(id: dossiers)
-      .includes(groupe_instructeur: :instructeurs)
-      .map { |d| [d.id, d.groupe_instructeur.instructeur_ids] }
-      .to_h
+    Dossier.where(id: dossiers).in_batches do |batch|
+      instructeur_ids_by_dossier_id = batch
+        .includes(groupe_instructeur: :instructeurs)
+        .map { |d| [d.id, d.groupe_instructeur.instructeur_ids] }
+        .to_h
 
-    create_notifications_by_type_for_dossiers_instructeurs(instructeur_ids_by_dossier_id, notification_type)
+      create_notifications_by_type_for_dossiers_instructeurs(instructeur_ids_by_dossier_id, notification_type)
+    end
   end
 
   def self.refresh_notifications_instructeur_for_followed_dossier(instructeur, dossier)
