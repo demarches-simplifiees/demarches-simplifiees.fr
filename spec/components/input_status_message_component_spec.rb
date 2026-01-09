@@ -41,6 +41,21 @@ RSpec.describe Dsfr::InputStatusMessageComponent, type: :component do
       end
     end
 
+    context 'with dossier_link champs' do
+      let(:types_de_champ_public) { [{ type: :dossier_link }] }
+      let(:linked_dossier) { create(:dossier, :en_construction) }
+
+      before do
+        champ.update(value: linked_dossier.id.to_s)
+      end
+
+      context "when a dossier is found" do
+        it "renders the dossier information" do
+          expect(subject).to have_css(".fr-message--info", text: /Dossier/)
+        end
+      end
+    end
+
     context 'with referentiel champs' do
       let(:referentiel) { create(:api_referentiel, :exact_match) }
       let(:types_de_champ_public) { [{ type: :referentiel, referentiel: }] }
