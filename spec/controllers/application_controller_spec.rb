@@ -324,6 +324,20 @@ describe ApplicationController, type: :controller do
         expect(config[:user][:segments]).to contain_exactly('administrateur', 'instructeur')
       end
     end
+
+    context 'on brouillon page' do
+      before do
+        allow(@controller).to receive(:controller_path).and_return('users/dossiers')
+        allow(@controller).to receive(:action_name).and_return('brouillon')
+        allow(@controller).to receive(:matomo_config)
+        allow(@controller).to receive(:sentry_config)
+      end
+
+      it 'does not setup crisp' do
+        expect(@controller).not_to receive(:crisp_config)
+        @controller.send(:setup_tracking)
+      end
+    end
   end
 
   describe 'chatbot feature flag' do
