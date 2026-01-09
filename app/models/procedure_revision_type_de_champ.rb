@@ -31,7 +31,7 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
   end
 
   def orphan?
-    child? && !parent_type_de_champ.repetition?
+    child? && !parent_type_de_champ.quotient_familial? && !parent_type_de_champ.repetition?
   end
 
   def first?
