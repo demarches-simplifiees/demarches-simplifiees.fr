@@ -18,8 +18,9 @@ class TypeDeChamp < ApplicationRecord
   PIECES_JOINTES = :pieces_jointes
   CHOICE = :choice
   REFERENTIEL_EXTERNE = :referentiel_externe
+  AUTOMATIC = :automatic
 
-  CATEGORIES = [STRUCTURE, ETAT_CIVIL, LOCALISATION, PAIEMENT_IDENTIFICATION, STANDARD, PIECES_JOINTES, CHOICE, REFERENTIEL_EXTERNE]
+  CATEGORIES = [STRUCTURE, ETAT_CIVIL, LOCALISATION, PAIEMENT_IDENTIFICATION, STANDARD, PIECES_JOINTES, CHOICE, REFERENTIEL_EXTERNE, AUTOMATIC]
 
   TYPE_DE_CHAMP_TO_CATEGORIE = {
     referentiel: REFERENTIEL_EXTERNE,
@@ -63,7 +64,7 @@ class TypeDeChamp < ApplicationRecord
     pole_emploi: REFERENTIEL_EXTERNE,
     mesri: REFERENTIEL_EXTERNE,
     cojo: REFERENTIEL_EXTERNE,
-    quotient_familial: REFERENTIEL_EXTERNE,
+    quotient_familial: AUTOMATIC,
   }
 
   enum :type_champ, {
@@ -325,7 +326,11 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def build_champ(params = {})
-    champ_class.new(params_for_champ.merge(params))
+    champ = champ_class.new(params_for_champ.merge(params))
+    if automatic?
+      champ.set_default_value(dossier: params[:dossier])
+    end
+    champ
   end
 
   def check_mandatory
@@ -424,6 +429,10 @@ class TypeDeChamp < ApplicationRecord
 
   def public?
     !private?
+  end
+
+  def automatic?
+    TYPE_DE_CHAMP_TO_CATEGORIE[type_champ.to_sym] == :automatic
   end
 
   def child?(revision)

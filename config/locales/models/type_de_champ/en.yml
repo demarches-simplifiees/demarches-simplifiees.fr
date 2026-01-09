@@ -13,6 +13,7 @@ en:
           pieces_jointes: 'Attachments'
           choice: 'Choice'
           referentiel_externe: 'External referential'
+          automatic: 'Automatic field'
         type_champs:
           header_section: 'Header section'
           repetition: 'Repetition'

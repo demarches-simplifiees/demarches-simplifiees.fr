@@ -20,4 +20,14 @@ class Champs::QuotientFamilialChamp < Champ
   def incorrect_qf_data?
     recovered_qf_data? && value_json&.dig('correct_qf_data') == 'false'
   end
+
+  def set_default_value(dossier:)
+    return if dossier.for_procedure_preview?
+
+    if !dossier.user_from_france_connect?
+      self.value_json = { 'recovered_qf_data' => 'false' }
+    else
+      # try get api part value
+    end
+  end
 end

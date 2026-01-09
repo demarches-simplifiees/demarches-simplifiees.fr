@@ -13,6 +13,7 @@ fr:
           pieces_jointes: 'Pièces jointes'
           choice: 'Choix'
           referentiel_externe: 'Référentiel externe'
+          automatic: 'Champ automatique'
         type_champs:
           header_section: 'Titre de section'
           repetition: 'Bloc répétable'
