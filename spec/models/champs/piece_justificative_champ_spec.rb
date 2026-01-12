@@ -12,11 +12,31 @@ describe Champs::PieceJustificativeChamp do
   describe "validations" do
     subject { champ }
 
-    context "by default" do
-      it do
-        is_expected.to validate_size_of(:piece_justificative_file).less_than(Champs::PieceJustificativeChamp::FILE_MAX_SIZE)
-        is_expected.to validate_content_type_of(:piece_justificative_file).rejecting('application/x-ms-dos-executable')
-        expect(champ.type_de_champ.skip_pj_validation).to be_falsy
+    context "by default (public context)" do
+      it "rejects file bigger than max size" do
+        champ.piece_justificative_file.purge
+
+        blob = ActiveStorage::Blob.create_and_upload!(
+          io: StringIO.new('x'),
+          filename: 'big.pdf',
+          content_type: 'application/pdf'
+        )
+        blob.update_column(:byte_size, Champs::PieceJustificativeChamp::FILE_MAX_SIZE + 1)
+
+        champ.piece_justificative_file.attach(blob)
+
+        expect(champ.valid?(:champs_public_value)).to be false
+        expect(champ.errors[:piece_justificative_file]).to be_present
+      end
+
+      it "does not validate public PJ when validating private context" do
+        champ.piece_justificative_file.attach(
+          io: StringIO.new('x'),
+          filename: 'bad.exe',
+          content_type: 'application/x-ms-dos-executable'
+        )
+
+        expect(champ.valid?(:champs_private_value)).to be true
       end
     end
 

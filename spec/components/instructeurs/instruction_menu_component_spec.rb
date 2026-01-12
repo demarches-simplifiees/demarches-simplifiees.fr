@@ -58,7 +58,10 @@ RSpec.describe Instructeurs::InstructionMenuComponent, type: :component do
     let(:types_de_champ_private)  { [{ type: :text, mandatory: true }] }
 
     it 'renders an alert if annotations privees are not valid' do
-      expect(subject).to have_selector('#alert-error-annotation', text: "Les annotations privées n’ont pas été correctement renseignées. Elles sont indispensables à l'instruction du dossier.", visible: true)
+      expect(subject).to have_selector(
+        '#alert-error-annotation:not(.hidden)',
+        text: "Les annotations privées n’ont pas été correctement renseignées. Elles sont indispensables à l'instruction du dossier."
+      )
     end
   end
 end
