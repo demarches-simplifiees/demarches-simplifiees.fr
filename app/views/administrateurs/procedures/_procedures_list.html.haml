@@ -17,30 +17,30 @@
 
             %p.fr-mt-1w.fr-mb-1w
               = t('administrateurs.procedures.created_at')
-              = procedure.created_at.strftime('%d/%m/%Y')
+              = l(procedure.created_at, format: :short)
 
               - if procedure.published_at.present?
                 %span
                   = t('administrateurs.procedures.published_at')
-                  = procedure.published_at.strftime('%d/%m/%Y')
+                  = l(procedure.published_at, format: :short)
 
               - if procedure.updated_at.today?
                 %span
                   = t('administrateurs.procedures.updated_at_today')
-                  = procedure.updated_at.strftime('%H:%M')
+                  = l(procedure.updated_at, format: '%H:%M')
               - else
                 %span
                   = t('administrateurs.procedures.updated_at')
-                  = procedure.updated_at.strftime('%d/%m/%Y %H:%M')
+                  = l(procedure.updated_at, format: :short_with_time)
 
               - if procedure.closed_at.present?
                 %span
                   = t('administrateurs.procedures.closed_at')
-                  = procedure.closed_at.strftime('%d/%m/%Y')
+                  = l(procedure.closed_at, format: :short)
               - elsif procedure.auto_archive_on&.future?
                 %span
                   = t('administrateurs.procedures.auto_archive_on')
-                  = procedure.auto_archive_on.strftime('%d/%m/%Y')
+                  = l(procedure.auto_archive_on, format: :short)
 
             %div
               = dsfr_icon('fr-icon-team-fill')
