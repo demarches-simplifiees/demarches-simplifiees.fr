@@ -151,7 +151,7 @@ describe Champs::RNAController, type: :controller do
             "department_name" => nil,
             "departement_code" => nil,
             "departement_name" => nil,
-            "association_objet" => "L'association a pour objet de promouvoir la pratique du sport de haut niveau et de contribuer à la formation des jeunes sportifs.",
+            "association_objet" => "L’association a pour objet de promouvoir la pratique du sport de haut niveau et de contribuer à la formation des jeunes sportifs.",
             "association_date_creation" => "2015-01-01",
             "association_date_declaration" => "2019-01-01",
             "association_date_publication" => "2018-01-01"
