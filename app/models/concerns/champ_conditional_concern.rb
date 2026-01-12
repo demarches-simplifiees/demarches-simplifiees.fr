@@ -34,6 +34,7 @@ module ChampConditionalConcern
 
     def reset_visible # recompute after a dossier update
       remove_instance_variable :@visible if instance_variable_defined? :@visible
+      remove_instance_variable :@parent_hidden if instance_variable_defined? :@parent_hidden
     end
 
     private
@@ -43,6 +44,12 @@ module ChampConditionalConcern
     end
 
     def parent_hidden?
+      return @parent_hidden if instance_variable_defined?(:@parent_hidden)
+
+      @parent_hidden = compute_parent_hidden
+    end
+
+    def compute_parent_hidden
       # if there is no row_id, it always has been a root champ
       return false if !child?
 
