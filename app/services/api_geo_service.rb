@@ -88,7 +88,9 @@ class APIGeoService
     def communes(departement_code)
       return [] if departement_code.blank? || departement_code == '99'
 
-      get_from_api_geo("communes-#{departement_code}").sort_by { I18n.transliterate([_1[:name], _1[:postal_code]].join(' ')) }
+      Rails.cache.fetch("api_geo_communes_by_dpt_#{departement_code}", expires_in: 1.week, version: 1) do
+        get_from_api_geo("communes-#{departement_code}").sort_by { I18n.transliterate([_1[:name], _1[:postal_code]].join(' ')) }
+      end
     end
 
     def communes_by_postal_code(postal_code)
