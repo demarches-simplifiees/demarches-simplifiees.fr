@@ -14,7 +14,7 @@ describe FranceConnectService do
       allow(OpenIDConnect::Client).to receive(:new).and_return(client)
       allow(SecureRandom).to receive(:alphanumeric).with(32).and_return(state, nonce)
       allow(client).to receive(:authorization_uri).with(
-        scope: [:profile, :email],
+        scope: [:identite_pivot, :email],
         state:, nonce:, acr_values: 'eidas1'
       )
         .and_return(uri)
@@ -32,12 +32,24 @@ describe FranceConnectService do
     let(:birthdate) { '2012-12-31' }
     let(:gender) { 'plop4' }
     let(:birthplace) { 'plop5' }
+    let(:birthcountry) { '99100' }
     let(:email) { 'plop@emaiL.com' }
     let(:phone) { '012345678' }
     let(:france_connect_particulier_id) { 'izhikziogjuziegj' }
     let(:nonce) { 'a_nonce' }
-
-    let(:user_info_hash) { { sub: france_connect_particulier_id, given_name:, family_name:, birthdate:, gender:, birthplace:, email:, phone: } }
+    let(:user_info_hash) {
+      {
+        'sub' => france_connect_particulier_id,
+        'given_name' => given_name,
+        'family_name' => family_name,
+        'birthdate' => birthdate,
+        'gender' => gender,
+        'birthplace' => birthplace,
+        'email' => email,
+        'phone' => phone,
+        'birthcountry' => birthcountry,
+      }
+    }
     let(:user_info) { instance_double('OpenIDConnect::ResponseObject::UserInfo', raw_attributes: user_info_hash) }
 
     subject { described_class.find_or_retrieve_france_connect_information(code, nonce) }
@@ -52,20 +64,43 @@ describe FranceConnectService do
       stub_const('FRANCE_CONNECT', identifier: 'identifier')
     end
 
-    it 'returns user informations' do
-      fci, id_token = subject
+    context "when there is no existing fci" do
+      it 'returns user informations' do
+        fci, id_token = subject
 
-      expect(fci).to have_attributes({
-        given_name: given_name,
-        family_name: family_name,
-        birthdate: Time.zone.parse(birthdate).to_date,
-        birthplace: birthplace,
-        gender: gender,
-        email_france_connect: email,
-        france_connect_particulier_id: france_connect_particulier_id,
-      })
+        expect(fci).to have_attributes({
+          given_name: given_name,
+          family_name: family_name,
+          birthdate: Time.zone.parse(birthdate).to_date,
+          birthplace: birthplace,
+          birthcountry: birthcountry,
+          gender: gender,
+          email_france_connect: email,
+          france_connect_particulier_id: france_connect_particulier_id,
+        })
 
-      expect(id_token).to eq('id_token')
+        expect(id_token).to eq('id_token')
+      end
+    end
+
+    context "when there is an existing fci with missing information" do
+      let!(:fci) { create(:france_connect_information, france_connect_particulier_id:, given_name:, family_name:, birthdate:, gender:, email_france_connect: email) }
+
+      it "add the missing information" do
+        subject
+        expect(fci.reload).to have_attributes({
+          birthplace: birthplace,
+          birthcountry: birthcountry,
+        })
+      end
+    end
+
+    context "when there is a complete fci with correct information" do
+      let!(:fci) { create(:france_connect_information, france_connect_particulier_id:, given_name:, family_name:, birthdate:, gender:, email_france_connect: email, birthplace:, birthcountry:) }
+
+      it "does not change the attributes" do
+        expect { subject }.not_to change { fci.reload.attributes }
+      end
     end
   end
 end

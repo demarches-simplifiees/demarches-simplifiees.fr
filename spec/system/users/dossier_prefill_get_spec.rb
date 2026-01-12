@@ -179,10 +179,22 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
     context 'when the user signs up with FranceConnect' do
       it_behaves_like "the user has got a prefilled dossier, owned by themselves" do
         let(:user) { User.last }
+        let(:user_info) do
+          {
+            'sub' => 'blablabla',
+            'given_name' => 'titi',
+            'family_name' => 'toto',
+            'birthdate' => '20150821',
+            'birthplace' => '1234',
+            'birthcountry' => '12345',
+            'gender' => 'M',
+            'email' => 'EMAIL_from_fc@test.com',
+          }
+        end
 
         before do
           allow(FranceConnectService).to receive(:authorization_uri).and_return([france_connect_callback_path(code: "c0d3", state: 'state'), 'state', 'nonce'])
-          allow(FranceConnectService).to receive(:retrieve_user_informations).and_return(build(:france_connect_information))
+          allow(FranceConnectService).to receive(:retrieve_user_informations).and_return([user_info, 'id_token'])
 
           page.find('.fr-connect').click
 

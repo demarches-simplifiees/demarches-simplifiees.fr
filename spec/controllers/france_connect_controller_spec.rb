@@ -3,16 +3,16 @@
 describe FranceConnectController, type: :controller do
   let(:birthdate) { '20150821' }
   let(:email) { 'EMAIL_from_fc@test.com' }
-
   let(:user_info) do
     {
-      france_connect_particulier_id: 'blablabla',
-      given_name: 'titi',
-      family_name: 'toto',
-      birthdate: birthdate,
-      birthplace: '1234',
-      gender: 'M',
-      email_france_connect: email,
+      'sub' => 'blablabla',
+      'given_name' => 'titi',
+      'family_name' => 'toto',
+      'birthdate' => birthdate,
+      'birthplace' => '1234',
+      'birthcountry' => '12345',
+      'gender' => 'M',
+      'email' => email,
     }
   end
 
@@ -90,11 +90,19 @@ describe FranceConnectController, type: :controller do
     context 'when code is correct' do
       before do
         allow(FranceConnectService).to receive(:retrieve_user_informations)
-          .and_return([FranceConnectInformation.new(user_info), 'id_token'])
+          .and_return([user_info, 'id_token'])
       end
 
       context 'when france_connect_particulier_id exists in database' do
-        let!(:fci) { FranceConnectInformation.create!(user_info.merge(user_id: fc_user&.id)) }
+        let(:fci_attributes) do
+          FranceConnectService::UPDATABLE_FRANCE_CONNECT_CLAIMS
+            .transform_values { |fc_claim| user_info[fc_claim] }
+            .merge(
+              france_connect_particulier_id: user_info['sub'],
+              user_id: fc_user&.id
+            )
+        end
+        let!(:fci) { FranceConnectInformation.create!(fci_attributes) }
 
         context 'and is linked to an user' do
           let(:fc_user) { create(:user, email: 'associated_user@a.com') }
@@ -194,7 +202,12 @@ describe FranceConnectController, type: :controller do
   describe '#merge_using_fc_email' do
     subject { post :merge_using_fc_email, params: { merge_token: merge_token } }
 
-    let!(:fci) { FranceConnectInformation.create!(user_info) }
+    let(:fci_attributes) do
+      FranceConnectService::UPDATABLE_FRANCE_CONNECT_CLAIMS
+        .transform_values { |fc_claim| user_info[fc_claim] }
+        .merge(france_connect_particulier_id: user_info['sub'])
+    end
+    let!(:fci) { FranceConnectInformation.create!(fci_attributes) }
     let(:merge_token) { fci.create_merge_token! }
 
     before do
@@ -243,9 +256,20 @@ describe FranceConnectController, type: :controller do
 
   describe '#confirm_email' do
     let!(:user) { create(:user) }
-    let!(:fci) { create(:france_connect_information, user: user) }
+    let!(:fci_attributes) do
+      FranceConnectService::UPDATABLE_FRANCE_CONNECT_CLAIMS
+        .transform_values { |fc_claim| user_info[fc_claim] }
+        .merge(
+          france_connect_particulier_id: user_info['sub'],
+          user_id: user&.id
+        )
+    end
+    let!(:fci) { FranceConnectInformation.create!(fci_attributes) }
 
-    before { fci.send_custom_confirmation_instructions }
+    before do
+      fci.send_custom_confirmation_instructions
+      user.reload
+    end
 
     context 'when the confirmation token is valid' do
       before do
@@ -372,7 +396,12 @@ describe FranceConnectController, type: :controller do
   end
 
   describe '#merge_using_password' do
-    let(:fci) { FranceConnectInformation.create!(user_info) }
+    let(:fci_attributes) do
+      FranceConnectService::UPDATABLE_FRANCE_CONNECT_CLAIMS
+        .transform_values { |fc_claim| user_info[fc_claim] }
+        .merge(france_connect_particulier_id: user_info['sub'])
+    end
+    let(:fci) { FranceConnectInformation.create!(fci_attributes) }
     let(:merge_token) { fci.create_merge_token! }
     let(:email) { 'EXISTING_account@a.com ' }
     let(:password) { SECURE_PASSWORD }
@@ -435,7 +464,12 @@ describe FranceConnectController, type: :controller do
   end
 
   describe '#merge_using_email_link' do
-    let(:fci) { FranceConnectInformation.create!(user_info) }
+    let(:fci_attributes) do
+      FranceConnectService::UPDATABLE_FRANCE_CONNECT_CLAIMS
+        .transform_values { |fc_claim| user_info[fc_claim] }
+        .merge(france_connect_particulier_id: user_info['sub'])
+    end
+    let(:fci) { FranceConnectInformation.create!(fci_attributes) }
     let!(:email_merge_token) { fci.create_email_merge_token! }
 
     context 'when the merge_token is ok and the user is found' do
@@ -476,7 +510,12 @@ describe FranceConnectController, type: :controller do
   end
 
   describe '#send_email_merge_request' do
-    let(:fci) { FranceConnectInformation.create!(user_info) }
+    let(:fci_attributes) do
+      FranceConnectService::UPDATABLE_FRANCE_CONNECT_CLAIMS
+        .transform_values { |fc_claim| user_info[fc_claim] }
+        .merge(france_connect_particulier_id: user_info['sub'])
+    end
+    let(:fci) { FranceConnectInformation.create!(fci_attributes) }
     let(:merge_token) { fci.create_merge_token! }
     let(:email) { 'requested_email@.a.com' }
 
