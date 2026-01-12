@@ -839,15 +839,20 @@ en:
       message: "Your session was renewed. Please repeat this action from this page."
   time:
     formats:
-      default: "%B %d %Y %R"
-      long: "%d %B %y %H:%M"
+      long: "%B %-d, %Y"
+      long_with_time: "%B %-d, %Y at %H:%M"
+      short: "%m/%d/%Y"
+      short_with_time: "%m/%d/%Y at %H:%M"
+      messagerie_date: "On %b %-d, %Y %I:%M %p"
       human: "%A %-d %B at %Hh%M"
-      short_datetime: "%b %d %Y %I:%M %p"
-      short_date: "%d/%m/%Y"
       dashed: "%Y-%m-%d"
+  datetime:
+    formats:
+      long: "%B %-d, %Y at %H:%M"
   date:
     formats:
-      short_date: "%d/%m/%Y"
+      long: "%B %-d, %Y"
+      short: "%m/%d/%Y"
       dashed: "%Y-%m-%d"
   dates:
     today: "Today"
