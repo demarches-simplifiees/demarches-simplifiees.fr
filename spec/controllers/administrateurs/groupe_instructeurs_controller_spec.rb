@@ -67,6 +67,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       before do
         gi_1_1.update(routing_rule: ds_eq(champ_value(drop_down_tdc.stable_id), constant('Deuxième choix')))
+        procedure.update_all_groupes_rule_statuses
         get :show, params: { procedure_id: procedure.id, id: gi_1_1.id }
       end
 

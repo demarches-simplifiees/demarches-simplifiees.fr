@@ -9,6 +9,7 @@ describe RoutingEngine, type: :model do
     let(:gi_2) { procedure.groupe_instructeurs.create(label: 'a second group') }
 
     subject do
+      procedure.update_all_groupes_rule_statuses
       RoutingEngine.compute(dossier)
       dossier.groupe_instructeur
     end
@@ -244,7 +245,7 @@ describe RoutingEngine, type: :model do
         procedure_id = procedure.id
         tdc_stable_id = drop_down_tdc.stable_id
 
-        groupe_data = Array.new(4999).map do |i|
+        groupe_data = Array.new(4999).map.with_index do |_, i|
           commune_name = "Commune_#{format('%04d', i + 2)}"
           {
             label: commune_name,
