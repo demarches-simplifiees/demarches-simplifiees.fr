@@ -21,6 +21,8 @@ class EditableChamp::QuotientFamilialComponent < EditableChamp::EditableChampBas
           File.join(__dir__, "quotient_familial_component", "preview_quotient_familial_data.json")
         )
       )
+    else
+      @champ.data
     end
   end
 

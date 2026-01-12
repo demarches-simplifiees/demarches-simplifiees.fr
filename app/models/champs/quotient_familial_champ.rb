@@ -27,7 +27,16 @@ class Champs::QuotientFamilialChamp < Champ
     if !dossier.user_from_france_connect?
       self.value_json = { 'recovered_qf_data' => 'false' }
     else
-      # try get api part value
+      fci = dossier.user.france_connect_informations.first
+      api = APIParticulier::QuotientFamilial.new(procedure.id)
+      response_body = api.quotient_familial(fci)
+
+      if response_body
+        self.value_json = { 'recovered_qf_data' => 'true' }
+        self.data = response_body[:data]
+      else
+        self.value_json = { 'recovered_qf_data' => 'false' }
+      end
     end
   end
 end
