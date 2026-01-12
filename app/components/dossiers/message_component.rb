@@ -20,10 +20,10 @@ class Dossiers::MessageComponent < ApplicationComponent
   def correction_badge
     return if groupe_gestionnaire || commentaire.dossier_correction.nil?
 
-    if commentaire.dossier_correction.resolved?
-      type = if commentaire.discarded?
-        :discarded
-      elsif commentaire.dossier_correction.resolved_by_modification?
+    if commentaire.dossier_correction.cancelled?
+      helpers.correction_resolved_badge(:discarded)
+    elsif commentaire.dossier_correction.resolved?
+      type = if commentaire.dossier_correction.resolved_by_modification?
         :modified
       else
         :not_modified
@@ -65,13 +65,34 @@ class Dossiers::MessageComponent < ApplicationComponent
   end
 
   def delete_button_text
-    if groupe_gestionnaire.nil? && commentaire.dossier_correction&.pending?
-      t('.delete_with_correction_button')
-    elsif groupe_gestionnaire.nil? && commentaire.dossier_pending_response&.pending?
+    if groupe_gestionnaire.nil? && commentaire.dossier_pending_response&.pending?
       t('.delete_with_response_button')
     else
       t('.delete_button')
     end
+  end
+
+  def show_cancel_correction_button?
+    return false if groupe_gestionnaire
+    return false unless connected_user.is_a?(Instructeur)
+
+    commentaire.can_cancel_correction?(connected_user)
+  end
+
+  def show_delete_button?
+    return false if groupe_gestionnaire.nil? && !connected_user.is_a?(Instructeur) && !connected_user.is_a?(Expert)
+    return false if groupe_gestionnaire.nil? && commentaire.dossier_correction&.pending?
+
+    commentaire.soft_deletable?(connected_user)
+  end
+
+  def cancel_correction_url
+    cancel_correction_instructeur_commentaire_path(
+      commentaire.dossier.procedure,
+      commentaire.dossier,
+      commentaire,
+      statut: params[:statut]
+    )
   end
 
   def highlight_if_unseen_class

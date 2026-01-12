@@ -22,8 +22,12 @@
     - else
       = render SimpleFormatComponent.new(commentaire.body, allow_a: false, allow_autolink: groupe_gestionnaire.nil? && commentaire.sent_by_instructeur?)
 
-  - if soft_deletable?
-    = button_to delete_url, method: :delete,  class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-icon-delete-line fr-btn--icon-left fr-text-default--warning fr-mb-1w', form: { data: { turbo: true, turbo_confirm: t('.confirm') } } do
+  - if show_cancel_correction_button?
+    = button_to cancel_correction_url, method: :post, class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-icon-close-line fr-btn--icon-left fr-text-default--warning fr-mb-1w', form: { data: { turbo: true, turbo_confirm: t('.confirm_cancel_correction') } } do
+      = t('.cancel_correction_button')
+
+  - if show_delete_button?
+    = button_to delete_url, method: :delete, class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-icon-delete-line fr-btn--icon-left fr-text-default--warning fr-mb-1w', form: { data: { turbo: true, turbo_confirm: t('.confirm') } } do
       = delete_button_text
 
   - if groupe_gestionnaire.nil? && show_attachments?
@@ -42,7 +46,7 @@
       - else
         %span.fr-text--xs.fr-text-mention--grey.font-weight-normal.fr-mb-0= t('.unread_label')
 
-  - if correction_badge && connected_user.is_a?(User)
+  - if correction_badge && connected_user.is_a?(User) && commentaire.dossier_correction&.pending?
     = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: 'fr-my-1w') do |c|
       - c.with_body do
         %p
