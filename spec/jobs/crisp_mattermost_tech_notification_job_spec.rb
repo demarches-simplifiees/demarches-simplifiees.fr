@@ -59,7 +59,7 @@ RSpec.describe CrispMattermostTechNotificationJob, type: :job do
           /#{user.email}/,
           /User ##{user.id}/,
           /customer, tech/,
-          /02 sept\. 15h12/,
+          %r{02/09/2025 15:12},
         ]
 
         expected_patterns.each do |pattern|

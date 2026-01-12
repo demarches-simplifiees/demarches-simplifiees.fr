@@ -99,11 +99,11 @@ describe ApplicationHelper do
   end
 
   describe "#try_format_datetime" do
-    subject { try_format_datetime(datetime) }
+    subject { try_format_datetime(datetime, format: :long_with_time) }
 
     describe 'try formatting 31/01/2019 11:25' do
       let(:datetime) { Time.zone.local(2019, 01, 31, 11, 25, 00) }
-      it { is_expected.to eq("31 janvier 2019 11:25") }
+      it { is_expected.to eq("31 janvier 2019 à 11:25") }
     end
 
     describe 'try formatting a blank string' do
