@@ -4,6 +4,7 @@ class AttestationPdfGenerationJob < ApplicationJob
   queue_as :critical
 
   discard_on ActiveRecord::RecordNotFound
+  retry_on WeasyprintService::Error, wait: :polynomially_longer
 
   def perform(dossier)
     template = template_for(dossier)
