@@ -10,7 +10,7 @@
       </div>
     <% end %>
     <div class="fr-col">
-      <% if @booked_rdvs.nil? || @booked_rdvs&.empty? %>
+      <% if @booked_rdvs.blank? %>
         <p>Vous pouvez proposer un rendez-vous à l'usager, en le configurant sur le site RDV Service Public (date et horaire, par téléphone / en visioconférence / en présentiel).</p>
         <p> En savoir plus sur la <a href="https://doc.demarches-simplifiees.fr/tutoriels/tutoriel-instructeur#la-prise-de-rendez-vous" target="_blank">prise de rendez-vous</a>.</p>
       <% end %>
@@ -41,7 +41,7 @@
           </p>
         <% else %>
           <div class="fr-mb-2w">
-            <% @booked_rdvs&.each do |rdv| %>
+            <% @booked_rdvs.each do |rdv| %>
               <%= render Instructeurs::RdvCardComponent.new(rdv:) %>
             <% end %>
           </div>
