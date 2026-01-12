@@ -235,7 +235,7 @@ module DossierHelper
   end
 
   def safe_expiration_date(dossier)
-    l(dossier.expired_at, format: '%d/%m/%Y')
+    l(dossier.expired_at, format: :short)
   end
 
   def annuaire_link(siren_or_siret = nil)
@@ -250,7 +250,7 @@ module DossierHelper
     elsif user_information.updated_at.present?
       t("shared.dossiers.france_connect_informations.details_updated",
           name: user_information.full_name,
-          date: l(user_information.updated_at.to_date, format: :default))
+          date: l(user_information.updated_at.to_date, format: :long))
     else
       t("shared.dossiers.france_connect_informations.details", name: user_information.full_name)
     end
