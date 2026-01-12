@@ -989,21 +989,26 @@ class Dossier < ApplicationRecord
 
   def check_mandatory_and_visible_champs_for(collection)
     collection.filter(&:visible?).each do |champ|
-      if champ.mandatory_blank?
-        error = champ.errors.add(:value, :missing)
-        errors.import(error)
-      end
+      add_missing_champ_error(champ)
 
       if champ.repetition?
         champ.rows.each do |champs|
-          champs.filter(&:visible?).filter(&:mandatory_blank?).each do |champ|
-            error = champ.errors.add(:value, :missing)
-            errors.import(error)
+          champs.filter(&:visible?).each do |champ|
+            add_missing_champ_error(champ)
           end
         end
       end
     end
     errors
+  end
+
+  def add_missing_champ_error(champ)
+    attribute_name, error_type = champ.type_de_champ.mandatory_blank?(champ)
+    raise "Unexpected missing attribute_name and error_type for Champ##{champ.id}" if attribute_name.nil? || error_type.nil?
+    if attribute_name.present?
+      error = champ.errors.add(attribute_name, error_type)
+      errors.import(error)
+    end
   end
 
   def demander_un_avis!(avis)

@@ -804,12 +804,16 @@ class TypeDeChamp < ApplicationRecord
 
   def mandatory_blank?(champ)
     # no champ
-    return true if champ.nil?
+    return [:value, :missing] if champ.nil?
     # type de champ on the revision changed
     if champ.is_type?(type_champ) || castable_on_change?(champ.last_write_type_champ, type_champ)
-      mandatory? && dynamic_type.champ_blank_or_invalid?(champ)
+      if mandatory? && dynamic_type.champ_blank_or_invalid?(champ)
+        [:value, :missing]
+      else
+        nil
+      end
     else
-      true
+      [:value, :missing]
     end
   end
 
