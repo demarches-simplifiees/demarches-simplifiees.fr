@@ -155,7 +155,7 @@ describe 'The user', js: true do
     expect(page).to have_selector(".repetition .champs-group", count: 1)
 
     # adding an element means we can ddestroy last item
-    click_on 'Ajouter un élément supplémentaire à'
+    click_on 'Ajouter un élément à'
     expect(page).to have_selector(".repetition .champs-group:first-child .utils-repetition-required-destroy-button", count: 1, visible: false)
     expect(page).to have_selector(".repetition .champs-group", count: 2)
     expect(page).to have_selector(".repetition .champs-group:last-child .utils-repetition-required-destroy-button", count: 1, visible: true)

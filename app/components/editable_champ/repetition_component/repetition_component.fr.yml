@@ -1,4 +1,3 @@
 ---
 fr:
-  add: "Ajouter un élément supplémentaire à « %{libelle} »"
-
+  add: 'Ajouter un élément à « %{libelle} »'
