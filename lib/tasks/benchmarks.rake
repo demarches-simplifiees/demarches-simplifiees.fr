@@ -44,10 +44,14 @@ namespace :benchmarks do
   desc 'graphql query - quick benchmark'
   task graphql_quick: :environment do
     query = API::V2::StoredQuery::QUERY_V2
-    variables = { "demarcheNumber": 107325, "includeDossiers": true, "first": 20 }
+
+    procedure = Procedure.find(ENV.fetch('PROCEDURE_ID', 107325).to_i)
+    administrateur = procedure.administrateurs.first
+
+    variables = { "demarcheNumber": procedure.id, "includeDossiers": true, "first": 20 }
     context = {
-      administrateur_id: User.where(email: 'martin.fourcade@beta.gouv.fr').first.administrateur.id,
-      procedure_ids: User.where(email: 'martin.fourcade@beta.gouv.fr').first.administrateur.procedure_ids,
+      administrateur_id: administrateur.id,
+      procedure_ids: administrateur.procedure_ids,
       write_access: true,
     }
     operation_name = 'getDemarche'
