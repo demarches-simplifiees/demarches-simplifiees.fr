@@ -41,47 +41,7 @@ namespace :benchmarks do
     end
   end
 
-  desc 'graphql query - quick comparison (stable_id optimization)'
-  task graphql_quick_stable_id: :environment do
-    query = API::V2::StoredQuery::QUERY_V2
-    variables = { "demarcheNumber": 107325, "includeDossiers": true, "first": 20 }
-    context = {
-      administrateur_id: User.where(email: 'martin.fourcade@beta.gouv.fr').first.administrateur.id,
-      procedure_ids: User.where(email: 'martin.fourcade@beta.gouv.fr').first.administrateur.procedure_ids,
-      write_access: true,
-    }
-    operation_name = 'getDemarche'
-
-    Rails.application.routes.default_url_options[:only_path] = true
-
-    # Nombre d'itérations depuis env ou 1 par défaut
-    iterations = ENV.fetch('ITERATIONS', 1).to_i
-
-    # Warmup
-    puts "Warmup (sans optimisation)..."
-    API::V2::Schema.execute(query:, variables:, context:, operation_name:)
-
-    puts "\nRunning #{iterations} iterations..."
-
-    Benchmark.bm(40) do |x|
-      x.report("Sans optimisation (#{iterations}x):") do
-        iterations.times do
-          API::V2::Schema.execute(query:, variables:, context:, operation_name:)
-        end
-      end
-
-      # Prepend le concern optimisé
-      ProcedureRevisionTypeDeChamp.prepend(ProcedureRevisionTypeDeChampOptimized)
-
-      x.report("Avec optimisation (#{iterations}x):") do
-        iterations.times do
-          API::V2::Schema.execute(query:, variables:, context:, operation_name:)
-        end
-      end
-    end
-  end
-
-  desc 'graphql query - quick comparison (champs_for_condition optimization)'
+  desc 'graphql query - quick benchmark'
   task graphql_quick: :environment do
     query = API::V2::StoredQuery::QUERY_V2
     variables = { "demarcheNumber": 107325, "includeDossiers": true, "first": 20 }
@@ -98,71 +58,13 @@ namespace :benchmarks do
     iterations = ENV.fetch('ITERATIONS', 1).to_i
 
     # Warmup
-    puts "Warmup (sans optimisation)..."
+    puts "Warmup..."
     API::V2::Schema.execute(query:, variables:, context:, operation_name:)
 
     puts "\nRunning #{iterations} iterations..."
 
-    Benchmark.bm(40) do |x|
-      x.report("Sans optimisation (#{iterations}x):") do
-        iterations.times do
-          API::V2::Schema.execute(query:, variables:, context:, operation_name:)
-        end
-      end
-
-      # Prepend le concern optimisé
-      Champ.prepend(ChampConditionalConcernOptimized)
-
-      x.report("Avec optimisation (#{iterations}x):") do
-        iterations.times do
-          API::V2::Schema.execute(query:, variables:, context:, operation_name:)
-        end
-      end
-    end
-  end
-
-  desc 'graphql query - quick comparison (both optimizations)'
-  task graphql_quick_both: :environment do
-    query = API::V2::StoredQuery::QUERY_V2
-    variables = { "demarcheNumber": 107325, "includeDossiers": true, "first": 20 }
-    context = {
-      administrateur_id: User.where(email: 'martin.fourcade@beta.gouv.fr').first.administrateur.id,
-      procedure_ids: User.where(email: 'martin.fourcade@beta.gouv.fr').first.administrateur.procedure_ids,
-      write_access: true,
-    }
-    operation_name = 'getDemarche'
-
-    Rails.application.routes.default_url_options[:only_path] = true
-
-    # Nombre d'itérations depuis env ou 1 par défaut
-    iterations = ENV.fetch('ITERATIONS', 1).to_i
-
-    # Warmup
-    puts "Warmup (sans optimisation)..."
-    API::V2::Schema.execute(query:, variables:, context:, operation_name:)
-
-    puts "\nRunning #{iterations} iterations..."
-
-    Benchmark.bm(50) do |x|
-      x.report("Sans optimisation (#{iterations}x):") do
-        iterations.times do
-          API::V2::Schema.execute(query:, variables:, context:, operation_name:)
-        end
-      end
-
-      # Prepend le premier concern optimisé
-      Champ.prepend(ChampConditionalConcernOptimized)
-
-      x.report("Avec champs_for_condition (#{iterations}x):") do
-        iterations.times do
-          API::V2::Schema.execute(query:, variables:, context:, operation_name:)
-        end
-      end
-
-      # Prepend le second concern optimisé
-      ProcedureRevisionTypeDeChamp.prepend(ProcedureRevisionTypeDeChampOptimized)
-
-      x.report("Avec les deux optimisations (#{iterations}x):") do
+    Benchmark.bm(30) do |x|
+      x.report("GraphQL API (#{iterations}x):") do
         iterations.times do
           API::V2::Schema.execute(query:, variables:, context:, operation_name:)
         end
