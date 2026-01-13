@@ -23,7 +23,7 @@ class Etablissement < ApplicationRecord
 
   alias_attribute :code_naf, :naf
 
-  # See https://github.com/demarches-simplifiees/demarches-simplifiees.fr/pull/10591#discussion_r1819399688
+  # See https://github.com/demarche-numerique/demarche.numerique.gouv.fr/pull/10591#discussion_r1819399688
   # SIRET is already exposed as base column.
   DISPLAYABLE_COLUMNS = {
     "entreprise_raison_sociale" => { type: :text },

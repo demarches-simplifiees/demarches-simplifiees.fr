@@ -7,8 +7,8 @@ export default {
     template: 'carbon-multi-page',
     output: './public/graphql/schema',
     options: {
-      appTitle: "Schema de l’API GraphQL de demarches-simplifiees.fr",
-      appLogo: 'https://www.demarches-simplifiees.fr/logo-icon.png',
+      appTitle: "Schema de l’API GraphQL de demarche.numerique.gouv.fr",
+      appLogo: 'https://demarche.numerique.gouv.fr/logo-icon.png',
       siteRoot: '/graphql/schema',
       queryGenerationFactories: {
         ISO8601DateTime: new Date().toISOString(),
@@ -17,12 +17,12 @@ export default {
       },
       externalLinks: [
         {
-          href: 'https://www.demarches-simplifiees.fr',
-          label: 'demarches-simplifiees.fr',
+          href: 'https://demarche.numerique.gouv.fr',
+          label: 'demarche.numerique.gouv.fr',
           position: 'header'
         },
         {
-          href: 'https://github.com/demarches-simplifiees/demarches-simplifiees.fr',
+          href: 'https://github.com/demarche-numerique/demarche.numerique.gouv.fr',
           label: 'GitHub',
           position: 'header',
           kind: 'Github'
@@ -34,7 +34,7 @@ export default {
           content: [
             {
               title: 'Welcome',
-              content: `# Schema de l’API GraphQL de demarches-simplifiees.fr
+              content: `# Schema de l’API GraphQL de demarche.numerique.gouv.fr`
 
 L'API v2 suit le paradigme GraphQL. Si GraphQL est un lointain sujet pour vous, nous vous recommandons de prendre le temps de consulter les liens suivants :
 
@@ -43,9 +43,9 @@ L'API v2 suit le paradigme GraphQL. Si GraphQL est un lointain sujet pour vous, 
 
 ## Point d’entrée et Schema GraphQL
 
-* https://www.demarches-simplifiees.fr/api/v2/graphql
-* Éditeur de requêtes en ligne : [https://www.demarches-simplifiees.fr/graphql](https://www.demarches-simplifiees.fr/graphql)
-* [Schema GraphQL](https://github.com/demarches-simplifiees/demarches-simplifiees.fr/blob/main/app/graphql/schema.graphql)
+* https://demarche.numerique.gouv.fr/api/v2/graphql
+* Éditeur de requêtes en ligne : [https://demarche.numerique.gouv.fr/graphql](https://demarche.numerique.gouv.fr/graphql)
+* [Schema GraphQL](https://github.com/demarche-numerique/demarche.numerique.gouv.fr/blob/main/app/graphql/schema.graphql)
 `
             }
           ]

@@ -1,15 +1,15 @@
-# demarches-simplifiees.fr
+# demarche.numerique.gouv.fr
 
 > [!NOTE]
 > [Lire la version française du README](README.fr.md)
 
 ## Context
 
-[demarches-simplifiees.fr](https://www.demarches-simplifiees.fr) is a web platform designed to address the French government's urgent need to comply with the directive for 100% digitization of administrative procedures.
+[demarche.numerique.gouv.fr](https://demarche.numerique.gouv.fr) is a web platform designed to address the French government's urgent need to comply with the directive for 100% digitization of administrative procedures.
 
 ## How to contribute?
 
-demarches-simplifiees.fr is [open source](https://en.wikipedia.org/wiki/Open-source_software) software under the AGPL license.
+demarche.numerique.gouv.fr is [open source](https://en.wikipedia.org/wiki/Open-source_software) software under the AGPL license.
 
 Would you like to make changes or improvements? Read our [contribution guide](CONTRIBUTING.md).
 
@@ -99,7 +99,7 @@ The application will then run at `http://localhost:3000` with a worker for jobs 
 
 ### Test users
 
-Locally, a test user is automatically created with the credentials `test@exemple.fr`/`this is a very complicated password !`. (see [db/seeds.rb](https://github.com/betagouv/demarches-simplifiees.fr/blob/dev/db/seeds.rb))
+Locally, a test user is automatically created with the credentials `test@exemple.fr`/`this is a very complicated password !`. (see [db/seeds.rb](https://github.com/demarche-numerique/demarche.numerique.gouv.fr/blob/dev/db/seeds.rb))
 
 ### Scheduling recurring tasks
 

@@ -1,6 +1,6 @@
 # Politiques et procédures de sécurité
 
-Ce document décrit les procédures de sécurité et les politiques générales pour le projet 'demarches-simplifiees.fr'.
+Ce document décrit les procédures de sécurité et les politiques générales pour le projet 'demarche.numerique.gouv.fr'.
 
   * [Signaler une faille](#signaler-une-faille)
   * [Politique de divulgation](#politique-de-divulgation)
@@ -8,8 +8,8 @@ Ce document décrit les procédures de sécurité et les politiques générales 
 
 ## Signaler une faille
 
-La communauté et l’équipe cœur de 'demarches-simplifiees.fr' prennent au très au sérieux la sécurité de l’application.
-Signalez toute faille de sécurité en envoyant un mail à l’équipe cœur tech@demarches-simplifiees.fr
+La communauté et l’équipe cœur de 'demarche.numerique.gouv.fr' prennent au très au sérieux la sécurité de l’application.
+Signalez toute faille de sécurité en envoyant un mail à l’équipe cœur tech@demarche.numerique.gouv.fr
 
 Si la faille vous paraît critique, vous pouvez utiliser la clée gpg suivante pour chiffrer votre alerte :
 

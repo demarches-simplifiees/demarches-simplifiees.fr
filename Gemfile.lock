@@ -9,7 +9,7 @@ GIT
       omniauth-oauth2 (~> 1.8)
 
 GIT
-  remote: https://github.com/demarches-simplifiees/reliable-fetch.git
+  remote: https://github.com/demarche-numerique/reliable-fetch.git
   revision: f547a270c402b0180091516d790434e83287fae7
   specs:
     gitlab-sidekiq-fetcher (0.11.0)

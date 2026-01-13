@@ -8,7 +8,7 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - demarches-simplifiees.fr
+      - demarche.numerique.gouv.fr
       Expect:
       - ''
   response:
@@ -56,7 +56,7 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - demarches-simplifiees.fr
+      - demarche.numerique.gouv.fr
       Expect:
       - ''
   response:

@@ -140,7 +140,7 @@ en:
         programme:
           intro: "Users can follow the measures taken by the service to improve the accessibility of the site via "
           label: "the DS accessibility continuous improvement programme"
-          url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues?q=accessibilit%C3%A9+"
+          url: "https://github.com/demarche-numerique/demarche.numerique.gouv.fr/issues?q=accessibilit%C3%A9+"
           title: "the DS accessibility continuous improvement programme - new tab"
       no_accessible:
         title: "Non-accessible content"
@@ -211,7 +211,7 @@ en:
         page_eleven: "File creation - Identity"
         page_twelve: "File creation - Draft"
         page_thirteen: "File creation - Dispatch confirmation"
-        page_note_html: "The procedure <a href=\"https://www.demarches-simplifiees.fr/commencer/cd92-demande-amethyste-ph-v1\">CD92 - Demande de titre améthyste - Première demande (v1 - PH)</a> was used as the basis for the audit."
+        page_note_html: "The procedure <a href=\"https://demarche.numerique.gouv.fr/commencer/cd92-demande-amethyste-ph-v1\">CD92 - Demande de titre améthyste - Première demande (v1 - PH)</a> was used as the basis for the audit."
       contact:
         title: "Feedback and contact"
         intro: "If you are unable to access a piece of content or service, you can contact the Simplified Approaches manager to be directed to an accessible alternative or obtain the content in another form."

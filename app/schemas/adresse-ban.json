@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://demarches-simplifiees.fr/adresse-ban.schema.json",
+  "$id": "http://demarche.numerique.gouv.fr/adresse-ban.schema.json",
   "title": "Adresse BAN",
   "type": "object",
   "properties": {

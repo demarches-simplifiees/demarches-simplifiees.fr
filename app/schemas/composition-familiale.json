@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://demarches-simplifiees.fr/composition-familiale.schema.json",
+  "$id": "http://demarche.numerique.gouv.fr/composition-familiale.schema.json",
   "title": "composition familiale",
   "type": "object",
   "properties": {

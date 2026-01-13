@@ -2,7 +2,7 @@
 
 ## Object Storage
 
-By default, demarches-simplifiees.fr uses an [OVH Object Storage](https://www.ovhcloud.com/en/public-cloud/object-storage/) backend. The hard-drives are encrypted at rest, but to protect user files even better, demarches-simplifiees.fr can also use an external encryption proxy, that will encrypt and decrypt files on the fly:
+By default, demarche.numerique.gouv.fr uses an [OVH Object Storage](https://www.ovhcloud.com/en/public-cloud/object-storage/) backend. The hard-drives are encrypted at rest, but to protect user files even better, demarche.numerique.gouv.fr can also use an external encryption proxy, that will encrypt and decrypt files on the fly:
 
 * Encryption is done via our [proxy](https://github.com/betagouv/ds_proxy) when the file is uploaded by a client.
 * Decryption is done via the same proxy when the file is downloaded to a client

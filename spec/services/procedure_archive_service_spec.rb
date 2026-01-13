@@ -45,7 +45,7 @@ describe ProcedureArchiveService do
       end
 
       it 'retry errors files with errors' do
-        allow_any_instance_of(ActiveStorage::Attached::One).to receive(:url).and_return("https://www.demarches-simplifiees.fr/error_1")
+        allow_any_instance_of(ActiveStorage::Attached::One).to receive(:url).and_return("https://demarche.numerique.gouv.fr/error_1")
 
         VCR.use_cassette('archive/new_file_to_get_400.html') do
           service.make_and_upload_archive(archive)

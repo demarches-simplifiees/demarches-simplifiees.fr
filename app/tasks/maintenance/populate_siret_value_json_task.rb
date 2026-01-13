@@ -4,7 +4,7 @@
 #     la normalisation des adresses des champs RNA/RNF/SIRET
 #     le fait de stocker ces données normalisées dans le champs.value_json (un jsonb)
 #     le backfill les anciens champs RNA/RNF/SIRET
-#     A (re)jouer après déploiement de PR #11013 https://github.com/demarches-simplifiees/demarches-simplifiees.fr/pull/11013
+#     A (re)jouer après déploiement de PR #11013 https://github.com/demarche-numerique/demarche.numerique.gouv.fr/pull/11013
 module Maintenance
   class PopulateSiretValueJSONTask < MaintenanceTasks::Task
     include RunnableOnDeployConcern

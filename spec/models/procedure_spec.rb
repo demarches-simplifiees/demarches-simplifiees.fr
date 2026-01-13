@@ -1551,7 +1551,7 @@ describe Procedure do
     end
 
     context 'when valid link' do
-      let(:lien_notice) { 'https://www.demarches-simplifiees.fr' }
+      let(:lien_notice) { 'https://demarche.numerique.gouv.fr' }
       it { expect(procedure.valid?).to be_truthy }
     end
 
@@ -1580,7 +1580,7 @@ describe Procedure do
     end
 
     context 'when valid link' do
-      let(:lien_dpo) { 'https://www.demarches-simplifiees.fr' }
+      let(:lien_dpo) { 'https://demarche.numerique.gouv.fr' }
       it { expect(procedure.valid?).to be_truthy }
     end
 
@@ -1590,7 +1590,7 @@ describe Procedure do
     end
 
     context 'when valid email' do
-      let(:lien_dpo) { 'test@demarches-simplifiees.fr' }
+      let(:lien_dpo) { 'test@demarche.numerique.gouv.fr' }
       it { expect(procedure.valid?).to be_truthy }
     end
 

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://demarches-simplifiees.fr/rnf.schema.json",
+  "$id": "http://demarche.numerique.gouv.fr/rnf.schema.json",
   "title": "RNF",
   "type": "object",
   "properties": {

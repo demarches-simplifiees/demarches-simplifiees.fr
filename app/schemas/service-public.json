@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://demarches-simplifiees.fr/service-public.schema.json",
+  "$id": "http://demarche.numerique.gouv.fr/service-public.schema.json",
   "title": "Service Public",
   "type": "object",
   "properties": {

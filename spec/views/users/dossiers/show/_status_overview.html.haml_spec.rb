@@ -73,7 +73,7 @@ describe 'users/dossiers/show/_status_overview', type: :view do
       expect(subject).not_to have_selector('.status-timeline')
       expect(subject).to have_selector('.status-explanation .accepte')
       expect(subject).to have_text(dossier.motivation)
-      expect(subject).to have_link('https://demarches-simplifiees.fr', href: 'https://demarches-simplifiees.fr')
+      expect(subject).to have_link('https://demarche.numerique.gouv.fr', href: 'https://demarche.numerique.gouv.fr')
     end
 
     context 'with attestation' do

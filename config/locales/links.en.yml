@@ -40,7 +40,7 @@ en:
         alt: "Direction interministérielle du numérique"
       code:
         label: "Source code"
-        url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr"
+        url: "https://github.com/demarche-numerique/demarche.numerique.gouv.fr"
       cgu:
         label: "ToS"
         title: "Terms of Service"
@@ -57,18 +57,18 @@ en:
       releases:
         label: "Releases notes"
         title: "Releases notes: Our last updates"
-        url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/releases"
+        url: "https://github.com/demarche-numerique/demarche.numerique.gouv.fr/releases"
       security:
         label: "Security"
         title: "Security policy and procedures"
-        url: 'https://github.com/demarches-simplifiees/demarches-simplifiees.fr/blob/main/SECURITY.md'
+        url: 'https://github.com/demarche-numerique/demarche.numerique.gouv.fr/blob/main/SECURITY.md'
       carte:
         label: "Deployment map"
         title: "Deployment map by department"
       status_page:
         label: "Disponibility"
         title: "Disponibility and availability statistics"
-        url: "https://status.demarches-simplifiees.fr"
+        url: "https://status.demarche.numerique.gouv.fr"
       suivi:
         label: "Audience tracking and privacy"
       cookies:

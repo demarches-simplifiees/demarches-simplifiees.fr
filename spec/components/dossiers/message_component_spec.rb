@@ -60,8 +60,8 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
     end
 
     context 'escape <img> tag' do
-      before { commentaire.update(body: '<img src="demarches-simplifiees.fr" />Hello') }
-      it { is_expected.not_to have_selector('img[src="demarches-simplifiees.fr"]') }
+      before { commentaire.update(body: '<img src="demarche.numerique.gouv.fr" />Hello') }
+      it { is_expected.not_to have_selector('img[src="demarche.numerique.gouv.fr"]') }
     end
 
     context 'attachments visibility' do
@@ -342,8 +342,8 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
     subject { render_inline(component).to_html }
 
     context 'escape <img> tag' do
-      before { commentaire.update(body: '<img src="demarches-simplifiees.fr" />Hello') }
-      it { is_expected.not_to have_selector('img[src="demarches-simplifiees.fr"]') }
+      before { commentaire.update(body: '<img src="demarche.numerique.gouv.fr" />Hello') }
+      it { is_expected.not_to have_selector('img[src="demarche.numerique.gouv.fr"]') }
     end
 
     context 'with a seen_at after commentaire created_at' do

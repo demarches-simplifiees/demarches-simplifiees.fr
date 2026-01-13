@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  sequence(:gestionnaire_email) { |n| "gestionnaire#{n}@demarches-simplifiees.fr" }
+  sequence(:gestionnaire_email) { |n| "gestionnaire#{n}@demarche.numerique.gouv.fr" }
 
   factory :gestionnaire do
     user { association :user, email: email, password: password }

@@ -1,8 +1,8 @@
 # Deployment documentation
 
-demarches-simplifiees.fr is a standard Rails app, and can be deployed using standard methods (PaaS, Docker, bare-metal, etc.) Deployments are engineered not to require any downtime.
+demarche numerique is a standard Rails app, and can be deployed using standard methods (PaaS, Docker, bare-metal, etc.) Deployments are engineered not to require any downtime.
 
-## 1. Deploying demarches-simplifiees.fr
+## 1. Deploying demarche numerique
 
 Usually, a deployment goes like this (in pseudo-code):
 
@@ -10,7 +10,7 @@ Usually, a deployment goes like this (in pseudo-code):
 # Run database schema migrations (e.g. `bin/rails db:migrate`)
 # For each server:
   # Stop the server
-  # Get the new code (e.g. `git clone https://github.com/demarches-simplifiees/demarches-simplifiees.fr.git`)
+  # Get the new code (e.g. `git clone https://github.com/demarche-numerique/demarche.numerique.gouv.fr.git`)
   # Install new dependencies (e.g. `bundle install && bun install`)
   # Restart the app server
 # Run on deploy data migrations (e.g. `bundle exec deploy:maintenance_tasks`).
@@ -18,13 +18,13 @@ Usually, a deployment goes like this (in pseudo-code):
 # Important: other maintenance tasks should be run manually after deployment, as soon as you can, from the UI at `https://yourserver.org/manager/maintenance_tasks`
 ```
 
-## 2. Upgrading demarches-simplifiees.fr
+## 2. Upgrading demarche numerique
 
 ### 2.1 Standard upgrade path
 
 Theoretically, only deploying each version sequentially is fully supported. This means that to deploy the version N+3, the upgrade plan should be to deploy the version N+1, N+2 and then only N+3, in that order.
 
-Release notes for each version are available on [GitHub's Releases page](https://github.com/demarches-simplifiees/demarches-simplifiees.fr/releases). Since 2022, when a release includes a database schema or data migration is present, this is mentionned in the release notes.
+Release notes for each version are available on [GitHub's Releases page](https://github.com/demarche-numerique/demarche.numerique.gouv.fr/releases). Since 2022, when a release includes a database schema or data migration is present, this is mentionned in the release notes.
 
 ### 2.2 Upgrading several releases at once
 
@@ -33,4 +33,4 @@ That said, it is possible to batch the upgrade of several releases at once, _pro
 
 The rule of thumb is that _an intermediary upgrade should be done before every database schema migration that follows a data migration_.
 
-_NB: There are some plans to improve this, and contributions are welcome. See https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues/6970_
+_NB: There are some plans to improve this, and contributions are welcome. See https://github.com/demarche-numerique/demarche.numerique.gouv.fr/issues/6970_

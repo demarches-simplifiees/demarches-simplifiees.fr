@@ -8,7 +8,7 @@ http_interactions:
       string: hashAlgo=SHA256&hashValue=d28d6c7742c6c77025a104b81750ce8dc5f7dba2d01d9b5f4cad828f02b2324b&withCert=true
     headers:
       User-Agent:
-      - demarches-simplifiees.fr
+      - demarche.numerique.gouv.fr
       Expect:
       - ''
       Authorization:
