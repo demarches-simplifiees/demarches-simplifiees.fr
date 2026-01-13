@@ -413,6 +413,11 @@
       .champs-group {
         margin-bottom: 2rem;
       }
+
+      // apply to repetitions with more than one champ per row
+      legend.fr-accordion__title {
+        padding: 0;
+      }
     }
 
     .champs-group {

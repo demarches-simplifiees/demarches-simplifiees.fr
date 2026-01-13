@@ -1,0 +1,15 @@
+<section class="fr-accordion">
+  <%= content_tag(title_tag, class: "fr-accordion__title") do %>
+    <button type="button"
+            class="fr-accordion__btn"
+            aria-expanded="<%= expanded.to_s %>"
+            aria-controls="<%= id %>">
+      <%= title %>
+    </button>
+  <% end %>
+  <div id="<%= id %>" class="fr-collapse">
+    <% if content? %>
+      <%= content %>
+    <% end %>
+  </div>
+</section>
