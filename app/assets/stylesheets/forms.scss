@@ -438,10 +438,21 @@
     }
   }
 
+  .fr-input-group.address-ban {
+    // A11y wants it as a label, but UI as hint, so we remove the label style
+    label.fr-hint-text {
+      font-size: 0.75rem;
+      font-weight: normal;
+      --text-spacing: 0 0 1rem;
+      margin-bottom: 0;
+    }
+  }
+
   .fr-input-address-ban--disabled {
     & .address-ban .fr-label,
     & > .fr-hint-text,
-    & > .fr-label .fr-hint-text {
+    & > .fr-label .fr-hint-text,
+    & label.fr-hint-text {
       color: var(--text-disabled-grey);
     }
     .address-ban .fr-ds-combobox .fr-autocomplete {
