@@ -3,8 +3,8 @@
 class EditableChamp::RepetitionRowComponent < ApplicationComponent
   include ChampAriaLabelledbyHelper
 
-  def initialize(form:, dossier:, champ:, row_id:, row_number:, seen_at: nil)
-    @form, @dossier, @champ, @row_id, @row_number, @seen_at = form, dossier, champ, row_id, row_number, seen_at
+  def initialize(form:, dossier:, champ:, row_id:, row_number:, expanded: false, seen_at: nil)
+    @form, @dossier, @champ, @row_id, @row_number, @expanded, @seen_at = form, dossier, champ, row_id, row_number, expanded, seen_at
     @type_de_champ = champ.type_de_champ
     @types_de_champ = dossier.revision.children_of(@type_de_champ)
   end

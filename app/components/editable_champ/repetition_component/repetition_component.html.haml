@@ -7,7 +7,7 @@
   .flex.column.flex-1.flex-gap-2
     .repetition.width-100.flex.column.flex-gap-2{ id: dom_id(@champ, :rows), class: class_names('utils-repetition-required' => @champ.mandatory?) }
       - @champ.row_ids.each.with_index(1) do |row_id, row_number|
-        = render EditableChamp::RepetitionRowComponent.new(form: @form, dossier: @champ.dossier, champ: @champ, row_id:, row_number:, seen_at: @seen_at)
+        = render EditableChamp::RepetitionRowComponent.new(form: @form, dossier: @champ.dossier, champ: @champ, row_id:, row_number:, seen_at: @seen_at, expanded: row_number == 1)
 
     .actions
       = render NestedForms::OwnedButtonComponent.new(formaction: champs_repetition_path(@champ.dossier, @champ.stable_id), http_method: :create, opt: { class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-circle-line fr-mb-3w", id: dom_id(@champ, :create_repetition)}) do
