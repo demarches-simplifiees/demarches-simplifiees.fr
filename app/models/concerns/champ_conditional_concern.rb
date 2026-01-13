@@ -40,11 +40,15 @@ module ChampConditionalConcern
     private
 
     def champs_for_condition
-      compute_champs_for_condition[row_id]
+      if row_id.nil?
+        Array(filled_champs_by_row_id[nil])
+      else
+        Array(filled_champs_by_row_id[row_id]) + Array(filled_champs_by_row_id[nil])
+      end
     end
 
-    def compute_champs_for_condition
-      @champs_for_condition ||= dossier.filled_champs.group_by(&:row_id)
+    def filled_champs_by_row_id
+      @filled_champs_by_row_id ||= dossier.filled_champs.group_by(&:row_id)
     end
 
     def parent_hidden?

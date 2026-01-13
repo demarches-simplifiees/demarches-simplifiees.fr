@@ -22,6 +22,7 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
   def revision_types_de_champ = revision.revision_types_de_champ.filter { _1.persisted? ? _1.parent_id == id : _1.parent == self }.sort_by(&:position)
   def types_de_champ = revision_types_de_champ.map(&:type_de_champ)
 
+  # significant perf gain when accessed hundreds of thousands of times in API or export context
   def stable_id
     @stable_id ||= type_de_champ.stable_id
   end
