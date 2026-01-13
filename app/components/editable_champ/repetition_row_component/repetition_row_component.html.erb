@@ -1,7 +1,7 @@
 <div id="safe-row-selector-<%= row_id %>" class="repetition-row">
   <% if has_fieldset? %>
-    <div class="champs-group fr-p-0">
-      <%= render Dsfr::AccordionComponent.new(id: "#{@champ.html_id}-#{row_id}-accordion", expanded: true, title_tag: :legend) do |accordion| %>
+    <div class="width-100 champs-group fr-p-0 fr-m-0">
+      <%= render Dsfr::AccordionComponent.new(id: "#{@champ.html_id}-#{row_id}-accordion", expanded: row_number == 1, accordion_tag: :fieldset, title_tag: :legend) do |accordion| %>
         <% accordion.with_title do %>
           <strong>
             [<%= row_number %>]
@@ -19,7 +19,7 @@
       <% end %>
     </div>
   <% else %>
-    <div class="champs-group">
+    <div class="champs-group fr-m-0">
       <%= render section_component %>
 
       <div class="flex row-reverse">

@@ -1,4 +1,4 @@
-<section class="fr-accordion">
+<%= content_tag(accordion_tag, class: "fr-accordion") do %>
   <%= content_tag(title_tag, class: "fr-accordion__title") do %>
     <button type="button"
             class="fr-accordion__btn"
@@ -12,4 +12,4 @@
       <%= content %>
     <% end %>
   </div>
-</section>
+<% end %>

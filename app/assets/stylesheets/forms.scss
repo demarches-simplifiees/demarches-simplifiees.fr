@@ -414,7 +414,12 @@
         margin-bottom: 2rem;
       }
 
-      // apply to repetitions with more than one champ per row
+      // this is applied to repetitions with more than one champ per row
+      fieldset.fr-accordion {
+        padding: 0;
+        margin: 0;
+      }
+
       legend.fr-accordion__title {
         padding: 0;
       }
@@ -427,7 +432,7 @@
     }
 
     .utils-repetition-required
-      .champs-group:first-child
+      .repetition-row:first-child
       .utils-repetition-required-destroy-button {
       display: none;
     }

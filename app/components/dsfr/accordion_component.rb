@@ -4,11 +4,12 @@ module Dsfr
   class AccordionComponent < ApplicationComponent
     renders_one :title
 
-    attr_reader :id, :expanded, :title_tag
+    attr_reader :id, :expanded, :accordion_tag, :title_tag
 
-    def initialize(id: nil, expanded: false, title_tag: :h3)
+    def initialize(id: nil, expanded: false, accordion_tag: :section, title_tag: :h3)
       @id = id || generate_id
       @expanded = expanded
+      @accordion_tag = accordion_tag
       @title_tag = title_tag
     end
 
