@@ -4,17 +4,15 @@
     - c.with_body do
       %p
         = t('instructeurs.dossiers.alert_unspecified_attestation_champs')
-        %br
-        -# = link_to t('instructeurs.dossiers.alert_error_annotations_link'), annotations_privees_instructeur_dossier_path(dossier.procedure, dossier, statut: params[:statut]), class: 'fr-link'
 
       - unspecified_annotations_privees, unspecified_champs = unspecified_attestation_champs.partition(&:private?)
 
       - if unspecified_champs.present?
         %p.fr-text--sm.fr-text--bold
           Champs de la demande
-        - unspecified_attestation_champs.each do |unspecified_champ|
+        - unspecified_champs.each do |unspecified_champ|
           .fr-mb-1v
-            %li= unspecified_champ.libelle
+            = unspecified_champ.libelle
 
       - if unspecified_annotations_privees.present?
         %p.fr-text--sm.fr-text--bold
