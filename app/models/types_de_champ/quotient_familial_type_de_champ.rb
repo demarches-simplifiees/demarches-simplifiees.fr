@@ -14,4 +14,16 @@ class TypesDeChamp::QuotientFamilialTypeDeChamp < TypesDeChamp::TypeDeChampBase
       }
     )
   end
+
+  def champ_blank?(champ)
+    return true if champ.recovered_qf_data? && champ.value_json['correct_qf_data'].blank?
+
+    if champ.not_recovered_qf_data? || champ.incorrect_qf_data?
+      dossier = champ.dossier
+      substitution_tdc = dossier.revision.children_of(self).first
+      substitution_champ = dossier.champs.find { |champ| champ.stable_id == substitution_tdc.stable_id }
+
+      substitution_tdc.champ_blank?(substitution_champ)
+    end
+  end
 end

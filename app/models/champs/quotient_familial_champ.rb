@@ -3,7 +3,9 @@
 class Champs::QuotientFamilialChamp < Champ
   store_accessor :value_json,
     :recovered_qf_data,
-    :correct_qf_data,
+    :correct_qf_data
+
+  validate :quotient_familial_present, if: -> { validate_champ_value? && recovered_qf_data? && correct_qf_data? }
 
   def recovered_qf_data?
     value_json&.dig('recovered_qf_data') == 'true'
@@ -37,6 +39,14 @@ class Champs::QuotientFamilialChamp < Champ
       else
         self.value_json = { 'recovered_qf_data' => 'false' }
       end
+    end
+  end
+
+  private
+
+  def quotient_familial_present
+    if data&.dig("quotient_familial").blank?
+      errors.add(:data, :not_present)
     end
   end
 end
