@@ -1,7 +1,7 @@
 .flex.column
   .fr-fieldset__element
     .fr-input-group.address-ban
-      = @form.label :address, t('.address_label'), for: @champ.focusable_input_id, class: 'fr-label', id: input_label_id(@champ)
+      = @form.label :address, t('.address_hint'), for: @champ.focusable_input_id, class: 'fr-hint-text', id: input_label_id(@champ)
       %react-fragment
         = render ReactComponent.new "ComboBox/RemoteComboBox", **react_props do
           = render ReactComponent.new "ComboBox/ComboBoxValueSlot", field: :data, name: @form.field_name(:address)
