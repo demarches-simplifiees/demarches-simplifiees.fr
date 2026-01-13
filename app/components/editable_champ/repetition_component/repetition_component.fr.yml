@@ -1,3 +1,5 @@
 ---
 fr:
   add: 'Ajouter un élément à « %{libelle} »'
+  expand_all: 'Déplier tous les éléments'
+  collapse_all: 'Replier tous les éléments'
