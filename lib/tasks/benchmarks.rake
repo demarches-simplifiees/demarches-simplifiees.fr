@@ -41,6 +41,41 @@ namespace :benchmarks do
     end
   end
 
+  desc 'graphql query - quick benchmark'
+  task graphql_quick: :environment do
+    query = API::V2::StoredQuery::QUERY_V2
+
+    procedure = Procedure.find(ENV.fetch('PROCEDURE_ID', 107325).to_i)
+    administrateur = procedure.administrateurs.first
+
+    variables = { "demarcheNumber": procedure.id, "includeDossiers": true, "first": 20 }
+    context = {
+      administrateur_id: administrateur.id,
+      procedure_ids: administrateur.procedure_ids,
+      write_access: true,
+    }
+    operation_name = 'getDemarche'
+
+    Rails.application.routes.default_url_options[:only_path] = true
+
+    # Nombre d'itérations depuis env ou 1 par défaut
+    iterations = ENV.fetch('ITERATIONS', 1).to_i
+
+    # Warmup
+    puts "Warmup..."
+    API::V2::Schema.execute(query:, variables:, context:, operation_name:)
+
+    puts "\nRunning #{iterations} iterations..."
+
+    Benchmark.bm(30) do |x|
+      x.report("GraphQL API (#{iterations}x):") do
+        iterations.times do
+          API::V2::Schema.execute(query:, variables:, context:, operation_name:)
+        end
+      end
+    end
+  end
+
   # Benchmark une action Rails spécifique, y compris le temps de génération des views.
   # Optionnellement, compare avec une autre implémentation de l’action
   # sur la même branche ou sur deux branches git.

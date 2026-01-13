@@ -34,12 +34,21 @@ module ChampConditionalConcern
 
     def reset_visible # recompute after a dossier update
       remove_instance_variable :@visible if instance_variable_defined? :@visible
+      remove_instance_variable :@champs_for_condition if instance_variable_defined? :@champs_for_condition
     end
 
     private
 
     def champs_for_condition
-      dossier.filled_champs.filter { _1.row_id.nil? || _1.row_id == row_id }
+      if row_id.nil?
+        Array(filled_champs_by_row_id[nil])
+      else
+        Array(filled_champs_by_row_id[row_id]) + Array(filled_champs_by_row_id[nil])
+      end
+    end
+
+    def filled_champs_by_row_id
+      @filled_champs_by_row_id ||= dossier.filled_champs.group_by(&:row_id)
     end
 
     def parent_hidden?
