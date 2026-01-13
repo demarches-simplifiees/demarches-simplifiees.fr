@@ -69,6 +69,15 @@ namespace :benchmarks do
           API::V2::Schema.execute(query:, variables:, context:, operation_name:)
         end
       end
+
+      # Prepend le concern optimisé
+      Champ.prepend(ChampConditionalConcernOptimized)
+
+      x.report("Avec optimisation (#{iterations}x):") do
+        iterations.times do
+          API::V2::Schema.execute(query:, variables:, context:, operation_name:)
+        end
+      end
     end
   end
 
