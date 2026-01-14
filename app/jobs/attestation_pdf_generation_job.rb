@@ -22,6 +22,8 @@ class AttestationPdfGenerationJob < ApplicationJob
       :refus
     end
 
+    return if kind.nil? # dossier not in accepte/refuse state anymore
+
     dossier.attestation_template_for(AttestationTemplate.kinds.fetch(kind))
   end
 end
