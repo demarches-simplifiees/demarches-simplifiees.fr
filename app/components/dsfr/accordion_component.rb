@@ -6,11 +6,16 @@ module Dsfr
 
     attr_reader :id, :expanded, :accordion_tag, :title_tag
 
-    def initialize(id: nil, expanded: false, accordion_tag: :section, title_tag: :h3)
+    def initialize(id: nil, expanded: false, accordion_tag: :section, title_tag: :h3, title_id: nil)
       @id = id || generate_id
       @expanded = expanded
       @accordion_tag = accordion_tag
       @title_tag = title_tag
+      @title_id = title_id
+    end
+
+    def accordion_id
+      "#{id}-accordion-content"
     end
 
     private
