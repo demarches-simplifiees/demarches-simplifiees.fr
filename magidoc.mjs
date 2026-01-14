@@ -34,7 +34,7 @@ export default {
           content: [
             {
               title: 'Welcome',
-              content: `# Schema de l’API GraphQL de demarche.numerique.gouv.fr`
+              content: `# Schema de l’API GraphQL de demarche.numerique.gouv.fr
 
 L'API v2 suit le paradigme GraphQL. Si GraphQL est un lointain sujet pour vous, nous vous recommandons de prendre le temps de consulter les liens suivants :
 
