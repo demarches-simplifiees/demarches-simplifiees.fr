@@ -117,6 +117,7 @@ class ImageProcessorJob < ApplicationJob
   def add_ocr_data(blob)
     champ = blob&.attachments&.first&.record
     return if !rib?(champ)
+    return if !champ.may_fetch? # a previous blob may have already been analyzed
 
     champ.fetch!
   end
