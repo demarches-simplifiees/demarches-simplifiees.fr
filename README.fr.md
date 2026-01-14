@@ -1,12 +1,12 @@
-# demarches-simplifiees.fr
+# demarche.numerique.gouv.fr
 
 ## Contexte
 
-[demarches-simplifiees.fr](https://www.demarches-simplifiees.fr) est un site web conçu afin de répondre au besoin urgent de l’État d’appliquer la directive sur le 100 % dématérialisation pour les démarches administratives.
+[demarche.numerique.gouv.fr](https://demarche.numerique.gouv.fr) est un site web conçu afin de répondre au besoin urgent de l’État d’appliquer la directive sur le 100 % dématérialisation pour les démarches administratives.
 
 ## Comment contribuer ?
 
-demarches-simplifiees.fr est un [logiciel libre](https://fr.wikipedia.org/wiki/Logiciel_libre) sous licence AGPL.
+demarche.numerique.gouv.fr est un [logiciel libre](https://fr.wikipedia.org/wiki/Logiciel_libre) sous licence AGPL.
 
 Vous souhaitez y apporter des changements ou des améliorations ? Lisez notre [guide de contribution](CONTRIBUTING.md).
 
@@ -96,7 +96,7 @@ L’application tourne alors à l’adresse `http://localhost:3000` avec en para
 
 ### Utilisateurs de test
 
-En local, un utilisateur de test est créé automatiquement, avec les identifiants `test@exemple.fr`/`this is a very complicated password !`. (voir [db/seeds.rb](https://github.com/betagouv/demarches-simplifiees.fr/blob/dev/db/seeds.rb))
+En local, un utilisateur de test est créé automatiquement, avec les identifiants `test@exemple.fr`/`this is a very complicated password !`. (voir [db/seeds.rb](https://github.com/demarche-numerique/demarche.numerique.gouv.fr/blob/dev/db/seeds.rb))
 
 ### Programmation des tâches récurrentes
 

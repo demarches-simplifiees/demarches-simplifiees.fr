@@ -3,11 +3,11 @@
 # More info at https://github.com/italia/publiccode.yml
 
 publiccodeYmlVersion: '0.2'
-name: Démarches Simplifiées
-url: 'https://github.com/demarches-simplifiees/demarches-simplifiees.fr'
-landingURL: 'https://www.demarches-simplifiees.fr/'
-roadmap: 'https://github.com/demarches-simplifiees/demarches-simplifiees.fr/wiki/Feuille-de-route'
-releaseDate: 'https://github.com/demarches-simplifiees/demarches-simplifiees.fr/releases/latest'
+name: Démarche Numérique
+url: 'https://github.com/demarche-numerique/demarche.numerique.gouv.fr'
+landingURL: 'https://demarche.numerique.gouv.fr'
+roadmap: 'https://github.com/demarche-numerique/demarche.numerique.gouv.fr/wiki/Feuille-de-route'
+releaseDate: 'https://github.com/demarche-numerique/demarche.numerique.gouv.fr/releases/latest'
 developmentStatus: beta
 softwareType: standalone/backend
 categories:
@@ -15,7 +15,7 @@ categories:
 platforms:
   - web
 logo: |-
-  https://www.demarches-simplifiees.fr/logo-icon.png
+  https://demarche.numerique.gouv.fr/logo-icon.png
 legal:
   license: GPL-3.0-or-later
 localisation:

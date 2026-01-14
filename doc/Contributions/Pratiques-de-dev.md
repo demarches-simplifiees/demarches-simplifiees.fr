@@ -2,8 +2,8 @@
 
 ## Branches du projet
 
-- `main`, branche qui contient le code du site tel qu’il est [en intégration](https://dev.demarches-simplifiees.fr/)
-- les [releases](https://github.com/demarches-simplifiees/demarches-simplifiees.fr/releases) pointent sur la branche `main` (historiquement sur la branche `production`)
+- `main`, branche qui contient le code du site tel qu’il est [en intégration](https://dev.demarche.numerique.gouv.fr/)
+- les [releases](https://github.com/demarche-numerique/demarche.numerique.gouv.fr/releases) pointent sur la branche `main` (historiquement sur la branche `production`)
 
 ## Cycle de développement
 
@@ -33,7 +33,7 @@ pour vous faire la main sur le processus.
 ### Injection de dépendance
 
 D'une manière générale, nous préférons avoir des controlleurs verbeux mais explicites.
-Afin d’éviter de trop alourdir les contrôleurs et les modèles, déjà bien chargés, nous mettons parfois en place des services pour centraliser une partie cohérente des traitements (voir [DossierProjectionService](https://github.com/betagouv/demarches-simplifiees.fr/blob/92f463bc039200b98908dc5c09366844b0e1d593/app/services/dossier_projection_service.rb), [PieceJustificativeService](https://github.com/betagouv/demarches-simplifiees.fr/blob/92f463bc039200b98908dc5c09366844b0e1d593/app/services/pieces_justificatives_service.rb))
+Afin d’éviter de trop alourdir les contrôleurs et les modèles, déjà bien chargés, nous mettons parfois en place des services pour centraliser une partie cohérente des traitements (voir [DossierProjectionService](https://github.com/demarche-numerique/demarche.numerique.gouv.fr/blob/92f463bc039200b98908dc5c09366844b0e1d593/app/services/dossier_projection_service.rb), [PieceJustificativeService](https://github.com/demarche-numerique/demarche.numerique.gouv.fr/blob/92f463bc039200b98908dc5c09366844b0e1d593/app/services/pieces_justificatives_service.rb))
 
 - Toute injection de dépendance doit être utilisée (sinon ne pas la coder)
 - Il est demandé d’éviter l’injection de dépendance dans les constructeurs.
@@ -86,7 +86,7 @@ Autrement dit, le LLM n’est qu’un outil, et il convient d’être tout aussi
 
 En date du 2021-10-19, voici une PR servant d’exemple :
 
-* [#6519 ETQ Super Admin je veux changer l’adresse électronique d’un instructeur](https://github.com/betagouv/demarches-simplifiees.fr/pull/6519)
+* [#6519 ETQ Super Admin je veux changer l’adresse électronique d’un instructeur](https://github.com/demarche-numerique/demarche.numerique.gouv.fr/pull/6519)
 
 ## Bonnes pratiques : sur les branches
 

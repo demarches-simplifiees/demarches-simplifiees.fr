@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# context: https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues/8661
+# context: https://github.com/demarche-numerique/demarche.numerique.gouv.fr/issues/8661
 #   a11y: a post/delete/patch/put action must be wrapped in a <button>, not in an <a>
 #   but we can't nest <forms>
 #   this component exposes each http methods within a form, and can be used with OwnedButtonComponent

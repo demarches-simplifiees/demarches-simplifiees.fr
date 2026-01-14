@@ -2,13 +2,13 @@
 http_interactions:
 - request:
     method: get
-    uri: https://www.demarches-simplifiees.fr/error_2
+    uri: https://demarche.numerique.gouv.fr/error_2
     body:
       encoding: US-ASCII
       string: ''
     headers:
       User-Agent:
-      - demarches-simplifiees.fr
+      - demarche.numerique.gouv.fr
       Expect:
       - ''
   response:
@@ -36,13 +36,13 @@ http_interactions:
   recorded_at: Wed, 04 Mar 2020 23:00:00 GMT
 - request:
     method: get
-    uri: https://www.demarches-simplifiees.fr/error_1
+    uri: https://demarche.numerique.gouv.fr/error_1
     body:
       encoding: US-ASCII
       string: ''
     headers:
       User-Agent:
-      - demarches-simplifiees.fr
+      - demarche.numerique.gouv.fr
       Expect:
       - ''
   response:
@@ -70,13 +70,13 @@ http_interactions:
   recorded_at: Wed, 04 Mar 2020 23:00:00 GMT
 - request:
     method: get
-    uri: https://www.demarches-simplifiees.fr/error_1
+    uri: https://demarche.numerique.gouv.fr/error_1
     body:
       encoding: US-ASCII
       string: ''
     headers:
       User-Agent:
-      - demarches-simplifiees.fr
+      - demarche.numerique.gouv.fr
       Expect:
       - ''
   response:

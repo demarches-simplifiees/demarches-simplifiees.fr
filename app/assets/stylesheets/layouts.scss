@@ -14,7 +14,7 @@
   }
 
   .columns-container {
-    // TODO: https://github.com/betagouv/demarches-simplifiees.fr/issues/7882, once implemented, we won't need container anymore
+    // TODO: https://github.com/demarche-numerique/demarche.numerique.gouv.fr/issues/7882, once implemented, we won't need container anymore
     @extend %container;
     display: flex;
     flex-direction: column;

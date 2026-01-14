@@ -136,7 +136,7 @@ fr:
         programme:
           intro: "Les usagers peuvent suivre les mesures engagées par le service pour améliorer l’accessibilité du site grâce au "
           label: "programme d’amélioration continue de DS en matière d’accessibilité"
-          url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues?q=accessibilit%C3%A9+"
+          url: "https://github.com/demarche-numerique/demarche.numerique.gouv.fr/issues?q=accessibilit%C3%A9+"
           title: "programme d’amélioration continue de DS en matière d’accessibilité - nouvel onglet"
       no_accessible:
         title: "Contenus non accessibles"
@@ -210,7 +210,7 @@ fr:
         page_eleven: "Création d’un dossier - Identité"
         page_twelve: "Création d’un dossier - Brouillon"
         page_thirteen: "Création d’un dossier - Confirmation d’envoi"
-        page_note_html: "La démarche <a href=\"https://www.demarches-simplifiees.fr/commencer/cd92-demande-amethyste-ph-v1\">CD92 - Demande de titre améthyste - Première demande (v1 - PH)</a> a été utilisé dans le cadre de l’audit."
+        page_note_html: "La démarche <a href=\"https://demarche.numerique.gouv.fr/commencer/cd92-demande-amethyste-ph-v1\">CD92 - Demande de titre améthyste - Première demande (v1 - PH)</a> a été utilisé dans le cadre de l’audit."
       contact:
         title: "Retour d’information et contact"
         intro: "Si vous n’arrivez pas à accéder à un contenu ou à un service, vous pouvez contacter le responsable de Démarches simplifiées pour être orienté vers une alternative accessible ou obtenir le contenu sous une autre forme."

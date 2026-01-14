@@ -75,6 +75,6 @@ module ProcedureHelper
     procedure.closing_reason_internal_procedure? &&
     procedure.replaced_by_procedure.present? &&
     !procedure.replaced_by_procedure.discarded? &&
-    procedure.replaced_by_procedure.path.present? # TODO: to remove when all path are added, cf: https://github.com/demarches-simplifiees/demarches-simplifiees.fr/pull/11453
+    procedure.replaced_by_procedure.path.present? # TODO: to remove when all path are added, cf: https://github.com/demarche-numerique/demarche.numerique.gouv.fr/pull/11453
   end
 end

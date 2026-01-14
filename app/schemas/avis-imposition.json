@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://demarches-simplifiees.fr/avis-imposition.schema.json",
+  "$id": "http://demarche.numerique.gouv.fr/avis-imposition.schema.json",
   "title": "avis imposition",
   "type": "object",
   "properties": {

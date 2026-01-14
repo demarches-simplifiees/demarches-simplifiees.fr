@@ -1,6 +1,6 @@
 # Privacy policy documentation
 
-This document describes various privacy consideration that should be considered when deploying an instance of demarches-simplifiees.fr.
+This document describes various privacy consideration that should be considered when deploying an instance of demarche.numerique.gouv.fr.
 ## Matomo and or Analytics service
 
 In order to prevent Matomo to store personnal information, you should set it up with some additional configurations options.

@@ -2,7 +2,7 @@
 
 module Maintenance
   # This task backfills the email_verified_at field for confirmed users
-  # as a bug fixed by https://github.com/demarches-simplifiees/demarches-simplifiees.fr/pull/11074
+  # as a bug fixed by https://github.com/demarche-numerique/demarche.numerique.gouv.fr/pull/11074
   # produced unverified confirmed users.
   class VerifyConfirmedUsersTask < MaintenanceTasks::Task
     include RunnableOnDeployConcern

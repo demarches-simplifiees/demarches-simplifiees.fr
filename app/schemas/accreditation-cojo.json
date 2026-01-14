@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://demarches-simplifiees.fr/accreditation-cojo.schema.json",
+  "$id": "http://demarche.numerique.gouv.fr/accreditation-cojo.schema.json",
   "title": "Accreditation COJO",
   "type": "object",
   "properties": {

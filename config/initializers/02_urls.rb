@@ -47,7 +47,7 @@ DOC_INTEGRATION_MONAVIS_URL = [DOC_URL, "tutoriels", "integration-du-bouton-mon-
 DOC_PROCEDURE_EXPIRES_URL = [DOC_URL, "expiration-et-suppression-des-dossiers"].join("/")
 DOC_EXPORT_TEMPLATE_URL = [DOC_URL, "tutoriels/tutoriel-instructeur#c.-personnaliser-les-exports"].join("/")
 
-STATUS_PAGE_URL = ENV.fetch("STATUS_PAGE_URL", "https://status.demarches-simplifiees.fr")
-DEMANDE_INSCRIPTION_ADMIN_PAGE_URL = ENV.fetch("DEMANDE_INSCRIPTION_ADMIN_PAGE_URL", "https://www.demarches-simplifiees.fr/commencer/demande-d-inscription-a-demarches-simplifiees")
+STATUS_PAGE_URL = ENV.fetch("STATUS_PAGE_URL", "https://status.demarche.numerique.gouv.fr")
+DEMANDE_INSCRIPTION_ADMIN_PAGE_URL = ENV.fetch("DEMANDE_INSCRIPTION_ADMIN_PAGE_URL", "https://demarche.numerique.gouv.fr/commencer/demande-d-inscription-a-demarches-simplifiees")
 MATOMO_IFRAME_URL = ENV.fetch("MATOMO_IFRAME_URL", "https://#{ENV.fetch('MATOMO_HOST', 'stats.data.gouv.fr')}/index.php?module=CoreAdminHome&action=optOut&language=fr&&fontColor=333333&fontSize=16px&fontFamily=Muli")
 # rubocop:enable DS/ApplicationName

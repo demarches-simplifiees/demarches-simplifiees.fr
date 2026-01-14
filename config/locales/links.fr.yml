@@ -46,7 +46,7 @@ fr:
         url: "https://doc.demarches-simplifiees.fr/cgu"
       code:
         label: "Code source"
-        url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr"
+        url: "https://github.com/demarche-numerique/demarche.numerique.gouv.fr"
       contact_technique:
         label: "Contact technique"
         title: "Contacter notre équipe technique"
@@ -62,11 +62,11 @@ fr:
       releases:
         label: "Nouveautés"
         title: "Nouveautés : Les dernière mises à jour de la plateforme"
-        url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/releases"
+        url: "https://github.com/demarche-numerique/demarche.numerique.gouv.fr/releases"
       security:
         label: "Sécurité"
         title: "Politique et procédure de sécurité"
-        url: 'https://github.com/demarches-simplifiees/demarches-simplifiees.fr/blob/main/SECURITY.md'
+        url: 'https://github.com/demarche-numerique/demarche.numerique.gouv.fr/blob/main/SECURITY.md'
       stats:
         label: "Statistiques"
       carte:
@@ -74,8 +74,8 @@ fr:
         title: "Carte de déploiement par département"
       status_page:
         label: "Disponibilité"
-        title: "Statistiques de disponibilité du site demarches-simplifiees"
-        url: "https://status.demarches-simplifiees.fr"
+        title: "Statistiques de disponibilité du site demarche.numerique.gouv.fr"
+        url: "https://status.demarche.numerique.gouv.fr"
       suivi:
         label: "Suivi d’audience et vie privée"
       solidarite_numerique:

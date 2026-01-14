@@ -3,7 +3,7 @@
 # We are going to confirm the various email addresses of the users in the system.
 # User model needs their email_verified_at attribute to be set in order to receive emails.
 # This task sets the email_verified_at attribute to the current time for all users to be backward compatible
-# See https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues/10450
+# See https://github.com/demarche-numerique/demarche.numerique.gouv.fr/issues/10450
 module Maintenance
   class PrefillUserEmailVerifiedAtTask < MaintenanceTasks::Task
     def collection

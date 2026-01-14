@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Maintenance
-  # a previous commit : https://github.com/demarches-simplifiees/demarches-simplifiees.fr/pull/10625/commits/305b8c13c75a711a85521d0b19659293d8d92805
+  # a previous commit : https://github.com/demarche-numerique/demarche.numerique.gouv.fr/pull/10625/commits/305b8c13c75a711a85521d0b19659293d8d92805
   #   the previous brokes a naming convention on ProcedurePresentation.filters|displayed_fields|sort
   # this commit
   #   it adjusts live data to fit new convention and avoid validation error

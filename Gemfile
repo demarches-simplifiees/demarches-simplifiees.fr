@@ -42,7 +42,7 @@ gem 'front_matter_parser'
 gem 'fugit'
 gem 'geocoder'
 gem 'geo_coord', require: "geo/coord"
-gem 'gitlab-sidekiq-fetcher', require: 'sidekiq-reliable-fetch', git: 'https://github.com/demarches-simplifiees/reliable-fetch.git'
+gem 'gitlab-sidekiq-fetcher', require: 'sidekiq-reliable-fetch', git: 'https://github.com/demarche-numerique/reliable-fetch.git'
 gem 'gon'
 gem 'graphql'
 gem 'graphql-batch'

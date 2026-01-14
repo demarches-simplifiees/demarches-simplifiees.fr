@@ -256,7 +256,7 @@ FactoryBot.define do
         when Dossier.states.fetch(:sans_suite)
           'Le département n’est pas éligible. Veuillez remplir un nouveau dossier auprès de la DDT du 93. Voir https://ddt-93.fr'
         else
-          'Vous avez validé les conditions. Retrouvez votre dossier sur https://demarches-simplifiees.fr'
+          'Vous avez validé les conditions. Retrouvez votre dossier sur https://demarche.numerique.gouv.fr'
         end
         dossier.traitements.last.update!(motivation: motivation)
       end

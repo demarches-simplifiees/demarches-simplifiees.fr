@@ -118,7 +118,7 @@ TEXT
   context 'auto-link' do
     let(:text) do
       <<~TEXT
-        bonjour https://www.demarches-simplifiees.fr
+        bonjour https://demarche.numerique.gouv.fr
         nohttp www.ds.io
         ecrivez à ds@rspec.io
         <a href="https://demarche.numerique.gouv.fr">lien html</a>
@@ -130,7 +130,7 @@ TEXT
       let(:allow_a) { true }
       it { expect(page).to have_selector("a") }
       it "inject expected attributes" do
-        link = page.find_link("https://www.demarches-simplifiees.fr").native
+        link = page.find_link("https://demarche.numerique.gouv.fr").native
         expect(link[:rel]).to eq("noopener noreferrer")
         expect(link[:title]).to eq("Nouvel onglet")
       end
@@ -165,23 +165,23 @@ TEXT
       let(:allow_autolink) { true }
 
       it "convert only visible http link, not html links" do
-        expect(page).to have_link("https://www.demarches-simplifiees.fr")
+        expect(page).to have_link("https://demarche.numerique.gouv.fr")
         expect(page).to have_selector("a", count: 1)
       end
 
       it "inject expected attributes" do
-        link = page.find_link("https://www.demarches-simplifiees.fr").native
+        link = page.find_link("https://demarche.numerique.gouv.fr").native
         expect(link[:rel]).to eq("noopener noreferrer")
         expect(link[:title]).to include("Nouvel onglet")
       end
 
       context 'url ending the paragraph' do
-        let(:text) { "bonjour https://www.demarches-simplifiees.fr" }
+        let(:text) { "bonjour https://demarche.numerique.gouv.fr" }
 
         it "does not include the closing p" do
-          link = page.find_link("https://www.demarches-simplifiees.fr").native
-          expect(link[:href]).to eq("https://www.demarches-simplifiees.fr")
-          expect(link.text).to eq("https://www.demarches-simplifiees.fr")
+          link = page.find_link("https://demarche.numerique.gouv.fr").native
+          expect(link[:href]).to eq("https://demarche.numerique.gouv.fr")
+          expect(link.text).to eq("https://demarche.numerique.gouv.fr")
         end
       end
     end

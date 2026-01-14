@@ -6,7 +6,7 @@ module Maintenance
     # de la liste ISO 3166-1 dans APIGeoService. Deux types de modifications :
     # 1. DOM français (GP, MQ, GF, RE, YT) → France (FR)
     # 2. Mise à jour des libellés de pays (capitalisation des îles, simplification des noms officiels)
-    # Cf https://github.com/demarches-simplifiees/demarches-simplifiees.fr/pull/12229
+    # Cf https://github.com/demarche-numerique/demarche.numerique.gouv.fr/pull/12229
 
     include RunnableOnDeployConcern
     include StatementsHelpersConcern
