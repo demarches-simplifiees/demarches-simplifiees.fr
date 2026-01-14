@@ -6,9 +6,9 @@ module Maintenance
   # Les données legacy légitimes (numéros de décret, références légales) sont préservées
   class T20251210CleanCadreJuridiqueTask < MaintenanceTasks::Task
     PATTERNS = [
-      /<[a-z]/i,                           # Balises HTML (<a>, etc.)
-      /&#\d+;/,                            # Entités HTML encodées (&#60; = <)
-      /&#x[0-9a-f]+;/i,                    # Entités HTML hex (&#x3c; = <)
+      /<.+>/i, # Balises HTML (<a>, etc.)
+      /&#60;/,                             # Entités HTML encodées (&#60; = <)
+      /&#x3c;;/i,                          # Entités HTML hex (&#x3c; = <)
       /\Ajavascript:/i,                    # Schéma javascript:
       /\Adata:/i,                          # Schéma data:
       /\Avbscript:/i,                      # Schéma vbscript:
