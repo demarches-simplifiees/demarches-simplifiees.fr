@@ -44,6 +44,21 @@ describe Champs::PieceJustificativeController, type: :controller do
       end
     end
 
+    context 'when the champ uses external_data but is already fetched with another file' do
+      let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
+
+      before do
+        allow_any_instance_of(Champs::PieceJustificativeChamp).to receive(:uses_external_data?).and_return(true)
+        champ.update_column(:external_state, :fetched)
+      end
+
+      it 'does not call fetch_later!' do
+        expect_any_instance_of(Champs::PieceJustificativeChamp).not_to receive(:fetch_later!)
+        subject
+        expect(response.status).to eq(200)
+      end
+    end
+
     context 'when the champ is private and the dossier is not brouillon' do
       let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
       let!(:dossier) { create(:dossier, :en_construction, user: user, procedure: procedure) }
