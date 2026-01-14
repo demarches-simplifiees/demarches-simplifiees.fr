@@ -32,7 +32,7 @@ class Champs::PieceJustificativeController < Champs::ChampController
     end
 
     if save_succeed
-      @champ.fetch_later! if @champ.uses_external_data?
+      @champ.fetch_later! if @champ.uses_external_data? && @champ.may_fetch_later?
 
       @champ.update_timestamps
 

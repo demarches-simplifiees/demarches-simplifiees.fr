@@ -200,6 +200,21 @@ describe ImageProcessorJob, type: :job do
         expect(champ_pj.reload.value_json).to be_nil
       end
     end
+
+    context "when the champ is already fetched" do
+      let(:blob) do
+        pj = champ_pj.piece_justificative_file
+        pj.attach(file)
+
+        # simulate another blob attached and analyzed (by a invitee, after rebase, …)
+        champ_pj.update_column(:external_state, :fetched)
+        pj.blobs.first
+      end
+
+      it "does not raise and does not call OcrService.analyze" do
+        expect(OCRService).not_to have_received(:analyze)
+      end
+    end
   end
 
   describe 'error handling' do
