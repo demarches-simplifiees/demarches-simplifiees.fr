@@ -1,4 +1,4 @@
-.flex.column.flex-1
+.flex.column.width-100
   .fr-fieldset__element
     .fr-input-group.address-ban
       = @form.label :address, t('.address_hint'), for: @champ.focusable_input_id, class: 'fr-hint-text', id: input_label_id(@champ)
@@ -16,31 +16,32 @@
     - if @champ.description.present?
       .fr-ml-1w{ id: @champ.describedby_id }= render SimpleFormatComponent.new(@champ.description, allow_a: true, class_names_map: { paragraph: "fr-hint-text" })
 
-    .width-100.not-in-ban-group.champs-group.fr-ml-1w
-      .fr-fieldset__element
-        .fr-input-group
-          = @form.label :country_code, for: @champ.focusable_input_id(:country_code), class: 'fr-label', id: input_label_id(@champ, :country_code) do
-            - capture do
-              = t('.country_label')
-              = render EditableChamp::AsteriskMandatoryComponent.new
-          = @form.select :country_code, pays_options, @champ.mandatory? ? { prompt: '' } : { include_blank: '' }, required: @champ.required?, id: @champ.focusable_input_id(:country_code), class: "width-33-desktop fr-select small-margin", 'aria-labelledby': aria_labelledby(:country_code)
-
-      .fr-fieldset__element
-        = render Dsfr::InputComponent.new(form: @form, attribute: :street_address, opts: { id: @champ.focusable_input_id(:street_address), class:"fr-input small-margin", "aria-labelledby": aria_labelledby(:street_address) }, label_opts: { id: input_label_id(@champ, :street_address) }) do |c|
-          - c.with_label { t('.street_label') }
-          - c.with_hint { @champ.international? ? t('.street_international_hint') : t('.street_fr_hint') }
-
-      - if @champ.international?
-        .fr-fieldset__element
-          = render Dsfr::InputComponent.new(form: @form, attribute: :city_name, opts: { id: @champ.focusable_input_id(:city_name), class:"fr-input small-margin width-33-desktop ", "aria-labelledby": aria_labelledby(:city_name) }, label_opts: { id: input_label_id(@champ, :city_name) }) do |c|
-            - c.with_label { t('.city_label') }
-            - c.with_hint t('.city_hint')
-
+    .width-100.not-in-ban-group.fr-px-1w
+      .champs-group
         .fr-fieldset__element
           .fr-input-group
-          = render Dsfr::InputComponent.new(form: @form, attribute: :postal_code, opts: { id: @champ.focusable_input_id(:postal_code), class:"fr-input small-margin width-33-desktop ", "aria-labelledby": aria_labelledby(:postal_code) }, label_opts: { id: input_label_id(@champ, :postal_code) }) do |c|
-            - c.with_label { t('.postal_code_label') }
-      - else
+            = @form.label :country_code, for: @champ.focusable_input_id(:country_code), class: 'fr-label', id: input_label_id(@champ, :country_code) do
+              - capture do
+                = t('.country_label')
+                = render EditableChamp::AsteriskMandatoryComponent.new
+            = @form.select :country_code, pays_options, @champ.mandatory? ? { prompt: '' } : { include_blank: '' }, required: @champ.required?, id: @champ.focusable_input_id(:country_code), class: "width-33-desktop fr-select small-margin", 'aria-labelledby': aria_labelledby(:country_code)
+
+        .fr-fieldset__element
+          = render Dsfr::InputComponent.new(form: @form, attribute: :street_address, opts: { id: @champ.focusable_input_id(:street_address), class:"fr-input small-margin", "aria-labelledby": aria_labelledby(:street_address) }, label_opts: { id: input_label_id(@champ, :street_address) }) do |c|
+            - c.with_label { t('.street_label') }
+            - c.with_hint { @champ.international? ? t('.street_international_hint') : t('.street_fr_hint') }
+
+        - if @champ.international?
+          .fr-fieldset__element
+            = render Dsfr::InputComponent.new(form: @form, attribute: :city_name, opts: { id: @champ.focusable_input_id(:city_name), class:"fr-input small-margin width-33-desktop ", "aria-labelledby": aria_labelledby(:city_name) }, label_opts: { id: input_label_id(@champ, :city_name) }) do |c|
+              - c.with_label { t('.city_label') }
+              - c.with_hint t('.city_hint')
+
+          .fr-fieldset__element
+            .fr-input-group
+            = render Dsfr::InputComponent.new(form: @form, attribute: :postal_code, opts: { id: @champ.focusable_input_id(:postal_code), class:"fr-input small-margin width-33-desktop ", "aria-labelledby": aria_labelledby(:postal_code) }, label_opts: { id: input_label_id(@champ, :postal_code) }) do |c|
+              - c.with_label { t('.postal_code_label') }
+        - else
         .fr-fieldset__element
           .fr-input-group{ class: class_names("fr-input-group--error": @champ.errors.include?(:commune_name)) }
             = @form.label :commune_name, for: @champ.focusable_input_id(:commune_name), class: 'fr-label', id: input_label_id(@champ, :commune_name) do
