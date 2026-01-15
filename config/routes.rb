@@ -384,6 +384,7 @@ Rails.application.routes.draw do
         get 'modifier', to: 'dossiers#modifier'
         post 'modifier', to: 'dossiers#submit_en_construction'
         post 'check_completude', to: 'dossiers#check_completude'
+        post 'notify_owner_for_changes', to: 'dossiers#notify_owner_for_changes'
         get 'champs/:stable_id', to: 'dossiers#champ', as: :champ
         get 'merci'
         get 'demande'

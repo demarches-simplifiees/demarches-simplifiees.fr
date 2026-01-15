@@ -394,6 +394,7 @@ fr:
         edit:
           autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
           autosave_submit: Vos modifications sont automatiquement enregistrées. Déposez-les quand vous aurez terminé.
+          invite_notice: En tant qu’invité, vous pouvez remplir ce formulaire – mais <strong>le titulaire du dossier doit le déposer lui-même</strong>.
         messages:
           form:
             send_message: "Envoyer le message"
@@ -942,6 +943,8 @@ fr:
       check_completude:
         success: Le dossier est complet et correctement rempli.
         error: Le dossier n'est pas correctement rempli.
+      notify_owner_for_changes:
+        success: Le titulaire a bien été informé par mail de vos modifications
       restore: "Votre dossier a bien été restauré"
       etablissement:
         no_establishment: "Aucun établissement n’est associé à ce dossier"

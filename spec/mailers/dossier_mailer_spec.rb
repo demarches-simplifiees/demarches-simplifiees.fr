@@ -387,4 +387,29 @@ RSpec.describe DossierMailer, type: :mailer do
       end
     end
   end
+
+  describe '.notify_owner_for_changes' do
+    let(:owner) { create(:user) }
+    let(:invite) { create(:user) }
+    let(:procedure) { create(:procedure) }
+    let(:dossier) { create(:dossier, user: owner, procedure: procedure) }
+
+    subject do
+      described_class.notify_owner_for_changes(dossier, invite)
+    end
+
+    it 'sends email to owner' do
+      expect(subject.to).to eq([owner.email])
+    end
+
+    it 'includes the correct subject and body content' do
+      expect(subject.subject).to include("modifié")
+      expect(subject.subject).to include(dossier.id.to_s)
+      expect(subject.body).to include(invite.email)
+      expect(subject.body).to include(dossier_url(dossier))
+      expect(subject.body).to include("modifications")
+    end
+
+    it_behaves_like 'a dossier notification'
+  end
 end

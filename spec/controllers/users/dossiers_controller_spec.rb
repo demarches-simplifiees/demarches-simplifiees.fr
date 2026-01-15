@@ -1650,6 +1650,50 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
+  describe '#notify_owner_for_changes' do
+    let(:owner) { create(:user) }
+    let(:invite) { create(:user) }
+    let(:dossier) { create(:dossier, user: owner) }
+
+    let(:mailer_double) { double(deliver_later: true) }
+
+    subject do
+      post :notify_owner_for_changes, params: { id: dossier.id }
+    end
+
+    before do
+      sign_in(invite)
+
+      create(:invite, dossier: dossier, user: invite)
+      allow(DossierMailer)
+        .to receive(:notify_owner_for_changes)
+        .and_return(mailer_double)
+    end
+
+    it 'send an email to the owner with 30 min delay and redirects to brouillon' do
+      subject
+
+      expect(DossierMailer).to have_received(:notify_owner_for_changes)
+        .with(dossier, invite)
+
+      expect(mailer_double).to have_received(:deliver_later)
+        .with(wait: 30.minutes)
+
+      expect(flash.notice).to be_present
+      expect(response).to redirect_to(brouillon_dossier_path(dossier))
+    end
+
+    context 'when dossier is en construction' do
+      before do
+        dossier.update!(state: :en_construction)
+      end
+      it 'redirects to modifier' do
+        subject
+        expect(response).to redirect_to(modifier_dossier_path(dossier))
+      end
+    end
+  end
+
   describe "#papertrail" do
     before { sign_in(user) }
 

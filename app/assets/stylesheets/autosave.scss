@@ -6,6 +6,7 @@
   // Position the status over the explanation text
   position: absolute;
   top: 0;
+  width: 100%;
 
   &.succeeded {
     color: var(--success-425-625);

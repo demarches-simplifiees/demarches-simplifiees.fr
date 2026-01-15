@@ -109,3 +109,9 @@
     display: initial;
   }
 }
+
+.no-flex-md {
+  @media (max-width: 62em) {
+    display: initial;
+  }
+}

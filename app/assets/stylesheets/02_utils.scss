@@ -36,6 +36,12 @@
   text-align: center;
 }
 
+.text-center-for-md {
+  @media (max-width: 62em) {
+    text-align: center;
+  }
+}
+
 .text-right {
   text-align: right !important;
 }
