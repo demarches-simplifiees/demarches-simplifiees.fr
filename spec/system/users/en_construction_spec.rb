@@ -18,9 +18,9 @@ describe "Dossier en_construction", js: true do
     expect(page).not_to have_button("Remplacer")
     find("button", text: "Supprimer le fichier toto.txt").click
 
-    wait_until { champ.reload.blank? }
-    live_region_selector = "##{champ.input_id}-aria-live"
+    live_region_selector = "##{champ.focusable_input_id}-aria-live"
     expect(page).to have_css(live_region_selector, text: "La pièce jointe (toto.txt) a bien été supprimée.", visible: :all)
+    expect(page).not_to have_button("Supprimer le fichier toto.txt")
   end
 
   context "with a mandatory piece justificative" do
@@ -30,7 +30,7 @@ describe "Dossier en_construction", js: true do
       visit_dossier(dossier)
 
       click_on "Supprimer le fichier toto.txt"
-      live_region_selector = "##{champ.input_id}-aria-live"
+      live_region_selector = "##{champ.focusable_input_id}-aria-live"
       expect(page).to have_css(live_region_selector, text: "La pièce jointe (toto.txt) a bien été supprimée.", visible: :all)
 
       input_selector = "#attachment-multiple-empty-#{champ.public_id}"
@@ -49,7 +49,7 @@ describe "Dossier en_construction", js: true do
       visit_dossier(dossier)
 
       click_on "Supprimer le fichier toto.png"
-      live_region_selector = "##{champ.input_id}-aria-live"
+      live_region_selector = "##{champ.focusable_input_id}-aria-live"
       expect(page).to have_css(live_region_selector, text: "La pièce jointe (toto.png) a bien été supprimée.", visible: :all)
 
       input_selector = "##{champ.focusable_input_id}"

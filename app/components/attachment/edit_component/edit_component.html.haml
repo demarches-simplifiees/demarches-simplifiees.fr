@@ -66,4 +66,5 @@
     %p.fr-error-text= t('.errors.uploading')
     = button_tag(**retry_button_options) do
       = t(".retry")
-  .sr-only{ id: "#{input_id}-aria-live", 'aria-live': 'polite', 'aria-atomic': 'true', tabindex: '-1' }
+  - unless champ.present?
+    .sr-only{ id: "#{input_id}-aria-live", role: 'status', 'aria-live': 'polite', 'aria-atomic': 'true' }
