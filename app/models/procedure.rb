@@ -807,6 +807,29 @@ class Procedure < ApplicationRecord
     public_send("attestation_#{kind}_template")
   end
 
+  def add_administrateurs(ids: [], emails: [], can_create_administrateur: false)
+    administrateurs_to_add, valid_emails, invalid_emails = Administrateur.find_all_by_identifier_with_emails(ids:, emails:)
+    not_found_emails = valid_emails - administrateurs_to_add.map(&:email)
+
+    if can_create_administrateur
+      # Send invitations to users without account
+      if not_found_emails.present?
+        administrateurs_to_add += not_found_emails.map do |email|
+          user = User.create_or_promote_to_administrateur(email, SecureRandom.hex)
+          user.invite_administrateur!
+          user.administrateur
+        end
+        not_found_emails = []
+      end
+    end
+
+    administrateurs_to_add -= administrateurs
+
+    administrateurs_to_add.each { administrateurs_procedures.create(administrateur: _1) }
+
+    [administrateurs_to_add, invalid_emails, not_found_emails]
+  end
+
   private
 
   def stable_ids_used_by_routing_rules
