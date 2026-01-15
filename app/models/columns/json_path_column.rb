@@ -50,7 +50,10 @@ class Columns::JSONPathColumn < Columns::ChampColumn
   def column_id = "type_de_champ/#{stable_id}-#{jsonpath}"
 
   def typed_value(champ)
-    JsonPath.on(champ.value_json, jsonpath).first
+    source = champ.data.presence || champ.value_json
+    return nil unless source
+
+    JsonPath.on(source, jsonpath).first
   end
 
   def quote_string(string) = ActiveRecord::Base.connection.quote_string(string)

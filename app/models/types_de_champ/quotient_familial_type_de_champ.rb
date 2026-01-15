@@ -32,4 +32,19 @@ class TypesDeChamp::QuotientFamilialTypeDeChamp < TypesDeChamp::TypeDeChampBase
     dossier = champ.dossier
     dossier.champs.find { |champ| champ.stable_id == substitution_type_de_champ(champ).stable_id }
   end
+
+  def columns(procedure:, displayable: true, prefix: nil)
+    [
+      Columns::JSONPathColumn.new(
+        procedure_id: procedure.id,
+        stable_id:,
+        tdc_type: type_champ,
+        label: libelle_with_prefix(prefix),
+        jsonpath: '$.quotient_familial.valeur',
+        displayable:,
+        type: :number,
+        mandatory: mandatory?
+      )
+    ]
+  end
 end
