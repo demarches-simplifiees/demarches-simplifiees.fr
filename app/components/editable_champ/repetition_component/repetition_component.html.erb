@@ -1,34 +1,32 @@
-<fieldset class="fr-fieldset flex column flex-1">
-  <%= tag.legend(class: "fr-h5", id: repetition_fieldset_legend_id(@champ), **legend_params) do %>
-    <%= @champ.libelle %>
+<%= tag.legend(class: "fr-fieldset__legend fr-h5", id: repetition_fieldset_legend_id(@champ), **legend_params) do %>
+  <%= @champ.libelle %>
+<% end %>
+
+<% if @champ.description.present? %>
+  <%= tag.div(class: "fr-messages-group notice fr-mt-n2w", **notice_params) do %>
+    <%= render SimpleFormatComponent.new(@champ.description, allow_a: true) %>
+  <% end %>
+<% end %>
+
+<div class="fr-fieldset__element flex column flex-gap-2" data-controller="repetition-toggle-all" data-repetition-toggle-all-expanded-text-value="<%= t(".collapse_all") %>" data-repetition-toggle-all-collapsed-text-value="<%= t(".expand_all") %>">
+  <% if show_toggle_all_button? %>
+    <div class="repetition-toggle-all fr-mb-2w fr-hidden fr-unhidden-md">
+      <button type="button" class="fr-btn fr-btn--tertiary fr-btn--sm fr-btn--icon-left" data-action="click->repetition-toggle-all#toggleAll">
+        <span data-repetition-toggle-all-target="icon" class="fr-icon-arrow-down-s-line" aria-hidden="true"></span>
+        <span data-repetition-toggle-all-target="text"><%= t(".expand_all") %></span>
+      </button>
+    </div>
   <% end %>
 
-  <% if @champ.description.present? %>
-    <%= tag.div(class: "width-100 notice fr-mt-n2w", **notice_params) do %>
-      <%= render SimpleFormatComponent.new(@champ.description, allow_a: true) %>
+  <div class="repetition width-100 flex column flex-gap-2 <%= class_names('utils-repetition-required' => @champ.mandatory?) %>" id="<%= dom_id(@champ, :rows) %>" data-repetition-toggle-all-target="rowsContainer">
+    <% @champ.row_ids.each.with_index(1) do |row_id, row_number| %>
+      <%= render EditableChamp::RepetitionRowComponent.new(form: @form, dossier: @champ.dossier, champ: @champ, row_id: row_id, row_number: row_number, seen_at: @seen_at, expanded: row_number == 1) %>
     <% end %>
-  <% end %>
-
-  <div class="width-100 flex column flex-1 flex-gap-2" data-controller="repetition-toggle-all" data-repetition-toggle-all-expanded-text-value="<%= t(".collapse_all") %>" data-repetition-toggle-all-collapsed-text-value="<%= t(".expand_all") %>">
-    <% if show_toggle_all_button? %>
-      <div class="repetition-toggle-all fr-mb-2w fr-hidden fr-unhidden-md">
-        <button type="button" class="fr-btn fr-btn--tertiary fr-btn--sm fr-btn--icon-left" data-action="click->repetition-toggle-all#toggleAll">
-          <span data-repetition-toggle-all-target="icon" class="fr-icon-arrow-down-s-line" aria-hidden="true"></span>
-          <span data-repetition-toggle-all-target="text"><%= t(".expand_all") %></span>
-        </button>
-      </div>
-    <% end %>
-
-    <div class="repetition width-100 flex column flex-gap-2 <%= class_names('utils-repetition-required' => @champ.mandatory?) %>" id="<%= dom_id(@champ, :rows) %>" data-repetition-toggle-all-target="rowsContainer">
-      <% @champ.row_ids.each.with_index(1) do |row_id, row_number| %>
-        <%= render EditableChamp::RepetitionRowComponent.new(form: @form, dossier: @champ.dossier, champ: @champ, row_id: row_id, row_number: row_number, seen_at: @seen_at, expanded: row_number == 1) %>
-      <% end %>
-    </div>
-
-    <div class="actions">
-      <%= render NestedForms::OwnedButtonComponent.new(formaction: champs_repetition_path(@champ.dossier, @champ.stable_id), http_method: :create, opt: { class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-circle-line fr-mb-3w", id: dom_id(@champ, :create_repetition)}) do %>
-        <%= t(".add", libelle: @champ.libelle) %>
-      <% end %>
-    </div>
   </div>
-</fieldset>
+
+  <div class="actions">
+    <%= render NestedForms::OwnedButtonComponent.new(formaction: champs_repetition_path(@champ.dossier, @champ.stable_id), http_method: :create, opt: { class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-circle-line fr-mb-3w", id: dom_id(@champ, :create_repetition)}) do %>
+      <%= t(".add", libelle: @champ.libelle) %>
+    <% end %>
+  </div>
+</div>
