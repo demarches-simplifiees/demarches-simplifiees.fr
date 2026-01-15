@@ -150,6 +150,8 @@ class TiptapService
         "<s>#{text}</s>"
       in type: 'highlight'
         "<mark>#{text}</mark>"
+      in type: 'link', attrs: { href: }
+        "<a href=\"#{ERB::Util.html_escape(href)}\" target=\"_blank\" rel=\"noopener noreferrer\">#{text}</a>"
       end
     end
   end

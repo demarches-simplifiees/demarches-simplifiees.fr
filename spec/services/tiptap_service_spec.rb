@@ -202,6 +202,64 @@ RSpec.describe TiptapService do
       end
     end
 
+    context 'link mark' do
+      let(:json) do
+        {
+          type: 'doc',
+          content: [
+            {
+              type: 'paragraph',
+              content: [
+                {
+                  type: 'text',
+                  text: 'Cliquez ',
+                },
+                {
+                  type: 'text',
+                  text: 'ici',
+                  marks: [{ type: 'link', attrs: { href: 'https://example.com' } }],
+                },
+                {
+                  type: 'text',
+                  text: ' pour continuer.',
+                },
+              ],
+            },
+          ],
+        }
+      end
+
+      it 'renders link with security attributes' do
+        expect(described_class.new.to_html(json, {})).to eq(
+          '<p class="body-start">Cliquez <a href="https://example.com" target="_blank" rel="noopener noreferrer">ici</a> pour continuer.</p>'
+        )
+      end
+
+      context 'with XSS attempt in href' do
+        let(:json) do
+          {
+            type: 'doc',
+            content: [
+              {
+                type: 'paragraph',
+                content: [
+                  {
+                    type: 'text',
+                    text: 'link',
+                    marks: [{ type: 'link', attrs: { href: '"><script>alert(1)</script>' } }],
+                  },
+                ],
+              },
+            ],
+          }
+        end
+
+        it 'escapes malicious href' do
+          expect(described_class.new.to_html(json, {})).to include('&quot;&gt;&lt;script&gt;')
+        end
+      end
+    end
+
     context 'ordered list with custom classes' do
       let(:json) do
         {
