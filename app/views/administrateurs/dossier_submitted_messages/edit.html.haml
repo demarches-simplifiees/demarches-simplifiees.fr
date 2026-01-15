@@ -6,9 +6,7 @@
                     ['Fin de dépôt']] }
 
 = form_for @dossier_submitted_message,
-  url: url_for({ controller: 'administrateurs/dossier_submitted_messages', action: :update, id: @procedure.id }),
-  html: { class: 'form' },
-  data: { turbo: 'true', controller: 'autosubmit', autosubmit_debounce_delay_value: 1000 } do |f|
+  url: url_for({ controller: 'administrateurs/dossier_submitted_messages', action: :update, id: @procedure.id }) do |f|
 
   .tiptap-content-editor.fr-container.fr-my-4w{ data: { controller: 'tiptap' } }
     .fr-grid-row.fr-grid-row--gutters
@@ -53,6 +51,6 @@
           .realistic-preview
             = render partial: 'users/dossiers/merci', locals: { procedure: @procedure, dossier: nil }
           %p.fr-hint-text
-            L'aperçu est mis à jour automatiquement après chaque modification.
+            L'aperçu est mis à jour après chaque enregistrement.
 
   = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f)
