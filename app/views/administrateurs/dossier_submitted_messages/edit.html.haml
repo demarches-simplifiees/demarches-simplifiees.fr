@@ -24,15 +24,22 @@
               %label.fr-label.fr-h4{ for: 'editor' }
                 Message personnalisé
 
-              .flex.flex-gap-1.fr-mb-2w
-                %button.fr-btn.fr-btn--secondary.fr-btn--sm.fr-icon-bold{ type: 'button', title: 'Gras', data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: 'bold' } }
-                  Gras
-                %button.fr-btn.fr-btn--secondary.fr-btn--sm.fr-icon-italic{ type: 'button', title: 'Italique', data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: 'italic' } }
-                  Italique
-                %button.fr-btn.fr-btn--secondary.fr-btn--sm.fr-icon-underline{ type: 'button', title: 'Souligné', data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: 'underline' } }
-                  Souligné
-                %button.fr-btn.fr-btn--secondary.fr-btn--sm.fr-icon-link{ type: 'button', title: 'Lien', data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: 'link' } }
-                  Lien
+              .flex.flex-gap-2.fr-mb-2w
+                .flex.flex-gap-1
+                  %button.fr-btn.fr-btn--secondary.fr-btn--sm.fr-icon-bold{ type: 'button', title: 'Gras', data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: 'bold' } }
+                    Gras
+                  %button.fr-btn.fr-btn--secondary.fr-btn--sm.fr-icon-italic{ type: 'button', title: 'Italique', data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: 'italic' } }
+                    Italique
+                  %button.fr-btn.fr-btn--secondary.fr-btn--sm.fr-icon-underline{ type: 'button', title: 'Souligné', data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: 'underline' } }
+                    Souligné
+                .flex.flex-gap-1
+                  %button.fr-btn.fr-btn--secondary.fr-btn--sm.fr-icon-list-unordered{ type: 'button', title: 'Liste à puces', data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: 'bulletList' } }
+                    Liste
+                  %button.fr-btn.fr-btn--secondary.fr-btn--sm.fr-icon-list-ordered{ type: 'button', title: 'Liste numérotée', data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: 'orderedList' } }
+                    Numérotée
+                .flex.flex-gap-1
+                  %button.fr-btn.fr-btn--secondary.fr-btn--sm.fr-icon-link{ type: 'button', title: 'Lien', data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: 'link' } }
+                    Lien
 
               %p.fr-hint-text
                 Utilisez les boutons ci-dessus pour mettre en forme votre message ou ajouter un lien.
