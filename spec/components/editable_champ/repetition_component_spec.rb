@@ -31,7 +31,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
 
         it_behaves_like "has the repetition legend with no row number"
         it do
-          expect(page).to have_selector("label", text: "Prénom 1")
+          expect(page).to have_selector("label", text: "[1]\n\nPrénom")
         end
       end
 
@@ -40,7 +40,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
 
         it_behaves_like "has the repetition legend with no row number"
         it do
-          expect(page).to have_selector("label", text: "Je suis une checkbox 1")
+          expect(page).to have_selector("label", text: "[1]\n\nJe suis une checkbox")
         end
       end
 
@@ -49,14 +49,14 @@ describe EditableChamp::RepetitionComponent, type: :component do
 
         it_behaves_like "has the repetition legend with no row number"
         it do
-          expect(page).to have_selector("legend", text: "Votre ville 1")
+          expect(page).to have_selector("legend", text: "[1]\n\nVotre ville")
         end
       end
     end
 
     shared_examples "has the repetition legend with row number" do
       it do
-        expect(page).to have_selector("legend", text: "Répétition 1")
+        expect(page).to have_selector(:xpath, "//legend[contains(., '[1]') and contains(substring-after(., '[1]'), 'Répétition')]")
       end
     end
 
@@ -124,7 +124,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
           expect(subject).not_to have_selector("legend[id='#{repetition_row_fieldset_legend_id(repetition_champ, champ.row_id)}']")
 
           # the label in the rows should contain the row number
-          expect(subject).to have_selector("label[id='#{input_label_id(champ)}']", text: "Prénom 1")
+          expect(subject).to have_selector("label[id='#{input_label_id(champ)}']", text: "[1]\n\nPrénom")
         end
       end
 
@@ -174,7 +174,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         it do
           subject
 
-          expect(page).to have_selector("legend[id='#{champ_fieldset_legend_id(champ)}']", text: "Civilité 1")
+          expect(page).to have_selector("legend[id='#{champ_fieldset_legend_id(champ)}']", text: "[1]\n\nCivilité")
 
           expect(page).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)} #{input_label_id(champ, :female)}']")
           expect(page).to have_selector("input[aria-labelledby='#{repetition_fieldset_legend_id(repetition_champ)} #{champ_fieldset_legend_id(champ)} #{input_label_id(champ, :male)}']")
@@ -563,7 +563,7 @@ describe EditableChamp::RepetitionComponent, type: :component do
         expect(page).to have_selector("legend[id='#{repetition_fieldset_legend_id(repetition_champ)}']", text: "Répétition")
 
         # should have a fieldset legend for the row with the row number
-        expect(page).to have_selector("legend[id='#{repetition_row_fieldset_legend_id(repetition_champ, text_champ.row_id)}']", text: "Répétition 1")
+        expect(page).to have_selector(:xpath, "//legend[@id='#{repetition_row_fieldset_legend_id(repetition_champ, text_champ.row_id)}' and contains(., '[1]') and contains(substring-after(., '[1]'), 'Répétition')]")
 
         # the labels in the row
         expect(page).to have_selector("label[id='#{input_label_id(text_champ)}']", text: "Prénom")

@@ -1,3 +1,4 @@
 ---
 fr:
-  delete: "Supprimer %{libelle} %{row_number}"
+  delete: 'Supprimer %{libelle} %{row_number}'
+  confirm: "Voulez-vous vraiment supprimer l'élément [%{row_number}] de « %{libelle} » ?"

@@ -119,7 +119,6 @@
 
   .editable-champ {
     position: relative;
-    max-width: calc(100% - 1.5rem); // Prevent overflow on 320px wide viewports
 
     .updated-at {
       font-size: 0.875rem;
@@ -405,14 +404,32 @@
     }
 
     &.editable-champ-repetition {
-      margin-left: 0.25rem;
-
       fieldset {
         border: none;
       }
 
       .champs-group {
         margin-bottom: 2rem;
+      }
+
+      // this applies to repetitions with more than one champ per row
+      fieldset.fr-accordion {
+        padding: 0;
+        margin: 0;
+
+        legend.fr-accordion__title {
+          padding: 0;
+        }
+      }
+
+      .repetition-toggle-all {
+        display: none;
+
+        &:has(~ .repetition > :nth-child(5)) {
+          @media (min-width: 48em) {
+            display: block;
+          }
+        }
       }
     }
 
@@ -423,7 +440,7 @@
     }
 
     .utils-repetition-required
-      .champs-group:first-child
+      .repetition-row:first-child
       .utils-repetition-required-destroy-button {
       display: none;
     }

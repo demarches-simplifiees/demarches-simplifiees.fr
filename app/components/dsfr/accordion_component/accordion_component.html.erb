@@ -1,0 +1,15 @@
+<%= content_tag(accordion_tag, class: "fr-accordion", id:) do %>
+  <%= content_tag(title_tag, class: "fr-accordion__title", id: @title_id) do %>
+    <button type="button"
+            class="fr-accordion__btn"
+            aria-expanded="<%= expanded.to_s %>"
+            aria-controls="<%= accordion_id %>">
+      <%= title %>
+    </button>
+  <% end %>
+  <div id="<%= accordion_id %>" class="fr-collapse">
+    <% if content? %>
+      <%= content %>
+    <% end %>
+  </div>
+<% end %>
