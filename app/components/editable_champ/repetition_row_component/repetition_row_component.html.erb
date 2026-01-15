@@ -12,9 +12,7 @@
         <%= render section_component %>
 
         <div class="flex row-reverse">
-          <%= render NestedForms::OwnedButtonComponent.new(formaction: champs_repetition_path(@dossier, @type_de_champ.stable_id, row_id:), http_method: :delete, opt: { class: "fr-btn fr-btn--sm fr-btn--tertiary fr-icon-delete-bin-line fr-btn--icon-left utils-repetition-required-destroy-button" }) do %>
-            <%= t(".delete", libelle: @type_de_champ.libelle, row_number:) %>
-          <% end %>
+          <%= delete_button %>
         </div>
       <% end %>
     </div>
@@ -23,9 +21,7 @@
       <%= render section_component %>
 
       <div class="flex row-reverse">
-        <%= render NestedForms::OwnedButtonComponent.new(formaction: champs_repetition_path(@dossier, @type_de_champ.stable_id, row_id:), http_method: :delete, opt: { class: "fr-btn fr-btn--sm fr-btn--tertiary fr-icon-delete-bin-line fr-btn--icon-left utils-repetition-required-destroy-button" }) do %>
-          <%= t(".delete", libelle: @type_de_champ.libelle, row_number:) %>
-        <% end %>
+        <%= delete_button %>
       </div>
     </div>
   <% end %>
