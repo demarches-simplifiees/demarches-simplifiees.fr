@@ -7,27 +7,45 @@
 
 = form_for @dossier_submitted_message,
   url: url_for({ controller: 'administrateurs/dossier_submitted_messages', action: :update, id: @procedure.id }),
-  html: { class: 'form' } do |f|
+  html: { class: 'form' },
+  data: { turbo: 'true', controller: 'autosubmit', autosubmit_debounce_delay_value: 1000 } do |f|
 
-  .procedure-form
-    .procedure-form__columns.container
-      .procedure-form__column--form.fr-background-alt--blue-france.fr-pt-5w
-        %h1.fr-h2
-          Fin de dépôt
-        %p.notice
-          L’utilisateur se verra afficher ce message une fois le dossier envoyé
+  .tiptap-content-editor.fr-container.fr-my-4w{ data: { controller: 'tiptap' } }
+    .fr-grid-row.fr-grid-row--gutters
+      .fr-col-12.fr-col-lg-7
+        %fieldset.fr-fieldset{ aria: { labelledby: 'edit-dossier-submitted-message' } }
+          %legend.fr-fieldset__legend#edit-dossier-submitted-message
+            %h1.fr-h2 Fin de dépôt
+            %p.fr-text--regular
+              Vous pouvez personnaliser le message affiché à l’usager après le dépôt de son dossier.
 
-        = render partial: 'administrateurs/dossier_submitted_messages/informations', locals: { f: f }
+          .fr-fieldset__element
+            .fr-input-group
+              %label.fr-label.fr-h4{ for: 'editor' }
+                Message personnalisé
 
+              .flex.flex-gap-1.fr-mb-2w
+                %button.fr-btn.fr-btn--secondary.fr-btn--sm.fr-icon-bold{ type: 'button', title: 'Gras', data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: 'bold' } }
+                  Gras
+                %button.fr-btn.fr-btn--secondary.fr-btn--sm.fr-icon-italic{ type: 'button', title: 'Italique', data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: 'italic' } }
+                  Italique
+                %button.fr-btn.fr-btn--secondary.fr-btn--sm.fr-icon-underline{ type: 'button', title: 'Souligné', data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: 'underline' } }
+                  Souligné
+                %button.fr-btn.fr-btn--secondary.fr-btn--sm.fr-icon-link{ type: 'button', title: 'Lien', data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: 'link' } }
+                  Lien
 
-      .procedure-form__column--preview
-        %h3
-          .procedure-form__preview-title
-            Aperçu
-            .notice
-              Cet aperçu est mis à jour après chaque sauvegarde.
+              %p.fr-hint-text
+                Utilisez les boutons ci-dessus pour mettre en forme votre message ou ajouter un lien.
 
-        .procedure-preview
-          = render partial: 'users/dossiers/merci', locals: { procedure: @procedure, dossier: nil}
+              #editor.tiptap-editor{ data: { tiptap_target: 'editor' } }
+              = f.hidden_field :tiptap_body, data: { tiptap_target: 'input' }, value: @dossier_submitted_message.tiptap_body_or_default
+
+      .fr-col-12.fr-col-lg-5.fr-background-alt--blue-france
+        .sticky--top.fr-px-1w{ data: { controller: 'sticky-top' } }
+          %h2.fr-h4 Aperçu
+          .realistic-preview
+            = render partial: 'users/dossiers/merci', locals: { procedure: @procedure, dossier: nil }
+          %p.fr-hint-text
+            L'aperçu est mis à jour automatiquement après chaque modification.
 
   = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f)

@@ -41,7 +41,7 @@ module Administrateurs
 
     def dossier_submitted_message_params
       params.require(:dossier_submitted_message)
-        .permit(:message_on_submit_by_usager)
+        .permit(:tiptap_body)
     end
   end
 end

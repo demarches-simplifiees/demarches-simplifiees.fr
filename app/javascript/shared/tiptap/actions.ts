@@ -106,6 +106,25 @@ const EDITOR_ACTIONS: Record<string, (editor: Editor) => EditorAction> = {
     run: () => editor.chain().focus().redo().run(),
     isActive: () => false,
     isDisabled: () => !editor.can().chain().focus().redo().run()
+  }),
+  link: (editor) => ({
+    run: () => {
+      const previousUrl = editor.getAttributes('link').href;
+      const url = window.prompt('URL du lien:', previousUrl);
+      if (url === null) return;
+      if (url === '') {
+        editor.chain().focus().extendMarkRange('link').unsetLink().run();
+        return;
+      }
+      editor
+        .chain()
+        .focus()
+        .extendMarkRange('link')
+        .setLink({ href: url })
+        .run();
+    },
+    isActive: () => editor.isActive('link'),
+    isDisabled: () => false
   })
 };
 
