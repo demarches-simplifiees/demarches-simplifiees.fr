@@ -1,0 +1,39 @@
+<div class="fr-input-group" data-controller="tiptap">
+  <label class="fr-label fr-h4" for="editor">
+    Message personnalisé
+  </label>
+
+  <div class="flex flex-gap-2 fr-mb-2w">
+    <div class="flex flex-gap-1">
+      <button class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-bold" type="button" title="Gras" data-action="click->tiptap#menuButton" data-tiptap-target="button" data-tiptap-action="bold">
+        Gras
+      </button>
+      <button class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-italic" type="button" title="Italique" data-action="click->tiptap#menuButton" data-tiptap-target="button" data-tiptap-action="italic">
+        Italique
+      </button>
+      <button class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-underline" type="button" title="Souligné" data-action="click->tiptap#menuButton" data-tiptap-target="button" data-tiptap-action="underline">
+        Souligné
+      </button>
+    </div>
+    <div class="flex flex-gap-1">
+      <button class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-list-unordered" type="button" title="Liste à puces" data-action="click->tiptap#menuButton" data-tiptap-target="button" data-tiptap-action="bulletList">
+        Liste
+      </button>
+      <button class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-list-ordered" type="button" title="Liste numérotée" data-action="click->tiptap#menuButton" data-tiptap-target="button" data-tiptap-action="orderedList">
+        Numérotée
+      </button>
+    </div>
+    <div class="flex flex-gap-1">
+      <button class="fr-btn fr-btn--secondary fr-btn--sm fr-icon-link" type="button" title="Lien" data-action="click->tiptap#menuButton" data-tiptap-target="button" data-tiptap-action="link">
+        Lien
+      </button>
+    </div>
+  </div>
+
+  <p class="fr-hint-text">
+    Utilisez les boutons ci-dessus pour mettre en forme votre message ou ajouter un lien.
+  </p>
+
+  <div id="editor" class="tiptap-editor" data-tiptap-target="editor"></div>
+  <%= form.hidden_field field_name, data: { tiptap_target: 'input' }, value: input_value %>
+</div>
