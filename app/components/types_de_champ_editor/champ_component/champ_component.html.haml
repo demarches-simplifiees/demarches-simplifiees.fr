@@ -280,6 +280,9 @@
     - if type_de_champ.referentiel?
       = render(TypesDeChampEditor::InfoReferentielComponent.new(procedure:, type_de_champ:))
 
+    - if type_de_champ.quotient_familial?
+      = render(TypesDeChampEditor::QuotientFamilialComponent.new())
+
     - if type_de_champ.repetition?
       .flex.justify-start.section.fr-ml-1w
         .editor-block.flex-grow.cell

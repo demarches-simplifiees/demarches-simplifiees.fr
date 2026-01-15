@@ -567,6 +567,8 @@ module Users
         :country_code,
         :commune_code,
         :postal_code,
+        :recovered_qf_data,
+        :correct_qf_data,
         value: [],
       ]
       # Strong attributes do not support records (indexed hash); they only support hashes with

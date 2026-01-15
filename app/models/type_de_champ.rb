@@ -18,8 +18,9 @@ class TypeDeChamp < ApplicationRecord
   PIECES_JOINTES = :pieces_jointes
   CHOICE = :choice
   REFERENTIEL_EXTERNE = :referentiel_externe
+  AUTOMATIC = :automatic
 
-  CATEGORIES = [STRUCTURE, ETAT_CIVIL, LOCALISATION, PAIEMENT_IDENTIFICATION, STANDARD, PIECES_JOINTES, CHOICE, REFERENTIEL_EXTERNE]
+  CATEGORIES = [STRUCTURE, ETAT_CIVIL, LOCALISATION, PAIEMENT_IDENTIFICATION, STANDARD, PIECES_JOINTES, CHOICE, REFERENTIEL_EXTERNE, AUTOMATIC]
 
   TYPE_DE_CHAMP_TO_CATEGORIE = {
     referentiel: REFERENTIEL_EXTERNE,
@@ -63,6 +64,7 @@ class TypeDeChamp < ApplicationRecord
     pole_emploi: REFERENTIEL_EXTERNE,
     mesri: REFERENTIEL_EXTERNE,
     cojo: REFERENTIEL_EXTERNE,
+    quotient_familial: AUTOMATIC,
   }
 
   enum :type_champ, {
@@ -107,6 +109,7 @@ class TypeDeChamp < ApplicationRecord
     epci: 'epci',
     cojo: 'cojo',
     referentiel: 'referentiel',
+    quotient_familial: 'quotient_familial',
   }
 
   enum :nature, {
@@ -180,7 +183,7 @@ class TypeDeChamp < ApplicationRecord
 
   belongs_to :referentiel, optional: true, inverse_of: :types_de_champ
 
-  delegate :estimated_fill_duration, :estimated_read_duration, :tags_for_template, :libelles_for_export, :libelle_for_export, :primary_options, :secondary_options, :columns, :info_columns, to: :dynamic_type
+  delegate :estimated_fill_duration, :estimated_read_duration, :tags_for_template, :libelles_for_export, :libelle_for_export, :primary_options, :secondary_options, :columns, :info_columns, :substitution_champ, to: :dynamic_type
 
   class WithIndifferentAccess
     def self.load(options)
@@ -234,6 +237,7 @@ class TypeDeChamp < ApplicationRecord
   before_validation :normalize_libelle
   before_validation :set_drop_down_list_options, if: -> { type_champ_changed? }
   before_validation :reset_pj_format_options_if_forced_nature
+  before_validation :create_substitution_champ_for_quotient_familial, if: -> { type_champ_changed? }
 
   before_save :remove_attachment, if: -> { type_champ_changed? }
 
@@ -322,7 +326,11 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def build_champ(params = {})
-    champ_class.new(params_for_champ.merge(params))
+    champ = champ_class.new(params_for_champ.merge(params))
+    if automatic?
+      champ.set_default_value(dossier: params[:dossier])
+    end
+    champ
   end
 
   def check_mandatory
@@ -421,6 +429,10 @@ class TypeDeChamp < ApplicationRecord
 
   def public?
     !private?
+  end
+
+  def automatic?
+    TYPE_DE_CHAMP_TO_CATEGORIE[type_champ.to_sym] == :automatic
   end
 
   def child?(revision)
@@ -904,5 +916,11 @@ class TypeDeChamp < ApplicationRecord
       self.pj_limit_formats = nil
       self.pj_format_families = []
     end
+  end
+
+  def create_substitution_champ_for_quotient_familial
+    return if !quotient_familial?
+
+    TypesDeChamp::QuotientFamilialTypeDeChamp.new(self).create_substitution_champ
   end
 end
