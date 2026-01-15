@@ -9,7 +9,9 @@
           &nbsp;
           <%= @type_de_champ.libelle %>
         <% end %>
-        <%= render section_component %>
+        <div class="flex column">
+          <%= render section_component %>
+        </div>
 
         <div class="flex row-reverse fr-mx-1w">
           <%= delete_button %>
