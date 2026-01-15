@@ -68,7 +68,9 @@ class DossierNotification < ApplicationRecord
   def self.create_notifications_for_non_customisable_type(dossiers, notification_type)
     return unless NON_CUSTOMISABLE_TYPE.include?(notification_type)
 
-    Dossier.where(id: dossiers).in_batches do |batch|
+    dossiers_relation = dossiers.is_a?(ActiveRecord::Relation) ? dossiers : Dossier.where(id: dossiers.id)
+
+    dossiers_relation.select(:id, :groupe_instructeur_id).in_batches do |batch|
       instructeur_ids_by_dossier_id = batch
         .includes(groupe_instructeur: :instructeurs)
         .map { |d| [d.id, d.groupe_instructeur.instructeur_ids] }
