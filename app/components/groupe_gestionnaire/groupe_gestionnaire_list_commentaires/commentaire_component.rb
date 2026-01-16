@@ -19,7 +19,7 @@ class GroupeGestionnaire::GroupeGestionnaireListCommentaires::CommentaireCompone
   end
 
   def created_at
-    try_format_datetime(@commentaire.created_at)
+    try_format_datetime(@commentaire.created_at, format: :short)
   end
 
   def see_button

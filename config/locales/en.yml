@@ -857,6 +857,8 @@ en:
       long: "%-d %B %Y"
       short: "%-d %b %Y"
       dashed: "%Y-%m-%d"
+      month_year: "%B %Y"
+      day_month_short: "%d %b"
   dates:
     today: "Today"
     yesterday: "Yesterday"

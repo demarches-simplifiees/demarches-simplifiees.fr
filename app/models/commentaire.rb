@@ -60,7 +60,7 @@ class Commentaire < ApplicationRecord
   end
 
   def header
-    "#{redacted_email}, #{I18n.l(created_at, format: '%d %b %Y %H:%M')}"
+    "#{redacted_email}, #{I18n.l(created_at, format: :short_with_time)}"
   end
 
   def redacted_email

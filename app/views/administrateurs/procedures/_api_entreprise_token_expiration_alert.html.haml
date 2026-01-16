@@ -10,5 +10,5 @@
       - c.with_body do
         %p
           Votre jeton API Entreprise expirera le
-          = procedure.api_entreprise_token.expires_at.strftime('%d/%m/%Y à %H:%M.')
+          = "#{I18n.l(procedure.api_entreprise_token.expires_at, format: :long_with_time)}."
           Merci de le renouveler avant cette date.

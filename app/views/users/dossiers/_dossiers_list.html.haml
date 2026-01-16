@@ -37,18 +37,18 @@
 
           - if dossier.hidden_by_expired?
             %p.fr-icon--sm.fr-icon-delete-line
-              = t('views.users.dossiers.dossiers_list.deleted_by_automatic', date: l(dossier.hidden_by_expired_at.to_date))
+              = t('views.users.dossiers.dossiers_list.deleted_by_automatic', date: l(dossier.hidden_by_expired_at.to_date, format: :long))
           - elsif dossier.hidden_by_user?
             %p.fr-icon--sm.fr-icon-delete-line
-              = t('views.users.dossiers.dossiers_list.deleted_by_user', date: l(dossier.hidden_by_user_at.to_date))
+              = t('views.users.dossiers.dossiers_list.deleted_by_user', date: l(dossier.hidden_by_user_at.to_date, format: :long))
           - else
             %p.fr-icon--sm.fr-icon-edit-box-line
               - if dossier.depose_at.present?
                 %span
-                  = t('views.users.dossiers.dossiers_list.depose_at', date: l(dossier.depose_at.to_date))
+                  = t('views.users.dossiers.dossiers_list.depose_at', date: l(dossier.depose_at.to_date, format: :long))
               - else
                 %span
-                  = t('views.users.dossiers.dossiers_list.created_at', date: l(dossier.created_at.to_date))
+                  = t('views.users.dossiers.dossiers_list.created_at', date: l(dossier.created_at.to_date, format: :long))
                 - if dossier.created_at != dossier.updated_at
                   = t('views.users.dossiers.dossiers_list.updated_at', date: l(dossier.updated_at.to_datetime))
 
