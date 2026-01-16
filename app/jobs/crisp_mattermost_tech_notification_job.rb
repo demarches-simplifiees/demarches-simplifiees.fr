@@ -85,7 +85,7 @@ class CrispMattermostTechNotificationJob < ApplicationJob
 
     if waiting_since.present?
       waiting_at = Time.zone.at(waiting_since / 1000.0)
-      message_lines << "**En attente depuis :** #{I18n.l(waiting_at, format: :short)}"
+      message_lines << "**En attente depuis :** #{I18n.l(waiting_at, format: :short_with_time)}"
     end
 
     message_lines.join("\n")

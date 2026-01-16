@@ -19,9 +19,9 @@
       .card.mb-4
         %h2.card-title
           - if revision.administrateur.present?
-            = "Modifications publiées le #{l(revision.published_at, format: :default)} par #{revision.administrateur.user.email}"
+            = "Modifications publiées le #{l(revision.published_at, format: :long_with_time)} par #{revision.administrateur.user.email}"
           - else
-            = "Modifications publiées le #{l(revision.published_at, format: :default)}"
+            = "Modifications publiées le #{l(revision.published_at, format: :long_with_time)}"
         - if !dossiers_en_construction_count.zero? && !dossiers_en_instruction_count.zero?
           %p
             - if dossiers_en_construction_count == 1

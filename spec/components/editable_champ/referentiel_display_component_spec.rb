@@ -47,7 +47,7 @@ describe EditableChamp::ReferentielDisplayComponent, type: :component do
 
       it 'render date/time well' do
         expect(subject).to have_content("Date de naissance")
-        expect(subject).to have_content("14/06/24")
+        expect(subject).to have_content("14/06/2024")
         expect(subject).to have_content("Date et heure de naissance")
         expect(subject).to have_content("19 juin 2024 à 15:30")
       end

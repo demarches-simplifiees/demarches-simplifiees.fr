@@ -84,7 +84,7 @@ describe Instructeurs::CellComponent do
 
       before { dossier.champs.first.update(value: Date.parse("12/02/2025")) }
 
-      it { is_expected.to eq('12 février 2025') }
+      it { is_expected.to eq('12/02/2025') }
     end
 
     context 'for a datetime column' do
@@ -93,7 +93,7 @@ describe Instructeurs::CellComponent do
 
       before { dossier.champs.first.update(value: Time.zone.parse("12/02/2025 09:19").iso8601) }
 
-      it { is_expected.to eq('12 février 2025 09:19') }
+      it { is_expected.to eq('12/02/2025 09:19') }
     end
 
     context 'for a date column with value as string' do
@@ -106,7 +106,7 @@ describe Instructeurs::CellComponent do
         etablissement.update_champ_value_json!
       }
 
-      it { is_expected.to eq('10 août 2015') }
+      it { is_expected.to eq('10/08/2015') }
     end
 
     context 'for a enum column' do

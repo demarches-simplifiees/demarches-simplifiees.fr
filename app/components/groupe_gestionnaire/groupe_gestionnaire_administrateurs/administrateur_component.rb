@@ -18,7 +18,7 @@ class GroupeGestionnaire::GroupeGestionnaireAdministrateurs::AdministrateurCompo
   end
 
   def created_at
-    try_format_datetime(@administrateur.created_at)
+    try_format_datetime(@administrateur.created_at, format: :short)
   end
 
   def registration_state

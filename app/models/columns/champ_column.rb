@@ -196,9 +196,9 @@ class Columns::ChampColumn < Column
     [:decimal_number, :formatted] => -> (v) { v.to_s },
     # date
     [:date, :datetime] => -> (v) { v.to_datetime },
-    [:date, :text] => -> (v) { I18n.l(v, format: '%d %B %Y') },
-    [:date, :textarea] => -> (v) { I18n.l(v, format: '%d %B %Y') },
-    [:date, :formatted] => -> (v) { I18n.l(v, format: '%d %B %Y') },
+    [:date, :text] => -> (v) { I18n.l(v, format: :long) },
+    [:date, :textarea] => -> (v) { I18n.l(v, format: :long) },
+    [:date, :formatted] => -> (v) { I18n.l(v, format: :long) },
     # datetime
     [:datetime, :date] => -> (v) { v.to_date },
     [:datetime, :text] => -> (v) { I18n.l(v) },

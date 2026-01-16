@@ -330,16 +330,15 @@ module TagsSubstitutionConcern
 
   private
 
-  # i18n-tasks-use t('date.formats.short_date')
+  # i18n-tasks-use t('date.formats.short')
   # i18n-tasks-use t('date.formats.dashed')
-  # i18n-tasks-use t('time.formats.short_date')
+  # i18n-tasks-use t('time.formats.short')
   # i18n-tasks-use t('time.formats.human')
   # i18n-tasks-use t('time.formats.long')
-  # i18n-tasks-use t('time.formats.short_datetime')
   # i18n-tasks-use t('time.formats.dashed')
   def format_date(date)
     if date.present?
-      format = defined?(self.class::FORMAT_DATE) ? self.class::FORMAT_DATE : :short_date
+      format = defined?(self.class::FORMAT_DATE) ? self.class::FORMAT_DATE : :short
       I18n.l(date, format:)
     else
       ''
