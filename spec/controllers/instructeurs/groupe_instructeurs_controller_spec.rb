@@ -84,14 +84,14 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
     end
   end
 
-  describe '#add_instructeur' do
+  describe '#add_instructeurs' do
     before do
-      allow(InstructeurMailer).to receive(:confirm_and_notify_added_instructeur).and_call_original
+      allow(GroupeInstructeurMailer).to receive(:confirm_and_notify_added_instructeur).and_call_original
       allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs).and_call_original
     end
 
     subject do
-      post :add_instructeur,
+      post :add_instructeurs,
         params: {
           procedure_id: procedure.id,
           id: gi_1_2.id,
@@ -107,7 +107,7 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
         expect(gi_1_2.instructeurs.map(&:email)).to include(new_instructeur_email)
         expect(flash.notice).to be_present
         expect(subject).to redirect_to(instructeur_groupe_path(procedure, gi_1_2))
-        expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).with(instance_of(Instructeur), gi_1_2, anything)
+        expect(GroupeInstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).with(instance_of(Instructeur), gi_1_2, anything)
         expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
       end
     end
@@ -122,7 +122,7 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
         expect(gi_1_2.instructeurs.map(&:email)).to include(new_instructeur_email)
         expect(flash.notice).to be_present
         expect(subject).to redirect_to(instructeur_groupe_path(procedure, gi_1_2))
-        expect(InstructeurMailer).not_to have_received(:confirm_and_notify_added_instructeur)
+        expect(GroupeInstructeurMailer).not_to have_received(:confirm_and_notify_added_instructeur)
         expect(GroupeInstructeurMailer).to have_received(:notify_added_instructeurs)
       end
     end
@@ -137,7 +137,7 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
         expect(gi_1_2.instructeurs.map(&:email)).to include(new_instructeur_email)
         expect(flash.notice).to be_present
         expect(subject).to redirect_to(instructeur_groupe_path(procedure, gi_1_2))
-        expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur)
+        expect(GroupeInstructeurMailer).to have_received(:confirm_and_notify_added_instructeur)
         expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
       end
     end
@@ -151,7 +151,7 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
 
       it "works" do
         expect(subject).to redirect_to(instructeur_groupe_path(procedure, gi_1_2))
-        expect(InstructeurMailer).not_to have_received(:confirm_and_notify_added_instructeur)
+        expect(GroupeInstructeurMailer).not_to have_received(:confirm_and_notify_added_instructeur)
         expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
       end
     end
@@ -162,7 +162,7 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
       it "works" do
         expect { subject }.not_to enqueue_email
         expect(flash.alert).to include(new_instructeur_email)
-        expect(InstructeurMailer).not_to have_received(:confirm_and_notify_added_instructeur)
+        expect(GroupeInstructeurMailer).not_to have_received(:confirm_and_notify_added_instructeur)
         expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
       end
     end

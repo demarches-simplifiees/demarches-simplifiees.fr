@@ -7,8 +7,9 @@ module Administrateurs
     include Logic
     include GroupeInstructeursSignatureConcern
     include CsvParsingConcern
+    include InstructeurEmailNotificationConcern
 
-    before_action :ensure_not_super_admin!, only: [:add_instructeur]
+    before_action :ensure_not_super_admin!, only: [:add_instructeurs]
 
     ITEMS_PER_PAGE = 25
 
@@ -243,14 +244,14 @@ module Administrateurs
       end
     end
 
-    def add_instructeur
+    def add_instructeurs
       emails_with_typos = JSON.parse(params[:emails_with_typos]) if params[:emails_with_typos]
       emails = params['emails'].presence || []
       emails.push(emails_with_typos).flatten! if emails_with_typos
       emails, maybe_typos = check_if_typo(emails)
       errors = Array.wrap(generate_emails_suggestions_message(maybe_typos))
 
-      instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
+      added_instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
 
       if invalid_emails.present?
         errors += [
@@ -260,27 +261,17 @@ module Administrateurs
         ]
       end
 
-      if instructeurs.present?
+      if added_instructeurs.present?
         flash[:notice] = if procedure.routing_enabled?
           t('.assignment',
-            count: instructeurs.size,
-            emails: instructeurs.map(&:email).join(', '),
+            count: added_instructeurs.size,
+            emails: added_instructeurs.map(&:email).join(', '),
             groupe: groupe_instructeur.label)
         else
           "Les instructeurs ont bien été affectés à la démarche"
         end
 
-        known_instructeurs, not_verified_instructeurs = instructeurs.partition { |instructeur| instructeur.user.email_verified_at }
-
-        not_verified_instructeurs.filter(&:should_receive_email_activation?).each do
-          InstructeurMailer.confirm_and_notify_added_instructeur(_1, groupe_instructeur, current_administrateur.email).deliver_later
-        end
-
-        if known_instructeurs.present?
-          GroupeInstructeurMailer
-            .notify_added_instructeurs(groupe_instructeur, known_instructeurs, current_administrateur.email)
-            .deliver_later
-        end
+        notify_instructeurs(groupe_instructeur, added_instructeurs, current_administrateur)
       end
 
       flash[:alert] = errors.join(". ") if !errors.empty?
@@ -353,21 +344,20 @@ module Administrateurs
         if csv_content.first.has_key?("groupe") && csv_content.first.has_key?("email")
           groupes_emails = csv_content.map { |r| r.to_h.slice('groupe', 'email') }
 
-          added_instructeurs_by_group, invalid_emails = InstructeursImportService.import_groupes(procedure, groupes_emails)
+          groupes_by_instructeur, invalid_emails = InstructeursImportService.import_groupes(procedure, groupes_emails)
 
-          added_instructeurs_by_group.each do |groupe, added_instructeurs|
-            if added_instructeurs.present?
-              notify_instructeurs(groupe, added_instructeurs)
-            end
-            flash_message_for_import(invalid_emails)
+          groupes_by_instructeur.each do |instructeur, groupes|
+            notify_instructeur_after_groupes_import(instructeur, groupes)
           end
+
+          flash_message_for_import(invalid_emails)
 
         elsif csv_content.first.has_key?("email") && !csv_content.map(&:to_h).first.keys.many? && procedure.groupe_instructeurs.one?
           instructors_emails = csv_content.map(&:to_h)
 
           added_instructeurs, invalid_emails = InstructeursImportService.import_instructeurs(procedure, instructors_emails)
           if added_instructeurs.present?
-            notify_instructeurs(groupe_instructeur, added_instructeurs)
+            notify_instructeurs(groupe_instructeur, added_instructeurs, current_administrateur)
           end
           flash_message_for_import(invalid_emails)
         else
@@ -520,18 +510,6 @@ module Administrateurs
           .groupe_instructeurs
           .find_or_create_by(label: label)
           .update(instructeurs: [current_administrateur.instructeur], routing_rule:)
-      end
-    end
-
-    def notify_instructeurs(groupe, added_instructeurs)
-      known_instructeurs, new_instructeurs = added_instructeurs.partition { |instructeur| instructeur.user.email_verified_at }
-
-      new_instructeurs.each { InstructeurMailer.confirm_and_notify_added_instructeur(_1, groupe, current_administrateur.email).deliver_later }
-
-      if known_instructeurs.present?
-        GroupeInstructeurMailer
-          .notify_added_instructeurs(groupe, known_instructeurs, current_administrateur.email)
-          .deliver_later
       end
     end
   end

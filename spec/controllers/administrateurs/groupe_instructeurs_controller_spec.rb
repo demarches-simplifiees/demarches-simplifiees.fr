@@ -327,7 +327,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
   end
 
-  describe '#add_instructeur_procedure_non_routee' do
+  describe '#add_instructeurs_procedure_non_routee' do
     # faire la meme chose sur une procedure non routee
     let(:procedure_non_routee) { create(:procedure, administrateur: admin) }
     let(:emails) { ['instructeur_3@ministere_a.gouv.fr', 'instructeur_4@ministere_b.gouv.fr'] }
@@ -335,7 +335,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     before {
       procedure_non_routee.administrateurs_procedures.where(administrateur: admin).update_all(manager:)
     }
-    subject { post :add_instructeur, params: { emails: emails, procedure_id: procedure_non_routee.id, id: procedure_non_routee.defaut_groupe_instructeur.id } }
+    subject { post :add_instructeurs, params: { emails: emails, procedure_id: procedure_non_routee.id, id: procedure_non_routee.defaut_groupe_instructeur.id } }
     context 'when all emails are valid' do
       let(:emails) { ['test@b.gouv.fr', 'test2@b.gouv.fr'] }
       it do
@@ -367,10 +367,10 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
   end
 
-  describe '#add_instructeur' do
+  describe '#add_instructeurs' do
     let!(:instructeur) { create(:instructeur) }
     let(:do_request) do
-      post :add_instructeur,
+      post :add_instructeurs,
         params: {
           procedure_id: procedure.id,
           id: gi_1_2.id,
@@ -391,7 +391,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
           .and_return(double(deliver_later: true))
 
-        allow(InstructeurMailer).to receive(:confirm_and_notify_added_instructeur)
+        allow(GroupeInstructeurMailer).to receive(:confirm_and_notify_added_instructeur)
           .and_return(double(deliver_later: true))
         do_request
       end
@@ -408,26 +408,26 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         )
       end
 
-      it "calls InstructeurMailer with the right params" do
-        expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).with(
+      it "calls GroupeInstructeurMailer with the right params" do
+        expect(GroupeInstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).with(
           User.find_by(email: 'new_i1@gmail.com').instructeur,
           gi_1_2,
           admin.email
         )
 
-        expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).with(
+        expect(GroupeInstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).with(
           User.find_by(email: 'new_i2@gmail.com').instructeur,
           gi_1_2,
           admin.email
         )
 
-        expect(InstructeurMailer).not_to have_received(:confirm_and_notify_added_instructeur).with(
+        expect(GroupeInstructeurMailer).not_to have_received(:confirm_and_notify_added_instructeur).with(
           instructeur_email_not_verified,
           gi_1_2,
           admin.email
         )
 
-        expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).with(
+        expect(GroupeInstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).with(
           instructeur_email_not_verified_but_received_invitation_long_time_ago,
           gi_1_2,
           admin.email
@@ -618,7 +618,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         before do
           allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
             .and_return(double(deliver_later: true))
-          allow(InstructeurMailer).to receive(:confirm_and_notify_added_instructeur)
+          allow(GroupeInstructeurMailer).to receive(:confirm_and_notify_added_instructeur_from_groupes_import)
             .and_return(double(deliver_later: true))
           subject
         end
@@ -628,7 +628,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
           expect(flash.notice).to be_present
           expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès")
           expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
-          expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).exactly(4).times
+          expect(GroupeInstructeurMailer).to have_received(:confirm_and_notify_added_instructeur_from_groupes_import).exactly(4).times
         end
       end
 
@@ -638,14 +638,14 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         before do
           allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
             .and_return(double(deliver_later: true))
-          allow(InstructeurMailer).to receive(:confirm_and_notify_added_instructeur)
+          allow(GroupeInstructeurMailer).to receive(:confirm_and_notify_added_instructeur_from_groupes_import)
             .and_return(double(deliver_later: true))
           subject
         end
 
         it 'works' do
           expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
-          expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).exactly(4).times
+          expect(GroupeInstructeurMailer).to have_received(:confirm_and_notify_added_instructeur_from_groupes_import).exactly(4).times
           expect(procedure.groupe_instructeurs.pluck(:label)).to match_array(["Marne", "Loire", "deuxième groupe", "défaut"])
           expect(flash.notice).to be_present
           expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès")
@@ -658,7 +658,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         before do
           allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
             .and_return(double(deliver_later: true))
-          allow(InstructeurMailer).to receive(:confirm_and_notify_added_instructeur)
+          allow(GroupeInstructeurMailer).to receive(:confirm_and_notify_added_instructeur_from_groupes_import)
             .and_return(double(deliver_later: true))
           subject
         end
@@ -668,7 +668,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
           expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès")
           expect(procedure.groupe_instructeurs.pluck(:label)).to match_array(["Auvergne-Rhône-Alpes", "Vendée", "deuxième groupe", "défaut"])
           expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
-          expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).exactly(4).times
+          expect(GroupeInstructeurMailer).to have_received(:confirm_and_notify_added_instructeur_from_groupes_import).exactly(4).times
         end
       end
 
@@ -750,7 +750,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         before do
           allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
             .and_return(double(deliver_later: true))
-          allow(InstructeurMailer).to receive(:confirm_and_notify_added_instructeur)
+          allow(GroupeInstructeurMailer).to receive(:confirm_and_notify_added_instructeur)
             .and_return(double(deliver_later: true))
           subject
         end
@@ -760,7 +760,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
           expect(procedure_non_routee.instructeurs.pluck(:email)).to match_array(["kara@beta-gouv.fr", "philippe@mail.com", "lisa@gouv.fr"])
           expect(flash.alert).to be_present
           expect(flash.alert).to eq("Import terminé. Cependant les adresses électroniques suivantes ne sont pas prises en compte : eric")
-          expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).exactly(3).times
+          expect(GroupeInstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).exactly(3).times
           expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
         end
       end
@@ -840,7 +840,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         before do
           allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
             .and_return(double(deliver_later: true))
-          allow(InstructeurMailer).to receive(:confirm_and_notify_added_instructeur)
+          allow(GroupeInstructeurMailer).to receive(:confirm_and_notify_added_instructeur)
             .and_return(double(deliver_later: true))
           subject
         end
@@ -850,7 +850,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
           expect(flash.notice).to be_present
           expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès")
           expect(GroupeInstructeurMailer).to have_received(:notify_added_instructeurs)
-          expect(InstructeurMailer).not_to have_received(:confirm_and_notify_added_instructeur)
+          expect(GroupeInstructeurMailer).not_to have_received(:confirm_and_notify_added_instructeur)
         end
       end
 
@@ -864,7 +864,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         before do
           allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
             .and_return(double(deliver_later: true))
-          allow(InstructeurMailer).to receive(:confirm_and_notify_added_instructeur)
+          allow(GroupeInstructeurMailer).to receive(:confirm_and_notify_added_instructeur)
             .and_return(double(deliver_later: true))
           subject
         end
@@ -874,7 +874,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
           expect(flash.notice).to be_present
           expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès")
           expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
-          expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).twice
+          expect(GroupeInstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).twice
         end
       end
     end
