@@ -320,6 +320,52 @@ describe 'Instructing a dossier:', js: true do
     end
   end
 
+  context 'An instructeur can see original dossier' do
+    let(:types_de_champ_public) do
+      [
+        { type: 'header_section', libelle: 'Header Section', stable_id: 99 },
+        { stable_id: 999, libelle: 'Nom' },
+        { type: 'checkbox', stable_id: 9999, libelle: 'Checkbox' },
+      ]
+    end
+    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur], types_de_champ_public:) }
+    let!(:dossier) { create(:dossier, :brouillon, :with_entreprise, :with_populated_champs, procedure:) }
+
+    before do
+      dossier.passer_en_construction!
+      dossier.reload
+      procedure.draft_revision.remove_type_de_champ(9999)
+      procedure.draft_revision.add_type_de_champ(type_champ: :yes_no, libelle: 'Yes No')
+      procedure.draft_revision.find_and_ensure_exclusive_use(99).update(libelle: 'Updated Header')
+      procedure.publish_revision!(procedure.administrateurs.first)
+      dossier.rebase!
+    end
+
+    scenario 'can see original dossier' do
+      log_in(instructeur.email, password)
+
+      visit instructeur_dossier_path(procedure, dossier)
+
+      expect(page).to have_text("Updated Header")
+      expect(page).to have_text("Nom")
+      expect(page).not_to have_text("Checkbox")
+      expect(page).to have_text("Yes No")
+
+      expect(page).to have_text("Il ne s’agit pas de la version d’origine déposée par l’usager")
+      click_on "Afficher la version d’origine"
+      expect(page).to have_current_path(original_instructeur_dossier_path(procedure, dossier))
+
+      expect(page).to have_text("Header Section")
+      expect(page).to have_text("Nom")
+      expect(page).to have_text("Checkbox")
+
+      expect(page).to have_text("VERSION D’ORIGINE DÉPOSÉE PAR L’USAGER")
+
+      click_on "Retour au dossier"
+      expect(page).to have_current_path(instructeur_dossier_path(procedure, dossier))
+    end
+  end
+
   def log_in(email, password, check_email: false)
     visit new_user_session_path
     expect(page).to have_current_path(new_user_session_path)
