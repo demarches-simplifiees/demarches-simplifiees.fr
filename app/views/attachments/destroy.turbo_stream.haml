@@ -2,7 +2,12 @@
   = fields_for @champ.input_name, @champ do |form|
     = turbo_stream.replace @champ.input_group_id do
       = render EditableChamp::EditableChampComponent.new champ: @champ, form: form
+  - deleted_filename = (@attachment&.blob&.filename || params[:attachment] || '')
+  = turbo_stream.update "#{@champ.focusable_input_id}-aria-live", t('activerecord.models.attachment.successfully_deleted_without_anchor', attachment: deleted_filename)
+  = turbo_stream.focus @champ.focusable_input_id
 - else
   = turbo_stream.replace dom_id(@attachment, :edit) do
     = render Attachment::EditComponent.new(**@attachment_options)
-  = turbo_stream.focus_all "##{dom_id(@attachment.record, @attachment.name)}"
+  - deleted_filename = (@attachment&.blob&.filename || params[:attachment] || '')
+  = turbo_stream.update "#{dom_id(@attachment.record, @attachment.name)}-aria-live", t('activerecord.models.attachment.successfully_deleted_without_anchor', attachment: deleted_filename)
+  = turbo_stream.focus dom_id(@attachment.record, @attachment.name)

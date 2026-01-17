@@ -431,7 +431,9 @@ describe 'The user', js: true do
     expect(page).to have_text('white.png')
 
     click_on("Supprimer le fichier file.pdf")
-    expect(page).to have_text("La pièce jointe (file.pdf) a bien été supprimée. Vous pouvez en ajouter une autre.")
+    file_input = find_field('Pièce justificative 1', visible: :all)
+    live_region_selector = "##{file_input[:id]}-aria-live"
+    expect(page).to have_css(live_region_selector, text: "La pièce jointe (file.pdf) a bien été supprimée.", visible: :all)
 
     attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/black.png')
 

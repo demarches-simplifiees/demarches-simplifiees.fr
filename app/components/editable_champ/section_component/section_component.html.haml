@@ -9,6 +9,8 @@
         - else
           = fields_for champ.input_name, champ do |form|
             = render EditableChamp::EditableChampComponent.new form:, champ:, row_number: @row_number
+          - if champ.piece_justificative_or_titre_identite?
+            .sr-only{ id: "#{champ.focusable_input_id}-aria-live", role: 'status', 'aria-live': 'polite', 'aria-atomic': 'true' }
 - else
   - if header_section
     .fr-fieldset__legend.fr-my-0{ class: "reset-#{tag_for_depth}" }
@@ -19,3 +21,5 @@
     - else
       = fields_for champ.input_name, champ do |form|
         = render EditableChamp::EditableChampComponent.new form:, champ:, row_number: @row_number
+      - if champ.piece_justificative_or_titre_identite?
+        .sr-only{ id: "#{champ.focusable_input_id}-aria-live", role: 'status', 'aria-live': 'polite', 'aria-atomic': 'true' }

@@ -119,6 +119,11 @@ RSpec.describe Attachment::EditComponent, type: :component do
     it 'shows the Delete button by default' do
       expect(subject).to have_selector('[title^="Supprimer le fichier"]')
     end
+
+    it 'still renders the hint text' do
+      expect(subject).to have_selector('.fr-hint-text')
+      expect(subject).to have_content(/Taille maximale/)
+    end
   end
 
   context 'when the user cannot destroy the attachment' do
