@@ -58,8 +58,8 @@ RSpec.describe Attachment::MultipleComponent, type: :component do
       expect(subject).to have_selector('input[type=file]:not(.hidden)')
     end
 
-    it 'does not renders max size anymore' do
-      expect(subject).to have_no_content(/Taille maximale/)
+    it 'still renders max size' do
+      expect(subject).to have_content(/Taille maximale/)
     end
   end
 

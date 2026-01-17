@@ -80,7 +80,7 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def show_hint?
-    first? && !persisted?
+    first?
   end
 
   def file_field_options
