@@ -122,4 +122,32 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
       .filter(&:referentiel?)
       .find { stable_id.to_s.in?(it.referentiel_mapping_prefillable_stable_ids.map(&:to_s)) }
   end
+
+  # Dans son propre bloc, seules les coordonnées qui suivent ; dans l'autre, toutes :
+  # l'ordre entre le formulaire et les annotations n'a pas de sens.
+  def prefill_target_coordinates
+    public_prefill_targets + private_prefill_targets
+  end
+
+  private
+
+  def public_prefill_targets
+    return [] if private?
+
+    coordinates_after_self(revision.revision_type_de_champs.filter(&:public?))
+  end
+
+  def private_prefill_targets
+    private_coordinates = revision.revision_type_de_champs.filter(&:private?)
+
+    private? ? coordinates_after_self(private_coordinates) : private_coordinates
+  end
+
+  def coordinates_after_self(coordinates)
+    return siblings_starting_at(1) if child?
+
+    coordinates.filter do |coordinate|
+      coordinate.child? ? coordinate.parent.position >= position : coordinate.position > position
+    end
+  end
 end
