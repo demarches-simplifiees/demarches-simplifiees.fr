@@ -38,26 +38,18 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
 
     select_tag(
       attribute_name(jsonpath, "prefill_stable_id"),
-      build_select_options(target_tdcs, selected_value),
+      grouped_options_for_select(target_tdcs, selected_value),
       class: "fr-select"
     )
   end
 
   private
 
-  def build_select_options(target_tdcs, selected_value)
-    if type_de_champ.public?
-      grouped_options_for_select(target_tdcs, selected_value)
-    else
-      options_for_select(target_tdcs, selected_value)
-    end
-  end
-
   def tdc_targets(mapping_element)
     allowed_types_for_mapping(mapping_element[:type])
       .then { |allowed_types| filter_incompatible_tdcs(allowed_types) }
       .then { |filtered_tdcs| group_tdcs_by_visibility(filtered_tdcs) }
-      .then { |grouped_tdcs| select_grouped_tdcs(grouped_tdcs) }
+      .compact_blank
   end
 
   def allowed_types_for_mapping(mapping_type)
@@ -97,14 +89,6 @@ class Referentiels::ReferentielPrefillComponent < Referentiels::MappingFormBase
 
   def tdc_option_for(tdc)
     [tdc.libelle_with_parent(draft_revision), tdc.stable_id]
-  end
-
-  def select_grouped_tdcs(grouped_tdcs)
-    if type_de_champ.public?
-      grouped_tdcs.compact_blank
-    else
-      grouped_tdcs[private_annotations_group]
-    end
   end
 
   def render?
