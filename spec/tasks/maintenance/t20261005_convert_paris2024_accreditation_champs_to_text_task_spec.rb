@@ -4,7 +4,7 @@ require "rails_helper"
 
 module Maintenance
   RSpec.describe T20261005ConvertParis2024AccreditationChampsToTextTask do
-    let(:procedure) { create(:procedure, :published, public_type_de_champs: [{ type: :cojo }]) }
+    let(:procedure) { create(:procedure, :published, public_type_de_champs: [{ type: :text }]) }
     let(:type_de_champ) { procedure.published_revision.type_de_champs.first }
     let(:dossier) { create(:dossier, :en_construction, procedure:) }
     let(:champ) { dossier.champ_data.first }
@@ -12,11 +12,17 @@ module Maintenance
 
     before do
       champ.update_columns(
+        type: 'Champs::COJOChamp',
         value: nil,
-        external_id: { accreditation_number: '123456', accreditation_birthdate: '1959-12-21' },
+        external_id: { accreditation_number: '123456', accreditation_birthdate: '1959-12-21' }.to_json,
         external_state: 'fetched',
         data: { accreditation_success:, accreditation_first_name: 'Florence', accreditation_last_name: 'Griffith-Joyner' }
       )
+      type_de_champ.update_columns(type_champ: 'cojo')
+    end
+
+    def raw_type_champ
+      TypeDeChamp.connection.select_value("SELECT type_champ FROM types_de_champ WHERE id = #{type_de_champ.id}")
     end
 
     describe "#collection" do
@@ -29,7 +35,7 @@ module Maintenance
       subject(:process) { described_class.process([type_de_champ.id, type_de_champ.stable_id]) }
 
       it "converts the type de champ to text" do
-        expect { process }.to change { TypeDeChamp.find(type_de_champ.id).type_champ }.from('cojo').to('text')
+        expect { process }.to change { raw_type_champ }.from('cojo').to('text')
       end
 
       it "converts the champ to text, keeping what the instructeur saw as value" do
