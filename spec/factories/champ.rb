@@ -160,9 +160,6 @@ FactoryBot.define do
     factory :champ_do_not_use_pre_rempli, class: 'Champs::PreRempliChamp' do
     end
 
-    factory :champ_do_not_use_cojo, class: 'Champs::COJOChamp' do
-    end
-
     factory :champ_do_not_use_rnf, class: 'Champs::RNFChamp' do
       value { '075-FDD-00003-01' }
       external_id { '075-FDD-00003-01' }

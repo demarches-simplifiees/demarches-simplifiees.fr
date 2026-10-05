@@ -26,7 +26,7 @@ class TypeDeChamp < ApplicationRecord
     'civilite', 'email', 'phone', 'siret', 'rna', 'rnf', 'annuaire_education', 'iban',
     'address', 'communes', 'departements', 'regions', 'pays', 'epci', 'carte',
     'quotient_familial', 'etudiant_boursier', 'aah', 'aeeh', 'ars',
-    'referentiel', 'pre_rempli', 'engagement_juridique', 'cojo',
+    'referentiel', 'pre_rempli', 'engagement_juridique',
   ].freeze
 
   def self.category = STANDARD
@@ -75,7 +75,6 @@ class TypeDeChamp < ApplicationRecord
     rnf: 'rnf',
     carte: 'carte',
     epci: 'epci',
-    cojo: 'cojo',
     referentiel: 'referentiel',
     pre_rempli: 'pre_rempli',
     quotient_familial: 'quotient_familial',

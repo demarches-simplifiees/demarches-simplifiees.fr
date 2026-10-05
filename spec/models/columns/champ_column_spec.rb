@@ -54,7 +54,6 @@ describe Columns::ChampColumn do
         champ = dossier.send(:filled_champ, type_de_champ)
         columns = type_de_champ.columns(procedure_id: procedure.id)
         expect(columns.map { _1.value(champ) }).to be_an_instance_of(Array)
-        expect_type_de_champ_values('cojo', eq([nil]))
         expect_type_de_champ_values('formatted', eq([nil]))
         expect_type_de_champ_values('rna', eq(["W173847273", "postal_code", "city_name", "department_code", "region_code", "region_name", nil, nil, nil, nil, nil, nil, "LA PRÉVENTION ROUTIERE"]))
         expect_type_de_champ_values('rnf', eq(["075-FDD-00003-01", "postal_code", "city_name", "department_code", "region_code", "region_name", "Fondation SFR"]))

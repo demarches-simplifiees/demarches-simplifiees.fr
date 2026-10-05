@@ -29,7 +29,7 @@ class ChampData < ApplicationRecord
     end
   end
 
-  # Champ types removed from the codebase (legacy France Connect data sources). Rows
+  # Champ types removed from the codebase. Rows
   # written before their removal are still in the table, and Rails raises
   # ActiveRecord::SubclassNotFound as soon as one is loaded — which aborts the expired
   # brouillon purge, rolling the dossier back and failing again on every cron run.
@@ -38,6 +38,7 @@ class ChampData < ApplicationRecord
   REMOVED_TYPES = [
     'Champs::CnafChamp',
     'Champs::CNAFChamp',
+    'Champs::COJOChamp',
     'Champs::DGFIPChamp',
     'Champs::MESRIChamp',
     'Champs::PoleEmploiChamp',
