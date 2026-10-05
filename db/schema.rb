@@ -1175,7 +1175,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_180000) do
     t.boolean "routing_enabled"
     t.bigint "service_id"
     t.jsonb "sva_svr", default: {}, null: false
-    t.text "tags", default: [], array: true
     t.boolean "template", default: false, null: false
     t.datetime "unpublished_at", precision: nil
     t.datetime "updated_at", precision: nil, null: false
@@ -1191,7 +1190,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_180000) do
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
     t.index ["published_revision_id"], name: "index_procedures_on_published_revision_id"
     t.index ["service_id"], name: "index_procedures_on_service_id"
-    t.index ["tags"], name: "index_procedures_on_tags", using: :gin
     t.index ["zone_id"], name: "index_procedures_on_zone_id"
   end
 
