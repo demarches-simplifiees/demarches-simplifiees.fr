@@ -97,12 +97,13 @@ module Recovery
         dossier.champ_data.each do |champ|
           champ.piece_justificative_file.each { |pj| import(pj) }
 
-          if champ.etablissement.present?
-            champ.etablissement.exercices.each do |exercice|
+          etablissement = champ.try(:etablissement)
+          if etablissement.present?
+            etablissement.exercices.each do |exercice|
               Exercice.insert(exercice.attributes)
             end
 
-            Etablissement.insert(champ.etablissement.attributes)
+            Etablissement.insert(etablissement.attributes)
           end
 
           ChampData.insert(champ.attributes)
