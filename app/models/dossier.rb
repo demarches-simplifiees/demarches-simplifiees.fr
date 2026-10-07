@@ -614,12 +614,16 @@ class Dossier < ApplicationRecord
 
   def can_passer_automatiquement_en_instruction?
     return false if hidden_by_user?
-    return true if procedure.auto_archive_on? && !procedure.auto_archive_on.future? && !pending_correction?
+    return true if procedure_auto_archived? && !pending_correction?
     return false if !can_passer_en_instruction?
     return true if declarative_triggered_at.nil? && procedure.declarative_en_instruction?
     return true if sva_svr_rule_applies? && sva_svr_decision_triggered_at.nil? && !pending_correction?
 
     false
+  end
+
+  def procedure_auto_archived?
+    procedure.auto_archive_on? && !procedure.auto_archive_on.future?
   end
 
   def can_repasser_en_construction?
@@ -995,6 +999,11 @@ class Dossier < ApplicationRecord
       end
 
       log_dossier_operation(author, :restaurer, self)
+    end
+
+    # skipped by AutoArchiveProcedureDossiersJob while hidden
+    if is_user?(author) && procedure_auto_archived? && may_passer_automatiquement_en_instruction?
+      passer_automatiquement_en_instruction!
     end
   end
 
