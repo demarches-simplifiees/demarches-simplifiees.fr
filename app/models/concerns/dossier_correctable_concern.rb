@@ -80,6 +80,8 @@ module DossierCorrectableConcern
       "demander_a_completer"
     when :outdated
       "demander_une_mise_a_jour"
+    when :complement
+      "transmettre_un_complement"
     end
 
     log_dossier_operation(commentaire.instructeur, operation, commentaire)
