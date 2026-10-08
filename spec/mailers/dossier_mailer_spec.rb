@@ -318,6 +318,19 @@ RSpec.describe DossierMailer, type: :mailer do
       end
     end
 
+    context 'reason is complement' do
+      let(:reason) { :complement }
+
+      it 'asks to complete the dossier and links to its edition' do
+        expect(subject.subject).to eq("Vous devez compléter votre dossier n°\u00A0#{dossier.id} «\u00A0#{dossier.procedure.libelle}\u00A0»")
+        expect(subject.body).to include("un instructeur vous demande de compléter")
+        expect(subject.body).to include("Rendez-vous sur le site pour le modifier.")
+        expect(subject.body).to include("Modifier le dossier", modifier_dossier_url(dossier))
+        expect(subject.body).not_to include("Ouvrir la messagerie")
+        expect(subject.body).not_to include("translation missing")
+      end
+    end
+
     context 'sva with reason is incorrect' do
       let(:sva_svr_decision_on) { Date.tomorrow }
       let(:procedure) { create(:procedure, :sva) }
@@ -336,6 +349,7 @@ RSpec.describe DossierMailer, type: :mailer do
       let(:procedure) { create(:procedure, :sva) }
 
       it 'mentions the need to complete the dossier and includes Silence Vaut Accord with reset message' do
+        expect(subject.subject).to eq("Vous devez compléter votre dossier n°\u00A0#{dossier.id} «\u00A0#{dossier.procedure.libelle}\u00A0»")
         expect(subject.body).to include("compléter")
         expect(subject.body).to include("Silence Vaut Accord")
         expect(subject.body).to include("réinitialisé")
@@ -346,7 +360,7 @@ RSpec.describe DossierMailer, type: :mailer do
       let(:reason) { :outdated }
 
       it 'asks to update the dossier' do
-        expect(subject.subject).to eq("Vous devez corriger votre dossier n° #{dossier.id} « #{dossier.procedure.libelle} »")
+        expect(subject.subject).to eq("Vous devez mettre à jour votre dossier n°\u00A0#{dossier.id} «\u00A0#{dossier.procedure.libelle}\u00A0»")
         expect(subject.body).to include("Afin de poursuivre son instruction, <strong>un instructeur vous demande de mettre à jour</strong> votre dossier n° #{dossier.id} de la démarche « #{dossier.procedure.libelle} ».")
         expect(subject.body).not_to include("translation missing")
       end
