@@ -15,6 +15,24 @@ class Etablissement < ApplicationRecord
   validates :siret, presence: true
   validates :dossier_id, uniqueness: { allow_nil: true }
 
+  # The DGFIP only holds the turnover of companies liable to corporate tax that file their annual
+  # accounts with the greffe (https://entreprise.api.gouv.fr/catalogue/dgfip/chiffres_affaires).
+  # Legal forms below never got any turnover in production; State services (71xx) even get a
+  # permanent 502 "03001 Service non disponible" instead of a 404, retried for weeks. INSEE level II
+  # codes: https://www.insee.fr/fr/information/2028129
+  # (n / total): etablissements that got a turnover / etablissements fetched in production from
+  # 2026-09-07 to 2026-10-08.
+  LEGAL_FORMS_WITHOUT_EXERCICES = [
+    '21', # Indivision (0 / 37)
+    '22', # Société créée de fait (0 / 15)
+    '27', # Paroisse hors zone concordataire (0 / 4)
+    '28', # Assujetti unique à la TVA (none fetched; 0 / 4 in an older sample)
+    '29', # Autre groupement de droit privé non doté de la personnalité morale (0 / 10)
+    '71', # Administration de l'état (0 / 4886)
+    '83', # Comité d'entreprise (0 / 128)
+    '91', # Syndicat de propriétaires (0 / 30)
+  ].freeze
+
   enum :entreprise_etat_administratif, {
     actif: "actif",
     fermé: "fermé",
@@ -162,6 +180,10 @@ class Etablissement < ApplicationRecord
 
   def association?
     association_rna.present?
+  end
+
+  def exercices_fetchable?
+    !entreprise_forme_juridique_code&.start_with?(*LEGAL_FORMS_WITHOUT_EXERCICES)
   end
 
   def entreprise
