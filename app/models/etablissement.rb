@@ -33,6 +33,27 @@ class Etablissement < ApplicationRecord
     '91', # Syndicat de propriétaires (0 / 30)
   ].freeze
 
+  # Infogreffe only delivers the Kbis of entities registered with the RCS
+  # (https://entreprise.api.gouv.fr/catalogue/infogreffe/rcs/extrait), which the legal forms below
+  # never are. INSEE level I or II codes: https://www.insee.fr/fr/information/2028129
+  # (n / total): etablissements whose Kbis gave a share capital / etablissements fetched in
+  # production from 2026-09-07 to 2026-10-08.
+  LEGAL_FORMS_WITHOUT_RCS = [
+    '00', # Organisme de placement collectif en valeurs mobilières sans personnalité morale (none fetched)
+    '2',  # Groupement de droit privé non doté de la personnalité morale (0 / 94)
+    '32', # Personne morale de droit étranger, non immatriculée au RCS (0 / 76)
+    '71', # Administration de l'état (0 / 4886)
+    '72', # Collectivité territoriale (0 / 29960)
+    '73', # Etablissement public administratif (0 / 22373)
+    '81', # Organisme gérant un régime de protection sociale à adhésion obligatoire (0 / 2286)
+    '82', # Organisme mutualiste (0 / 742)
+    '83', # Comité d'entreprise (0 / 128)
+    '84', # Organisme professionnel (0 / 193)
+    '91', # Syndicat de propriétaires (0 / 30)
+    '92', # Association loi 1901 ou assimilé (11 / 20906, likely former companies)
+    '93', # Fondation (0 / 861)
+  ].freeze
+
   enum :entreprise_etat_administratif, {
     actif: "actif",
     fermé: "fermé",
@@ -184,6 +205,10 @@ class Etablissement < ApplicationRecord
 
   def exercices_fetchable?
     !entreprise_forme_juridique_code&.start_with?(*LEGAL_FORMS_WITHOUT_EXERCICES)
+  end
+
+  def extrait_kbis_fetchable?
+    !entreprise_forme_juridique_code&.start_with?(*LEGAL_FORMS_WITHOUT_RCS)
   end
 
   def entreprise
