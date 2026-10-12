@@ -114,6 +114,31 @@ describe ChampConditionalConcern do
         expect(conditional_champ.visible?).to be true
       end
     end
+
+    context 'when the condition no longer fits the type of the champ it reads' do
+      let(:procedure) do
+        create(:procedure, public_type_de_champs: [
+          { type: :multiple_drop_down_list, stable_id: 99, options: ['val1', 'val2'] },
+          { type: :text, stable_id: 999, condition: ds_include(champ_value(99), constant('val1')) },
+        ])
+      end
+      let(:dossier) { create(:dossier, procedure:) }
+      let(:conditional_champ) { dossier.root_champs_public.find { it.stable_id == 999 } }
+
+      # the admin tests the draft procedure, then turns the champ the
+      # condition reads into a yes/no: nothing rewrites the condition, and the
+      # draft is only validated at publication
+      before do
+        draft = procedure.draft_revision
+        draft.update_type_de_champ(draft.find_and_ensure_exclusive_use(99), type_champ: 'yes_no')
+        dossier.champ_data.find { it.stable_id == 99 }.update_columns(value: 'true')
+        dossier.reload
+      end
+
+      it 'is not met, so the champ is hidden' do
+        expect(conditional_champ.visible?).to be false
+      end
+    end
   end
 
   describe '#submitted_filled?' do
