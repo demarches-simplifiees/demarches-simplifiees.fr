@@ -73,7 +73,7 @@ module Manager
     end
 
     def merge
-      requested_resource.merge(@old_administrateur)
+      requested_resource.take_over(@old_administrateur)
       logger.info("L’administrateur #{@old_administrateur.id} a été fusionné dans #{requested_resource.id} par #{current_super_admin.id}, sur invitation de #{@inviter_id}")
 
       redirect_to_administrateur(:notice, "L’administrateur « #{requested_resource.email} » a récupéré les démarches, services, instructeurs et jetons d’API de « #{@old_administrateur.email} ».")

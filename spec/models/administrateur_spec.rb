@@ -210,6 +210,27 @@ describe Administrateur, type: :model do
     end
   end
 
+  describe '#take_over' do
+    let(:new_admin) { create(:administrateur) }
+    let(:old_admin) { create(:administrateur) }
+    let!(:procedure) { create(:procedure, administrateurs: [old_admin], instructeurs: [old_admin.instructeur]) }
+    let!(:other_procedure) { create(:procedure, instructeurs: [old_admin.instructeur]) }
+
+    it "hands the old admin's teams on its procedures over to the new admin" do
+      new_admin.take_over(old_admin)
+
+      expect(procedure.reload.administrateurs).to eq([new_admin])
+      expect(procedure.defaut_groupe_instructeur.instructeurs).to eq([new_admin.instructeur])
+      expect(other_procedure.defaut_groupe_instructeur.instructeurs).to eq([old_admin.instructeur])
+    end
+
+    it 'does nothing when the old admin is the new admin' do
+      old_admin.take_over(old_admin)
+
+      expect(procedure.defaut_groupe_instructeur.instructeurs).to eq([old_admin.instructeur])
+    end
+  end
+
   describe 'unused' do
     subject { Administrateur.unused }
 

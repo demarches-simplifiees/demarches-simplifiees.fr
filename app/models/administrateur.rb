@@ -131,6 +131,24 @@ class Administrateur < ApplicationRecord
     end
   end
 
+  # Used when this admin replaces one who left. On top of the merge, the old
+  # admin's instructeur profile hands over its teams on the transferred
+  # procedures, otherwise it would keep reading their dossiers.
+  def take_over(old_admin)
+    return if old_admin == self
+
+    old_instructeur = old_admin.instructeur
+    groupes = old_instructeur&.groupe_instructeurs&.where(procedure_id: old_admin.procedures.with_discarded.select(:id)).to_a || []
+
+    transaction do
+      merge(old_admin)
+      groupes.each do |groupe|
+        groupe.add(instructeur)
+        groupe.remove(old_instructeur)
+      end
+    end
+  end
+
   def zones
     procedures.includes(:zones).flat_map(&:zones).uniq
   end
