@@ -15,6 +15,45 @@ class Etablissement < ApplicationRecord
   validates :siret, presence: true
   validates :dossier_id, uniqueness: { allow_nil: true }
 
+  # The DGFIP only holds the turnover of companies liable to corporate tax that file their annual
+  # accounts with the greffe (https://entreprise.api.gouv.fr/catalogue/dgfip/chiffres_affaires).
+  # Legal forms below never got any turnover in production; State services (71xx) even get a
+  # permanent 502 "03001 Service non disponible" instead of a 404, retried for weeks. INSEE level II
+  # codes: https://www.insee.fr/fr/information/2028129
+  # (n / total): etablissements that got a turnover / etablissements fetched in production from
+  # 2026-09-07 to 2026-10-08.
+  LEGAL_FORMS_WITHOUT_EXERCICES = [
+    '21', # Indivision (0 / 37)
+    '22', # Société créée de fait (0 / 15)
+    '27', # Paroisse hors zone concordataire (0 / 4)
+    '28', # Assujetti unique à la TVA (none fetched; 0 / 4 in an older sample)
+    '29', # Autre groupement de droit privé non doté de la personnalité morale (0 / 10)
+    '71', # Administration de l'état (0 / 4886)
+    '83', # Comité d'entreprise (0 / 128)
+    '91', # Syndicat de propriétaires (0 / 30)
+  ].freeze
+
+  # Infogreffe only delivers the Kbis of entities registered with the RCS
+  # (https://entreprise.api.gouv.fr/catalogue/infogreffe/rcs/extrait), which the legal forms below
+  # never are. INSEE level I or II codes: https://www.insee.fr/fr/information/2028129
+  # (n / total): etablissements whose Kbis gave a share capital / etablissements fetched in
+  # production from 2026-09-07 to 2026-10-08.
+  LEGAL_FORMS_WITHOUT_RCS = [
+    '00', # Organisme de placement collectif en valeurs mobilières sans personnalité morale (none fetched)
+    '2',  # Groupement de droit privé non doté de la personnalité morale (0 / 94)
+    '32', # Personne morale de droit étranger, non immatriculée au RCS (0 / 76)
+    '71', # Administration de l'état (0 / 4886)
+    '72', # Collectivité territoriale (0 / 29960)
+    '73', # Etablissement public administratif (0 / 22373)
+    '81', # Organisme gérant un régime de protection sociale à adhésion obligatoire (0 / 2286)
+    '82', # Organisme mutualiste (0 / 742)
+    '83', # Comité d'entreprise (0 / 128)
+    '84', # Organisme professionnel (0 / 193)
+    '91', # Syndicat de propriétaires (0 / 30)
+    '92', # Association loi 1901 ou assimilé (11 / 20906, likely former companies)
+    '93', # Fondation (0 / 861)
+  ].freeze
+
   enum :entreprise_etat_administratif, {
     actif: "actif",
     fermé: "fermé",
@@ -162,6 +201,26 @@ class Etablissement < ApplicationRecord
 
   def association?
     association_rna.present?
+  end
+
+  def exercices_fetchable?
+    !entreprise_forme_juridique_code&.start_with?(*LEGAL_FORMS_WITHOUT_EXERCICES)
+  end
+
+  def extrait_kbis_fetchable?
+    !entreprise_forme_juridique_code&.start_with?(*LEGAL_FORMS_WITHOUT_RCS)
+  end
+
+  # The RNA only holds associations (92xx, "Association loi 1901 ou assimilé"), and in production a
+  # few foundations (93xx): https://entreprise.api.gouv.fr/catalogue/djepva/associations_open_data
+  def association_fetchable?
+    entreprise_forme_juridique_code.nil? || entreprise_forme_juridique_code.start_with?('92', '93')
+  end
+
+  # GIP-MDS only counts the staff of open employers; INSEE marks an unite legale that employs
+  # nobody "NN": https://entreprise.api.gouv.fr/catalogue/gip_mds/effectifs_annuels_unite_legale
+  def effectifs_fetchable?
+    !entreprise_etat_administratif_fermé? && entreprise_code_effectif_entreprise != 'NN'
   end
 
   def entreprise
