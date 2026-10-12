@@ -79,4 +79,14 @@ describe RootController, type: :controller do
       expect(response.body).to have_css("a[href='#{new_user_session_path(with_proconnect: true)}']")
     end
   end
+
+  describe '#administration' do
+    render_views
+
+    it 'links to the release notes of administrateurs, instructeurs and usagers' do
+      get :administration
+
+      expect(response.body).to have_link("Voir les nouveautés", href: release_notes_path(categories: %w[administrateur instructeur usager]))
+    end
+  end
 end

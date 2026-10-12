@@ -173,7 +173,7 @@
       <div class="fr-col-md-6 fr-col-12">
         <%= render Dsfr::CardVerticalComponent.new(title: t(".card_know_more_title"), desc: t(".card_know_more_desc")) do |c| %>
           <% c.with_footer_button do %>
-            <%= link_to(t(".webinar_link"), INSCRIPTION_WEBINAIRE_URL, class: "fr-btn", **external_link_attributes) %>
+            <%= link_to(t(".release_notes_link"), release_notes_path(categories: %w[administrateur instructeur usager]), class: "fr-btn") %>
           <% end %>
         <% end %>
       </div>
