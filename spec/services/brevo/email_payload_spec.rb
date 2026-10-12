@@ -39,6 +39,18 @@ describe Brevo::EmailPayload do
     )
   end
 
+  it 'keeps template openings literal, since Brevo renders subject and bodies' do
+    mail.subject = 'Dossier {{ nom }}'
+    mail.html_part.body = '<p>{% if x %} {#</p>'
+    mail.text_part.body = '{{{'
+
+    expect(payload_for(mail)).to include(
+      subject: 'Dossier {% templatetag openvariable %} nom }}',
+      htmlContent: '<p>{% templatetag openblock %} if x %} {% templatetag opencomment %}</p>',
+      textContent: '{% templatetag openvariable %}{'
+    )
+  end
+
   it 'sends a bcc-only mail as one message version per recipient' do
     mail.to = nil
     mail.bcc = ['a@example.com', 'b@example.com']

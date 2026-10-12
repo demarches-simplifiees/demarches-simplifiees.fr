@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 class Brevo::EmailPayload
+  # Brevo treats the subject and both bodies as templates, even without params:
+  # a champ value `Projet {{ alpha }}` came out as "Projet", and a stray `{{`
+  # got the mail accepted (201), then never delivered. Each opening becomes the
+  # Pongo2 tag that prints it as is. `{% verbatim %}` would not do: content can
+  # close it.
+  TEMPLATE_OPENINGS = {
+    '{{' => '{% templatetag openvariable %}',
+    '{%' => '{% templatetag openblock %}',
+    '{#' => '{% templatetag opencomment %}',
+  }.freeze
+
   def initialize(mail)
     @mail = mail
   end
@@ -9,9 +20,9 @@ class Brevo::EmailPayload
   def to_h
     {
       sender: address(@mail[:from].addrs.first),
-      subject: @mail.subject,
-      htmlContent: @mail.html_part.decoded,
-      textContent: @mail.text_part.decoded,
+      subject: literal(@mail.subject),
+      htmlContent: literal(@mail.html_part.decoded),
+      textContent: literal(@mail.text_part.decoded),
       replyTo: @mail[:reply_to]&.then { address(it.addrs.first) },
       attachment: attachments.presence,
       tags: [@mail[PriorityDeliveryConcern::MAILER_HEADER].value],
@@ -35,6 +46,8 @@ class Brevo::EmailPayload
       }
     end
   end
+
+  def literal(text) = text.gsub(/\{[{%#]/, TEMPLATE_OPENINGS)
 
   def emails(addresses) = addresses.map { { email: it } }
 
