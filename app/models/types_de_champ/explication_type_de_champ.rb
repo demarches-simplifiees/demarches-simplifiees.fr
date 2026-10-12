@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "redcarpet/render_strip"
-
 class TypesDeChamp::ExplicationTypeDeChamp < TypesDeChamp::TextTypeDeChamp
   def self.category = STRUCTURE
   def self.icon = 'fr-icon-emphasis'
@@ -37,7 +35,7 @@ class TypesDeChamp::ExplicationTypeDeChamp < TypesDeChamp::TextTypeDeChamp
 
   # the description is markdown that may embed html
   def plain_description
-    stripped = Redcarpet::Markdown.new(Redcarpet::Render::StripDown).render(description.to_s)
-    Nokogiri::HTML5.fragment(stripped).text.squish
+    html = Redcarpet::Markdown.new(Redcarpet::BareRenderer.new(class_names_map: {})).render(description.to_s)
+    Nokogiri::HTML5.fragment(html).text.squish
   end
 end
