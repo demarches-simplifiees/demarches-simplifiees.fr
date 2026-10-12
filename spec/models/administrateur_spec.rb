@@ -73,6 +73,16 @@ describe Administrateur, type: :model do
       it { expect { subject }.not_to raise_error }
     end
 
+    context 'when the old admin is the new admin' do
+      let(:old_admin) { new_admin }
+      let!(:procedure) { create(:procedure, administrateurs: [new_admin]) }
+
+      it 'keeps its procedures' do
+        subject
+        expect(procedure.reload.administrateurs).to eq([new_admin])
+      end
+    end
+
     context 'when the old admin has a procedure' do
       let(:procedure) { create(:procedure) }
       let(:discarded_procedure) { create(:procedure, :discarded) }
@@ -160,6 +170,19 @@ describe Administrateur, type: :model do
       end
     end
 
+    context 'when the old admin has a full access api token' do
+      let(:old_admin) { create(:administrateur, :with_api_token) }
+      let!(:old_procedure) { create(:procedure, administrateurs: [old_admin]) }
+      let!(:new_procedure) { create(:procedure, administrateurs: [new_admin]) }
+
+      it 'restricts the token to the old admin procedures' do
+        token = old_admin.api_tokens.first
+        subject
+
+        expect(token.reload.procedure_ids).to eq([old_procedure.id])
+      end
+    end
+
     context 'when the old admin has an old api token' do
       let(:old_admin) { create(:administrateur, :with_api_token) }
 
@@ -184,6 +207,27 @@ describe Administrateur, type: :model do
         expect(new_admin.instructeurs).to match_array(instructeur)
         expect(old_admin.instructeurs).to be_empty
       end
+    end
+  end
+
+  describe '#take_over' do
+    let(:new_admin) { create(:administrateur) }
+    let(:old_admin) { create(:administrateur) }
+    let!(:procedure) { create(:procedure, administrateurs: [old_admin], instructeurs: [old_admin.instructeur]) }
+    let!(:other_procedure) { create(:procedure, instructeurs: [old_admin.instructeur]) }
+
+    it "hands the old admin's teams on its procedures over to the new admin" do
+      new_admin.take_over(old_admin)
+
+      expect(procedure.reload.administrateurs).to eq([new_admin])
+      expect(procedure.defaut_groupe_instructeur.instructeurs).to eq([new_admin.instructeur])
+      expect(other_procedure.defaut_groupe_instructeur.instructeurs).to eq([old_admin.instructeur])
+    end
+
+    it 'does nothing when the old admin is the new admin' do
+      old_admin.take_over(old_admin)
+
+      expect(procedure.defaut_groupe_instructeur.instructeurs).to eq([old_admin.instructeur])
     end
   end
 
