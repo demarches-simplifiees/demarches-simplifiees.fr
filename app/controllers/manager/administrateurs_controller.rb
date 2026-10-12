@@ -7,11 +7,12 @@ module Manager
     MERGE_PURPOSE = :confirm_merging_administrateur
     MERGE_LINK_VALIDITY = 1.day
 
-    before_action :verify_fresh_super_admin_otp!, only: [:delete, :request_merge]
     # Like adding an administrateur to a procedure, the merge link generated
     # by a super admin must be confirmed by another one.
     before_action :decrypt_merge_params, only: [:merge_link, :merge_edit, :merge]
     before_action :ensure_other_super_admin, only: [:merge_edit, :merge], unless: -> { Rails.env.development? }
+    # After the link checks, so that an invalid link does not use up an OTP attempt.
+    before_action :verify_fresh_super_admin_otp!, only: [:delete, :request_merge, :merge]
 
     def create
       administrateur = current_super_admin.invite_admin(create_administrateur_params[:email])

@@ -118,7 +118,7 @@ describe Manager::AdministrateursController, type: :controller do
 
   describe 'merging an old administrateur' do
     let(:inviter_super_admin) { create(:super_admin) }
-    let(:confirmer_super_admin) { create(:super_admin) }
+    let(:confirmer_super_admin) { create(:super_admin, :with_otp) }
 
     let(:administrateur) { administrateurs.default }
     let(:old_administrateur) { administrateurs.blank }
@@ -225,16 +225,18 @@ describe Manager::AdministrateursController, type: :controller do
           new_request
           expect(response).to render_template(:merge_edit)
           expect(response.body).to include(inviter_super_admin.email, administrateur.email, old_administrateur.email)
+          expect(response.body).to include('name="otp_attempt"')
         end
       end
     end
 
     describe '#merge' do
-      subject(:create_request) { post :merge, params: { id: administrateur_id, q: } }
+      subject(:create_request) { post :merge, params: { id: administrateur_id, q:, otp_attempt: } }
 
       let!(:procedure) { create(:procedure, administrateurs: [old_administrateur]) }
       let(:administrateur_id) { administrateur.id }
       let(:q) { valid_q }
+      let(:otp_attempt) { current_otp_for(confirmer_super_admin) }
 
       context "when another super admin confirms" do
         before { sign_in confirmer_super_admin }
@@ -245,6 +247,17 @@ describe Manager::AdministrateursController, type: :controller do
           expect(procedure.reload.administrateurs).to eq([administrateur])
           expect(flash[:notice]).to include(administrateur.email, old_administrateur.email)
           expect(response).to redirect_to(manager_administrateur_path(administrateur))
+        end
+
+        context "without the OTP code" do
+          let(:otp_attempt) { nil }
+
+          it "does not merge" do
+            create_request
+
+            expect(procedure.reload.administrateurs).to eq([old_administrateur])
+            expect(flash[:error]).to include("Code OTP invalide ou manquant")
+          end
         end
       end
 

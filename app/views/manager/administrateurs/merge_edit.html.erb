@@ -20,6 +20,13 @@
 
   <%= form_tag merge_manager_administrateur_path(@administrateur) do %>
     <%= hidden_field_tag :q, params[:q] %>
+
+    <% if SUPER_ADMIN_OTP_ENABLED %>
+      <div class="field-unit field-unit--string field-unit--required">
+        <%= render Manager::OtpAttemptInputComponent.new %>
+      </div>
+    <% end %>
+
     <%= submit_tag "Oui, je confirme la fusion" %>
     <%= link_to "Non, je ne confirme pas la fusion", manager_administrateur_path(@administrateur) %>
   <% end %>
