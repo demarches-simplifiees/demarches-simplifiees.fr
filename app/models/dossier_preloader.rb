@@ -62,37 +62,27 @@ class DossierPreloader
   private
 
   # Révisions indexées par id pour un batch de dossiers, mémorisées d'un batch
-  # à l'autre. Les révisions déjà chargées avec leurs `revision_type_de_champs`
-  # (ex: `Dossier.for_api_v2`) sont réutilisées : recharger les types de champ
-  # d'une révision est la requête la plus coûteuse du préchargement.
+  # à l'autre. Une révision déjà chargée sur un dossier est réutilisée : le
+  # Preloader ne charge que ce qui lui manque (ex: `Dossier.for_api_v2` a déjà
+  # les types de champ, la requête la plus coûteuse du préchargement).
   def revisions_for(dossiers, pj_template: false)
     @revisions ||= {}
-    @revisions.merge!(preloaded_revisions(dossiers)) unless pj_template
+    known_ids = @revisions.keys
+
+    dossiers.each do |dossier|
+      @revisions[dossier.revision_id] ||= dossier.revision if dossier.association(:revision).loaded?
+    end
 
     missing_ids = dossiers.flat_map { [it.revision_id, it.submitted_revision_id] }.compact.uniq - @revisions.keys
-    if missing_ids.any?
-      @revisions.merge!(
-        ProcedureRevision.where(id: missing_ids)
-          .includes(procedure: [], revision_type_de_champs: { type_de_champ: pj_template ? { piece_justificative_template_attachment: :blob, notice_explicative_attachment: :blob } : [] })
-          .index_by(&:id)
-      )
-    end
+    @revisions.merge!(ProcedureRevision.where(id: missing_ids).index_by(&:id))
+
+    templates = pj_template ? { piece_justificative_template_attachment: :blob, notice_explicative_attachment: :blob } : []
+    ActiveRecord::Associations::Preloader.new(
+      records: @revisions.except(*known_ids).values,
+      associations: [:procedure, { revision_type_de_champs: { type_de_champ: templates } }]
+    ).call
 
     @revisions
-  end
-
-  def preloaded_revisions(dossiers)
-    revisions = dossiers.filter_map do |dossier|
-      association = dossier.association(:revision)
-      revision = association.target if association.loaded?
-      revision if revision&.association(:revision_type_de_champs)&.loaded?
-    end.index_by(&:id)
-
-    if revisions.any?
-      ::ActiveRecord::Associations::Preloader.new(records: revisions.values, associations: :procedure).call
-    end
-
-    revisions
   end
 
   def load_dossiers(dossiers, pj_template: false)

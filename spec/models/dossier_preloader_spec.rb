@@ -68,13 +68,23 @@ describe DossierPreloader do
       expect(sql_touching('') { loaded_dossier.root_champs_public.map(&:type_de_champ) }).to be_empty
     end
 
-    it 'loads revisions that are missing or loaded without their types de champ' do
+    it 'reuses a loaded revision and only loads its types de champ' do
       loaded_dossiers = Dossier.where(id: dossiers).includes(:revision).to_a
 
-      queries = sql_touching('"procedure_revision_types_de_champ"') { DossierPreloader.new(loaded_dossiers).all }
+      queries = sql_touching('"procedure_revision') { DossierPreloader.new(loaded_dossiers).all }
 
-      expect(queries.size).to eq(1)
+      expect(queries.grep(/"procedure_revisions"/)).to be_empty
+      expect(queries.grep(/"procedure_revision_types_de_champ"/).size).to eq(1)
       expect(sql_touching('') { loaded_dossiers.first.root_champs_public.map(&:type_de_champ) }).to be_empty
+    end
+
+    it 'reuses a loaded revision with pj_template and preloads its templates' do
+      loaded_dossiers = Dossier.where(id: dossiers).includes(:revision).to_a
+
+      expect(sql_touching('"procedure_revisions"') { DossierPreloader.new(loaded_dossiers).all(pj_template: true) }).to be_empty
+
+      templates_attached = -> { loaded_dossiers.first.root_champs_public.map { it.type_de_champ.piece_justificative_template.attached? } }
+      expect(sql_touching('', &templates_attached)).to be_empty
     end
   end
 
