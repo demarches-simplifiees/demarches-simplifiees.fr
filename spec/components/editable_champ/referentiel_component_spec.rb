@@ -53,4 +53,36 @@ describe EditableChamp::ReferentielComponent, type: :component do
       end
     end
   end
+
+  context 'when an annotation prefills the form of a dossier that cannot go back to the usager' do
+    let(:procedure) do
+      create(:procedure,
+             public_type_de_champs: [{ type: :text, libelle: 'Nom', stable_id: 99 }],
+             private_type_de_champs: [{ type: :referentiel, stable_id: 88, referentiel:, referentiel_mapping: { "$.nom" => { prefill: "1", prefill_stable_id: 99, type: "string" } } }])
+    end
+    let(:dossier) { create(:dossier, :accepte, procedure:) }
+    let(:champ) { dossier.champ_data.find { it.stable_id == 88 } }
+    let(:form) do
+      ActionView::Helpers::FormBuilder.new("dossier[champs_private_attributes]", champ, ActionController::Base.new.view_context, {})
+    end
+
+    context 'in exact match mode' do
+      let(:referentiel) { create(:api_referentiel, :exact_match) }
+
+      it 'disables the field and says why' do
+        expect(subject).to have_field(type: 'text', disabled: true)
+        expect(subject).to have_text('ce champ, qui préremplit son formulaire, n’est plus modifiable')
+        expect(subject).to have_selector("input[aria-describedby~='#{champ.html_id}-locked']")
+      end
+    end
+
+    context 'in autocomplete mode' do
+      let(:referentiel) { create(:api_referentiel, :autocomplete) }
+
+      it 'disables the combobox and says why' do
+        expect(subject.to_html).to include('&quot;is_disabled&quot;:true')
+        expect(subject).to have_text('ce champ, qui préremplit son formulaire, n’est plus modifiable')
+      end
+    end
+  end
 end

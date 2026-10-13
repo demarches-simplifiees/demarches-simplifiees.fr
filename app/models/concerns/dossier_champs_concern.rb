@@ -209,6 +209,21 @@ module DossierChampsConcern
     reset_champs_cache
   end
 
+  # Sans édition instructeur sur ces démarches, le buffer ne porte que des propositions de
+  # référentiel : leurs cibles, lignes de répétition comprises, suffisent à les reconnaître.
+  def discard_instructeur_buffer_proposal!(type_de_champs)
+    target_stable_ids = type_de_champs.map(&:stable_id)
+    repetition_stable_ids = type_de_champs.filter_map { revision.parent_of(it)&.stable_id }
+    buffer = champ_data.filter(&:instructeur_buffer_stream?)
+    row_ids = buffer.filter { it.row? && it.stable_id.in?(repetition_stable_ids) }.map(&:row_id)
+    discarded = buffer.filter { it.stable_id.in?(target_stable_ids) || it.row_id.in?(row_ids) }
+    return if discarded.empty?
+
+    champ_data.where(id: discarded.map(&:id)).destroy_all
+    association(:champ_data).target = champ_data - discarded
+    reset_champs_cache
+  end
+
   def user_buffer_changes?
     champ_data_on_user_buffer_stream.present?
   end

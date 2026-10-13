@@ -55,6 +55,8 @@ class Champs::ReferentielChamp < ChampData
       # n'est pas une sélection.
       if value.blank?
         super(nil)
+        # Pas de machine à états en autocomplétion : la proposition part là où la sélection l'a écrite.
+        dossier.discard_instructeur_buffer_proposal!(public_prefill_type_de_champs) if private?
       elsif value_changed?
         reject_selection
       end
@@ -81,9 +83,30 @@ class Champs::ReferentielChamp < ChampData
     exact_match?
   end
 
+  # Une annotation qui préremplit le formulaire ne sert plus à rien quand le dossier ne peut
+  # plus revenir à l'usager.
+  def locked_prefill?
+    private? && public_prefill_type_de_champs.any? && !dossier.may_receive_prefill_proposal?
+  end
+
+  # La proposition de l'ancienne référence part avec sa donnée, avant le nouvel appel.
+  def after_reset_external_data(opts = {})
+    super
+    dossier.discard_instructeur_buffer_proposal!(public_prefill_type_de_champs) if private?
+  end
+
   def prefillable_stable_ids
     @prefillable_stable_ids ||= referentiel_mapping_prefillable_with_stable_id
       .map { |_jsonpath, mapping| mapping[:prefill_stable_id].to_i }
+  end
+
+  def proposes_public_changes?
+    private? && proposed_columns.any?
+  end
+
+  def proposed_columns
+    stable_ids = public_prefill_type_de_champs.map(&:stable_id)
+    dossier.instructeur_changed_columns.filter { it.stable_id.in?(stable_ids) }
   end
 
   def prefillable_champs
@@ -117,12 +140,35 @@ class Champs::ReferentielChamp < ChampData
 
   def propagate_prefill(type_de_champs)
     type_de_champs_by_stable_id = type_de_champs.index_by(&:stable_id)
-    referentiel_mapping_prefillable_with_stable_id
-      .transform_values do |mapping|
-        type_de_champs_by_stable_id[mapping[:prefill_stable_id].to_i]
-      end.compact.group_by do |_, type_de_champ|
-        dossier.revision.parent_of(type_de_champ)
-      end.flat_map do |repetition_type_de_champ, mappings|
+    targets = referentiel_mapping_prefillable_with_stable_id
+      .transform_values { type_de_champs_by_stable_id[it[:prefill_stable_id].to_i] }
+      .compact
+
+    public_targets, private_targets = targets.partition { |_, tdc| tdc.public? }.map(&:to_h)
+
+    propagate_public_prefill(public_targets) + propagate_to(private_targets)
+  end
+
+  private
+
+  # Une annotation écrit sur le buffer instructeur, où l'usager ne voit rien avant
+  # que la proposition ne soit validée.
+  def propagate_public_prefill(targets)
+    return [] if targets.empty?
+    return propagate_to(targets) if !private?
+
+    dossier.discard_instructeur_buffer_proposal!(targets.values)
+    dossier.with_instructeur_buffer_stream { propagate_to(targets) }
+  end
+
+  def public_prefill_type_de_champs
+    prefillable_stable_ids.filter_map { dossier.find_type_de_champ_by_stable_id(it, :public) }
+  end
+
+  def propagate_to(targets)
+    targets
+      .group_by { |_, type_de_champ| dossier.revision.parent_of(type_de_champ) }
+      .flat_map do |repetition_type_de_champ, mappings|
         if repetition_type_de_champ.present?
           update_repetition_prefillable_champs(data, repetition_type_de_champ, mappings)
         else
@@ -130,8 +176,6 @@ class Champs::ReferentielChamp < ChampData
         end
       end
   end
-
-  private
 
   def prefillable_type_de_champs
     if main_stream?

@@ -5,3 +5,9 @@ fr:
       single_combobox: 'Sélectionnez ou commencez à saisir'
       multiple_combobox: 'Sélectionnez ou commencez à saisir'
       remote_combobox: 'Commencez à saisir'
+      changes:
+        removed: La valeur a été supprimée
+        changed: La valeur a été modifiée
+        geojson_changed: La zone géographique a été modifiée
+        added: "Ajouté :"
+        removed_values: "Retiré :"

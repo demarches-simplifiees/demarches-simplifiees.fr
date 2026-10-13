@@ -14,7 +14,7 @@ module Instructeurs
     include Zipline
 
     before_action :redirect_on_dossier_not_found, only: [:show, :show_submitted_revision]
-    before_action :redirect_on_dossier_in_batch_operation, only: [:archive, :unarchive, :follow, :unfollow, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :restore, :destroy, :extend_conservation]
+    before_action :redirect_on_dossier_in_batch_operation, only: [:archive, :unarchive, :follow, :unfollow, :passer_en_instruction, :repasser_en_construction, :proposition, :repasser_en_instruction, :terminer, :restore, :destroy, :extend_conservation]
     before_action :dossier_with_champs, only: [:show, :show_submitted_revision]
     before_action :dossier_with_submitted_revision, only: [:show_submitted_revision]
     before_action :set_gallery_attachments, only: [:show, :pieces_jointes, :annotations_privees, :avis, :messagerie, :personnes_impliquees, :reaffectation, :rendez_vous, :rdv_connection]
@@ -397,6 +397,23 @@ module Instructeurs
           @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_attributes_params(:private), dossier.flat_champs_private)
         end
       end
+    end
+
+    # Sur les vrais changements, pas sur le buffer : une copie identique à la saisie de l'usager
+    # ou un second envoi enregistreraient une correction vide.
+    def proposition
+      if !dossier.may_receive_prefill_proposal?
+        flash.alert = t('.unavailable')
+      elsif dossier.instructeur_changed_columns.any?
+        dossier.transaction do
+          dossier.repasser_en_construction!(instructeur: current_instructeur) if dossier.en_instruction?
+          # Le message générique (« afin de poursuivre l'instruction ») est faux ici.
+          dossier.instructeur_submit_en_construction!(instructeur: current_instructeur, notify: false)
+        end
+        flash.notice = t('.sent')
+      end
+
+      redirect_to annotations_privees_instructeur_dossier_path(dossier.procedure, dossier)
     end
 
     def print
