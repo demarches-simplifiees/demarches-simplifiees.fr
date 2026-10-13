@@ -55,6 +55,8 @@ class Champs::ReferentielChamp < ChampData
       # n'est pas une sélection.
       if value.blank?
         super(nil)
+        # Pas de machine à états en autocomplétion : la proposition part là où la sélection l'a écrite.
+        dossier.discard_instructeur_buffer_proposal!(public_prefill_type_de_champs) if private?
       elsif value_changed?
         reject_selection
       end
@@ -79,6 +81,12 @@ class Champs::ReferentielChamp < ChampData
 
   def has_async_external_data?
     exact_match?
+  end
+
+  # La proposition de l'ancienne référence part avec sa donnée, avant le nouvel appel.
+  def after_reset_external_data(opts = {})
+    super
+    dossier.discard_instructeur_buffer_proposal!(public_prefill_type_de_champs) if private?
   end
 
   def prefillable_stable_ids

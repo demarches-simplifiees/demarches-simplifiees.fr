@@ -565,6 +565,29 @@ describe Champs::ReferentielChamp, type: :model do
         end
       end
 
+      context 'when the reference is abandoned' do
+        before do
+          champ.update!(external_id: 'JE-VALIDE')
+          champ.update_external_data!(data: { 'nom' => 'Dupont' }, value: 'JE-VALIDE', value_json: {})
+          expect(proposed_public_target.value).to eq('Dupont')
+        end
+
+        # Comme le contrôleur (DossierEditConcern#refresh_external_data) : la valeur, puis la remise à zéro.
+        it 'drops the proposal when the reference changes, before the new call answers' do
+          champ.reload.update!(external_id: 'AUTRE-REF')
+          champ.reset_external_data!
+
+          expect(proposed_public_target.value).to be_nil
+        end
+
+        it 'drops the proposal when the reference is emptied' do
+          champ.reload.update!(external_id: nil)
+          champ.reset_external_data!
+
+          expect(proposed_public_target.value).to be_nil
+        end
+      end
+
       context 'when another referentiel proposes other champs' do
         let(:procedure) do
           create(:procedure,
@@ -603,6 +626,15 @@ describe Champs::ReferentielChamp, type: :model do
         expect(private_target.value).to eq('Favorable')
         expect(proposed_public_target.value).to eq('Dupont')
         expect(public_target.value).to be_nil
+      end
+
+      it 'drops the proposal when the combobox is emptied' do
+        champ.update!(value: 'Dupont', data: token)
+        expect(proposed_public_target.value).to eq('Dupont')
+
+        champ.reload.update!(value: '', data: '')
+
+        expect(proposed_public_target.value).to be_nil
       end
     end
   end
