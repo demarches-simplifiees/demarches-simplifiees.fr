@@ -102,10 +102,7 @@ describe Instructeurs::CellComponent do
       let(:column) { dossier.procedure.find_column(label: 'siret – Entreprise date de création') }
       let(:etablissement) { build(:etablissement, entreprise_date_creation: Date.new(2015, 8, 10)) }
 
-      before {
-        dossier.champ_data.first.update(value: etablissement.siret, etablissement:)
-        etablissement.update_champ_value_json!
-      }
+      before { dossier.champ_data.first.update(value: etablissement.siret, etablissement:, value_json: etablissement.champ_value_json) }
 
       it { is_expected.to eq('10/08/2015') }
     end

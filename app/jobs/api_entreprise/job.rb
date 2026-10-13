@@ -34,7 +34,6 @@ class APIEntreprise::Job < ApplicationJob
   # Used by before_perform to skip jobs when provider is down.
   # See https://entreprise.api.gouv.fr/developpeurs#surveillance-etat-fournisseurs
   PING_KEY_BY_JOB = {
-    'EtablissementJob' => APIEntreprise::HealthChecker::PROVIDERS[:insee_sirene],
     'ExtraitKbisJob' => APIEntreprise::HealthChecker::PROVIDERS[:infogreffe_rcs],
     'TvaJob' => APIEntreprise::HealthChecker::PROVIDERS[:dgfip_numero_tva],
     'AssociationJob' => APIEntreprise::HealthChecker::PROVIDERS[:djepva_association],
