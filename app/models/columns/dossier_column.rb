@@ -11,8 +11,6 @@ class Columns::DossierColumn < Column
       dossier.individual.public_send(column)
     when 'groupe_instructeur'
       dossier.groupe_instructeur.label
-    when 'dossier_labels'
-      dossier.labels.map(&:name).join(' ')
     when 'traitements'
       dossier.traitements.map(&:instructeur_email).join(' ')
     end
@@ -22,11 +20,6 @@ class Columns::DossierColumn < Column
 
   def sorted_ids(dossiers, order, **)
     case table
-    when 'dossier_labels'
-      dossiers.includes(:labels)
-        .order("labels.name #{order}")
-        .pluck(:id)
-        .uniq
     when 'self', 'user', 'individual', 'etablissement', 'groupe_instructeur'
       (table == 'self' ? dossiers : dossiers.includes(table))
         .order("#{DossierFilterService.sanitized_column(table, column)} #{order}")
@@ -115,10 +108,6 @@ class Columns::DossierColumn < Column
       dossiers
         .includes(table)
         .filter_ilike(table, column, values) # ilike or where column == 'value' are both valid, we opted for ilike
-    when 'dossier_labels'
-      dossiers
-        .joins(:dossier_labels)
-        .where(dossier_labels: { label_id: values })
     when 'groupe_instructeur'
       dossiers
         .joins(:groupe_instructeur)

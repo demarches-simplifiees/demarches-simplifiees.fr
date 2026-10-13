@@ -187,7 +187,7 @@ module ColumnsConcern
 
   def user_france_connected_column = dossier_col(table: 'self', column: 'user_from_france_connect?', type: :boolean, filterable: false, displayable: false)
 
-  def dossier_labels_column = dossier_col(table: 'dossier_labels', column: 'label_id', type: :enum, options_for_select: labels.map { [_1.name, _1.id] })
+  def dossier_labels_column = Columns::DossierLabelsColumn.new(procedure_id: id, options_for_select: labels.map { [_1.name, _1.id] })
 
   def dossier_submitted_with_identity_provider_columns
     ['submitted_with_france_connect', 'submitted_with_pro_connect']
