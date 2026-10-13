@@ -2,19 +2,21 @@
 
 <p><%= t(:hello, scope: [:views, :shared, :greetings]) %></p>
 
-<p>
-  <%= t('.header', count: @hidden_dossiers.size) %>
+<p><%= t('.header', count: @dossiers_count) %></p>
 
+<% if @dossiers %>
   <ul>
-    <% @hidden_dossiers.each do |d| %>
+    <% @dossiers.each do |d| %>
       <li>n° <%= d.id %> (<%= d.procedure.libelle %>)</li>
     <% end %>
   </ul>
-</p>
+<% else %>
+  <%= render "dossiers_count_by_procedure", counts: @dossiers_count_by_procedure, statut: 'supprimes' %>
+<% end %>
 
 <p>
-  <%= t('.footer_html', count: @hidden_dossiers.size,
-                        trash_url: instructeur_procedure_url(procedure_id: @hidden_dossiers.first.procedure.id, statut: "supprimes"),
+  <%= t('.footer_html', count: @dossiers_count,
+                        trash_url: instructeur_procedure_url(@dossiers_count_by_procedure.first.first, statut: "supprimes"),
                         procedures_url: instructeur_procedures_url,
                         deletion_date: human_date(@deletion_date.to_date)) %>
 </p>
