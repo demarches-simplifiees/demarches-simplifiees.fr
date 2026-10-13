@@ -1086,7 +1086,7 @@ fr:
         to_archive: à archiver
         trash: corbeille
       aasm_error_originating_state: Le dossier est déjà %{state}.
-      aasm_error_etablissement_as_degraded_mode: "Les données suivantes n’ont pas encore pu être vérifiées : %{champs}. Il n’est pas possible de passer le dossier en %{state}."
+      aasm_error_awaiting_external_verification: "Les données suivantes n’ont pas encore pu être vérifiées : %{champs}. Il n’est pas possible de passer le dossier en %{state}."
       unverified_champ: "« %{libelle} »"
       unverified_demandeur: le SIRET du demandeur
       aasm_error_annotations_no_url: Les annotations privées n’ont pas été correctement renseignées, elles sont indispensables pour rendre une décision.

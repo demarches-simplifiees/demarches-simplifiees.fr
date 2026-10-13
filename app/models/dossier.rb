@@ -574,7 +574,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_terminer?
-    return false if any_etablissement_as_degraded_mode?
+    return false if awaiting_external_verification?
     return false unless champs_private_valid?
 
     true
@@ -652,7 +652,7 @@ class Dossier < ApplicationRecord
     procedure.sva_svr_enabled? || (procedure.sva_svr_rule? && sva_svr_decision_on.present?)
   end
 
-  def any_etablissement_as_degraded_mode?
+  def awaiting_external_verification?
     return true if demandeur_siret_awaiting_fix?
 
     champs_awaiting_verification.any?
