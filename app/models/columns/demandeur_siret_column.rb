@@ -5,7 +5,7 @@ class Columns::DemandeurSiretColumn < Columns::DossierColumn
 
   def value(dossier) = dossier.siret
 
-  def sorted_ids(dossiers, order)
+  def sorted_ids(dossiers, order, **)
     direction = order == 'desc' ? 'DESC' : 'ASC'
 
     dossiers

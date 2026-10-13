@@ -32,6 +32,19 @@ class Columns::ChampColumn < Column
     end
   end
 
+  def sorted_ids(dossiers, order, count:, **)
+    ids = dossiers
+      .with_type_de_champ(stable_id)
+      .order("champs.value #{order}")
+      .pluck(:id)
+    if ids.size != count
+      rest = dossiers.where.not(id: ids).order(id: order).pluck(:id)
+      order == 'asc' ? ids + rest : rest + ids
+    else
+      ids
+    end
+  end
+
   def filtered_ids(dossiers, filter)
     case filter
     in { operator: 'before', value: Array }

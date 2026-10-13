@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class DossierFilterService
-  TYPE_DE_CHAMP = 'type_de_champ'
-
   def self.filtered_sorted_ids(dossiers, statut, filtered_columns, sorted_column, instructeur, count: nil, include_archived: false)
     dossiers_by_statut = dossiers.by_statut(statut, instructeur:, include_archived:)
     dossiers_sorted_ids = self.sorted_ids(dossiers_by_statut, sorted_column, instructeur, count || dossiers_by_statut.size)
@@ -17,54 +15,7 @@ class DossierFilterService
   private
 
   def self.sorted_ids(dossiers, sorted_column, instructeur, count)
-    return sorted_column.column.sorted_ids(dossiers, sorted_column.order) if sorted_column.column.is_a?(Columns::DemandeurSiretColumn)
-
-    table = sorted_column.column.table
-    column = sorted_column.column.column
-    order = sorted_column.order
-    case table
-    when 'notifications'
-      if order == 'desc'
-        dossiers_id_with_notifications = dossiers.with_notifications(instructeur).order_by_notifications_importance.map(&:id)
-        (dossiers_id_with_notifications + dossiers.order('dossiers.updated_at desc').ids).uniq
-      else
-        dossiers.order('dossiers.updated_at asc').ids
-      end
-    when TYPE_DE_CHAMP
-      stable_id = sorted_column.column.stable_id
-      ids = dossiers
-        .with_type_de_champ(stable_id)
-        .order("champs.value #{order}")
-        .pluck(:id)
-      if ids.size != count
-        rest = dossiers.where.not(id: ids).order(id: order).pluck(:id)
-        order == 'asc' ? ids + rest : rest + ids
-      else
-        ids
-      end
-    when 'followers_instructeurs'
-      # LEFT OUTER JOIN allows to keep dossiers without assigned instructeurs yet
-      dossiers
-        .includes(:followers_instructeurs)
-        .joins('LEFT OUTER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
-        .order("instructeurs_users.email #{order}")
-        .pluck(:id)
-        .uniq
-    when 'avis'
-      dossiers.includes(table)
-        .order("#{sanitized_column(table, column)} #{order}")
-        .pluck(:id)
-        .uniq
-    when 'dossier_labels'
-      dossiers.includes(:labels)
-        .order("labels.name #{order}")
-        .pluck(:id)
-        .uniq
-    when 'self', 'user', 'individual', 'etablissement', 'groupe_instructeur'
-      (table == 'self' ? dossiers : dossiers.includes(table))
-        .order("#{sanitized_column(table, column)} #{order}")
-        .pluck(:id)
-    end
+    sorted_column.column.sorted_ids(dossiers, sorted_column.order, instructeur:, count:)
   end
 
   def self.filtered_ids(dossiers, filtered_columns)

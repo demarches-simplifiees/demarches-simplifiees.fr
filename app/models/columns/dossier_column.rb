@@ -22,6 +22,40 @@ class Columns::DossierColumn < Column
 
   def dossier_column? = true
 
+  def sorted_ids(dossiers, order, instructeur:, **)
+    case table
+    when 'notifications'
+      if order == 'desc'
+        dossiers_id_with_notifications = dossiers.with_notifications(instructeur).order_by_notifications_importance.map(&:id)
+        (dossiers_id_with_notifications + dossiers.order('dossiers.updated_at desc').ids).uniq
+      else
+        dossiers.order('dossiers.updated_at asc').ids
+      end
+    when 'followers_instructeurs'
+      # LEFT OUTER JOIN allows to keep dossiers without assigned instructeurs yet
+      dossiers
+        .includes(:followers_instructeurs)
+        .joins('LEFT OUTER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
+        .order("instructeurs_users.email #{order}")
+        .pluck(:id)
+        .uniq
+    when 'avis'
+      dossiers.includes(table)
+        .order("#{DossierFilterService.sanitized_column(table, column)} #{order}")
+        .pluck(:id)
+        .uniq
+    when 'dossier_labels'
+      dossiers.includes(:labels)
+        .order("labels.name #{order}")
+        .pluck(:id)
+        .uniq
+    when 'self', 'user', 'individual', 'etablissement', 'groupe_instructeur'
+      (table == 'self' ? dossiers : dossiers.includes(table))
+        .order("#{DossierFilterService.sanitized_column(table, column)} #{order}")
+        .pluck(:id)
+    end
+  end
+
   def filtered_ids(dossiers, filter)
     case filter
     in { operator: 'before', value: Array }
