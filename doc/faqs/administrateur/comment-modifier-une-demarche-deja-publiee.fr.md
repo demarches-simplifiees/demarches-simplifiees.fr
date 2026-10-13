@@ -14,7 +14,7 @@ La plupart des caractéristiques de la démarche peuvent être modifiées après
 - le nom et la description
 - le formulaire en lui-même
 - la délivrance et le contenu de l’attestation
-- la plupart des réglages, à l’exception du chemin (l’url) et des réglages liés aux *Silence Vaut Accord* ou *Silence Vaut Rejet*
+- la plupart des réglages, à l’exception du chemin (l’url)
 
 
 ## Modification du formulaire
