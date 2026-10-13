@@ -22,11 +22,6 @@ class Columns::DossierColumn < Column
 
   def sorted_ids(dossiers, order, **)
     case table
-    when 'avis'
-      dossiers.includes(table)
-        .order("#{DossierFilterService.sanitized_column(table, column)} #{order}")
-        .pluck(:id)
-        .uniq
     when 'dossier_labels'
       dossiers.includes(:labels)
         .order("labels.name #{order}")

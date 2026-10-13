@@ -237,7 +237,7 @@ module ColumnsConcern
       user_email_for_display_column,
       followers_instructeurs_email_column,
       groupe_instructeurs_id_column,
-      dossier_col(table: 'avis', column: 'question_answer', filterable: false),
+      Columns::AvisColumn.new(procedure_id: id),
       user_france_connected_column,
       dossier_labels_column,
       dossier_notifications_column,
