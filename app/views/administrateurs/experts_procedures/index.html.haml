@@ -66,9 +66,9 @@
       = render Procedure::InvitationWithTypoComponent.new(maybe_typos: @maybe_typos, url: admin_procedure_experts_path(@procedure), title: "Avant d’ajouter l’adresse électronique à la liste d’expert prédéfinie, veuillez confirmer" )
       = form_for :experts_procedure,
         url: admin_procedure_experts_path(@procedure),
-        html: { class: 'form' } do |f|
+        html: { class: 'form', data: { controller: 'enable-submit-if-filled' } } do |f|
 
-        .instructeur-wrapper
+        .instructeur-wrapper{ data: { action: "change->enable-submit-if-filled#fill input->enable-submit-if-filled#fill" } }
           %p#experts-emails Entrez les adresses électroniques des experts que vous souhaitez ajouter à la liste prédéfinie
           %react-fragment
             = render ReactComponent.new "ComboBox/MultiComboBox",
@@ -76,9 +76,10 @@
               name: 'emails[]',
               allows_custom_value: true,
               'aria-label': 'Emails',
-              'aria-describedby': 'experts-emails'
+              'aria-describedby': 'experts-emails',
+              data: { 'enable-submit-if-filled-target': 'input' }
 
-          = f.submit 'Ajouter à la liste', class: 'fr-btn'
+          = f.submit 'Ajouter à la liste', class: 'fr-btn', disabled: true, data: { 'enable-submit-if-filled-target': 'submit' }
 
   - if @experts_procedure.present?
     .fr-table.fr-table--no-caption.fr-table--layout-fixed.fr-mt-3w
