@@ -225,19 +225,6 @@ RSpec.describe Types::DossierType, type: :graphql do
         expect(data[:dossier][:champs][1][:address][:countryName]).to eq('Italie')
       end
     end
-
-    context 'when etablissement is in degraded mode' do
-      let(:etablissement) { dossier.root_champs_public.third.etablissement }
-      before do
-        etablissement.update(adresse: nil)
-      end
-
-      it do
-        expect(etablissement).to be_as_degraded_mode
-        expect(data[:dossier][:champs][2][:__typename]).to eq "SiretChamp"
-        expect(data[:dossier][:champs][2][:etablissement]).to be_nil
-      end
-    end
   end
 
   describe 'champ updatedAt' do

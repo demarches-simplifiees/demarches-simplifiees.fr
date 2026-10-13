@@ -32,15 +32,6 @@ describe 'users/dossiers/etablissement', type: :view do
     expect(footer).to have_selector('footer')
   end
 
-  context 'etablissement as degraded mode' do
-    let(:etablissement) { Etablissement.create!(siret: '41816609600051') }
-
-    it "affiche une notice avec un lien de vérification vers l’annuaire" do
-      expect(rendered).to have_text("418 166 096 00051")
-      expect(rendered).to have_link("Vérifier dans l’annuaire des entreprises", href: "https://annuaire-entreprises\.data\.gouv\.fr/rechercher?terme=#{etablissement.siret}")
-    end
-  end
-
   context 'with an unverified SIRET and no etablissement' do
     let(:dossier) { create(:dossier, procedure: procedures.entreprise) }
 

@@ -24,9 +24,6 @@ class APIEntrepriseService
       jobs.push(APIEntreprise::EffectifsJob, APIEntreprise::EffectifsAnnuelsJob) if etablissement.effectifs_fetchable?
       jobs << APIEntreprise::AttestationSocialeJob if token.can_fetch_attestation_sociale?
       jobs << APIEntreprise::BilansBdfJob if token.can_fetch_bilans_bdf?
-      if etablissement.as_degraded_mode?
-        jobs << APIEntreprise::EtablissementJob
-      end
       jobs.each do |job|
         job.set(wait:).perform_later(etablissement.id, procedure_id)
       end

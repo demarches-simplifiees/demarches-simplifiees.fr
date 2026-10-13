@@ -2,8 +2,6 @@ en:
   shared:
     dossiers:
       identite_entreprise:
-        insee_indisponible: "INSEE is unavailable, information about the company will be available in a few hours."
-        pas_accepter_refuser: "It is not possible to accept or reject a dossier without this step."
         siret: "SIRET"
         denomination: "Name"
         siret_siege_social: "SIRET of the registered office"

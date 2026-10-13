@@ -1632,13 +1632,13 @@ describe Dossier, type: :model do
     end
   end
 
-  describe "can't transition to terminer when etablissement is in degraded mode" do
+  describe "can't transition to terminer while a SIRET waits for the API" do
     let(:instructeur) { instructeurs.default }
     let(:motivation) { 'motivation' }
 
     context "when dossier is en_instruction" do
-      let(:dossier_incomplete) { create(:dossier, :en_instruction, :with_entreprise, as_degraded_mode: true, procedure: procedures.entreprise) }
-      let(:dossier_ok) { create(:dossier, :en_instruction, :with_entreprise, as_degraded_mode: false, procedure: procedures.entreprise) }
+      let(:dossier_incomplete) { create(:dossier, :en_instruction, :with_unverified_demandeur_siret, procedure: procedures.entreprise) }
+      let(:dossier_ok) { create(:dossier, :en_instruction, :with_entreprise, procedure: procedures.entreprise) }
 
       it "can't accepter" do
         expect(dossier_incomplete.may_accepter?(instructeur:, motivation:)).to be_falsey
@@ -1657,27 +1657,12 @@ describe Dossier, type: :model do
     end
 
     context "when dossier is en_construction" do
-      let(:dossier_incomplete) { create(:dossier, :en_construction, :with_entreprise, :with_declarative_accepte, as_degraded_mode: true, procedure: procedures.entreprise) }
-      let(:dossier_ok) { create(:dossier, :en_construction, :with_entreprise, :with_declarative_accepte, as_degraded_mode: false, procedure: procedures.entreprise) }
+      let(:dossier_incomplete) { create(:dossier, :en_construction, :with_unverified_demandeur_siret, :with_declarative_accepte, procedure: procedures.entreprise) }
+      let(:dossier_ok) { create(:dossier, :en_construction, :with_entreprise, :with_declarative_accepte, procedure: procedures.entreprise) }
 
       it "can't accepter_automatiquement" do
         expect(dossier_incomplete.may_accepter_automatiquement?(instructeur:, motivation:)).to be_falsey
         expect(dossier_ok.accepter_automatiquement(instructeur:, motivation:)).to be_truthy
-      end
-    end
-
-    context "when a SIRET champ has etablissement in degraded mode" do
-      let(:procedure) { create(:procedure, public_type_de_champs: [{ type: :siret }]) }
-      let(:dossier_incomplete) { create(:dossier, :en_instruction, :with_populated_champs, procedure:) }
-      let(:dossier_ok) { create(:dossier, :en_instruction, :with_populated_champs, procedure:) }
-
-      before do
-        dossier_incomplete.champ_data.first.update(etablissement: Etablissement.new(siret: build(:etablissement).siret))
-      end
-
-      it "can't accepter" do
-        expect(dossier_incomplete.may_accepter?(instructeur:, motivation:)).to be_falsey
-        expect(dossier_ok.may_accepter?(instructeur:, motivation:)).to be_truthy
       end
     end
 
@@ -1700,7 +1685,7 @@ describe Dossier, type: :model do
 
     describe '#unverified_data_labels' do
       let(:procedure) { create(:procedure, for_individual: false, public_type_de_champs: [{ type: :siret, libelle: 'Numéro SIRET' }, { type: :rna, libelle: 'Numéro RNA' }]) }
-      let(:dossier) { create(:dossier, :en_instruction, :with_entreprise, :with_populated_champs, as_degraded_mode: true, procedure:) }
+      let(:dossier) { create(:dossier, :en_instruction, :with_unverified_demandeur_siret, :with_populated_champs, procedure:) }
 
       before do
         dossier.champ_data.each { _1.update_columns(external_state: 'degraded') }

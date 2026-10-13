@@ -92,12 +92,12 @@ RSpec.describe ProcessStalledDeclarativeDossierJob, type: :job do
       context 'for entreprise' do
         let(:procedure) { create(:procedure, :published, :with_instructeur, for_individual: false, declarative_with_state: state) }
 
-        let(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure:, as_degraded_mode: false) }
+        let(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure:) }
 
         it { expect(subject).to be_accepte }
 
-        context 'having etablissement in degraded_mode' do
-          let(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure:, as_degraded_mode: true) }
+        context 'when the demandeur SIRET waits for the API' do
+          let(:dossier) { create(:dossier, :en_construction, :with_unverified_demandeur_siret, procedure:) }
 
           before do
             expect(dossier).to_not receive(:accepter_automatiquement!)

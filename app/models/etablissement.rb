@@ -295,10 +295,6 @@ class Etablissement < ApplicationRecord
     SpreadsheetArchitect.send("to_#{format}".to_sym, bilans_bdf_data)
   end
 
-  def as_degraded_mode?
-    adresse.nil? # TOOD: maybe dedicated column or more robust way
-  end
-
   def update_champ_value_json!
     return if champ_data.nil?
 

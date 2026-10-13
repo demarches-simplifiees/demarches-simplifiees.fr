@@ -288,8 +288,8 @@ describe API::V2::GraphqlController do
           expect(gql_data[:dossierAccepter][:dossier][:state]).to eq('accepte')
         }
 
-        context 'when in degraded mode' do
-          before { dossier.etablissement.update(adresse: nil) }
+        context 'when the demandeur SIRET waits for the API' do
+          before { dossier.create_demandeur_siret!(siret: '30613890001294', external_state: 'degraded') }
 
           it {
             expect(gql_data[:dossierAccepter][:errors].first[:message]).to eq('Les informations du SIRET du dossier ne sont pas complètes. Veuillez réessayer plus tard.')
@@ -415,8 +415,8 @@ describe API::V2::GraphqlController do
           expect(gql_data[:dossierRefuser][:dossier][:state]).to eq('refuse')
         end
 
-        context 'when in degraded mode' do
-          before { dossier.etablissement.update(adresse: nil) }
+        context 'when the demandeur SIRET waits for the API' do
+          before { dossier.create_demandeur_siret!(siret: '30613890001294', external_state: 'degraded') }
 
           it '', :slow do
             expect(gql_data[:dossierRefuser][:errors].first[:message]).to eq('Les informations du SIRET du dossier ne sont pas complètes. Veuillez réessayer plus tard.')
@@ -476,8 +476,8 @@ describe API::V2::GraphqlController do
           expect(gql_data[:dossierClasserSansSuite][:dossier][:state]).to eq('sans_suite')
         }
 
-        context 'when in degraded mode' do
-          before { dossier.etablissement.update(adresse: nil) }
+        context 'when the demandeur SIRET waits for the API' do
+          before { dossier.create_demandeur_siret!(siret: '30613890001294', external_state: 'degraded') }
 
           it {
             expect(gql_data[:dossierClasserSansSuite][:errors].first[:message]).to eq('Les informations du SIRET du dossier ne sont pas complètes. Veuillez réessayer plus tard.')
