@@ -1099,6 +1099,7 @@ en:
       preview_attestation: Preview the certificate
       proposition:
         sent: The application has been prefilled and the applicant has been told they can complete it.
+        unavailable: This application cannot go back to submitted, so it cannot be prefilled.
       terminer_notice: The file has been processed. The user has been informed that their file has been %{state}.
       alert_unspecified_attestation_title: The decision certificate is incomplete
       unspecified_champs_group: User form

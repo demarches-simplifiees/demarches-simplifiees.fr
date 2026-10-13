@@ -57,6 +57,17 @@ describe EditableChamp::ProposedPrefillComponent, type: :component do
     end
   end
 
+  context 'when the dossier can no longer go back to the usager' do
+    let(:dossier) { create(:dossier, :accepte, procedure:) }
+
+    before { champ.update_external_data!(data:, value: 'JE-VALIDE', value_json: {}) }
+
+    it 'hides the proposal' do
+      expect(dossier.instructeur_buffer_changes?).to be true
+      expect(subject.to_html).to be_blank
+    end
+  end
+
   context 'when the API returns what the usager already has' do
     before do
       dossier.champ_data.find { it.stable_id == 99 }.update!(value: 'Dupont')

@@ -401,7 +401,9 @@ module Instructeurs
 
     # Sans changements, un second envoi enregistrerait une correction vide.
     def proposition
-      if dossier.instructeur_buffer_changes?
+      if !dossier.may_receive_prefill_proposal?
+        flash.alert = t('.unavailable')
+      elsif dossier.instructeur_buffer_changes?
         dossier.transaction do
           dossier.repasser_en_construction!(instructeur: current_instructeur) if dossier.en_instruction?
           # Le message générique (« afin de poursuivre l'instruction ») est faux ici.

@@ -83,6 +83,12 @@ class Champs::ReferentielChamp < ChampData
     exact_match?
   end
 
+  # Une annotation qui préremplit le formulaire ne sert plus à rien quand le dossier ne peut
+  # plus revenir à l'usager.
+  def locked_prefill?
+    private? && public_prefill_type_de_champs.any? && !dossier.may_receive_prefill_proposal?
+  end
+
   # La proposition de l'ancienne référence part avec sa donnée, avant le nouvel appel.
   def after_reset_external_data(opts = {})
     super

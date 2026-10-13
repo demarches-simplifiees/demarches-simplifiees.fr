@@ -1101,6 +1101,7 @@ fr:
       preview_attestation: Prévisualiser l’attestation
       proposition:
         sent: Le dossier a été prérempli et l’usager a été informé qu’il peut le compléter.
+        unavailable: Ce dossier ne peut pas repasser en construction, il ne peut donc pas être prérempli.
       terminer_notice: Le dossier a bien été traité. L’usager a été informé que son dossier a été %{state}.
       alert_unspecified_attestation_title: L’attestation de décision est incomplète
       unspecified_champs_group: Formulaire usager

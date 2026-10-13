@@ -8,7 +8,7 @@ class EditableChamp::ProposedPrefillComponent < ApplicationComponent
   end
 
   def render?
-    @champ.referentiel? && @champ.proposes_public_changes?
+    @champ.referentiel? && @champ.dossier.may_receive_prefill_proposal? && @champ.proposes_public_changes?
   end
 
   def source

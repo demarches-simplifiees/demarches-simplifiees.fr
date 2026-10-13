@@ -284,6 +284,28 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(dossier.reload).to be_en_instruction
       end
     end
+
+    shared_examples 'a dossier that cannot receive the proposal' do
+      it 'leaves the dossier and the proposal untouched' do
+        expect(flash.alert).to eq('Ce dossier ne peut pas repasser en construction, il ne peut donc pas être prérempli.')
+        expect(dossier.reload.state).to eq(state.to_s)
+        expect(dossier.instructeur_buffer_changes?).to be true
+        expect(dossier.traitements.map(&:event)).not_to include(:depose_correction_instructeur)
+      end
+    end
+
+    context 'when the dossier is accepte' do
+      let(:state) { :accepte }
+
+      it_behaves_like 'a dossier that cannot receive the proposal'
+    end
+
+    context 'when the procedure is SVA and the dossier en instruction' do
+      let(:procedure) { create(:procedure, :published, :for_individual, :sva, instructeurs: [instructeur], public_type_de_champs: [{ type: :text, libelle: 'Nom', stable_id: 99 }]) }
+      let(:state) { :en_instruction }
+
+      it_behaves_like 'a dossier that cannot receive the proposal'
+    end
   end
 
   describe '#repasser_en_construction' do

@@ -638,4 +638,34 @@ describe Champs::ReferentielChamp, type: :model do
       end
     end
   end
+
+  describe '#locked_prefill?' do
+    let(:referentiel) { create(:api_referentiel, :exact_match) }
+    let(:procedure) do
+      create(:procedure,
+             public_type_de_champs: [{ type: :text, libelle: 'Nom', stable_id: 99 }],
+             private_type_de_champs: [
+               { type: :referentiel, stable_id: 88, referentiel:, referentiel_mapping: { "$.nom" => { prefill: "1", prefill_stable_id: 99, type: "string" } } },
+               { type: :referentiel, stable_id: 87, referentiel:, referentiel_mapping: { "$.avis" => { prefill: "1", prefill_stable_id: 77, type: "string" } } },
+               { type: :text, libelle: 'Avis', stable_id: 77 },
+             ])
+    end
+
+    def champ(stable_id) = dossier.champ_data.find { it.stable_id == stable_id }
+
+    context 'when the dossier is accepte' do
+      let(:dossier) { create(:dossier, :accepte, procedure:) }
+
+      it 'locks an annotation that prefills the form, not one that prefills annotations' do
+        expect(champ(88)).to be_locked_prefill
+        expect(champ(87)).not_to be_locked_prefill
+      end
+    end
+
+    context 'when the dossier is en instruction' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure:) }
+
+      it { expect(champ(88)).not_to be_locked_prefill }
+    end
+  end
 end
