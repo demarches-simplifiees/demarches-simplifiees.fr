@@ -278,7 +278,7 @@ RSpec.describe ExternalDataConcern do
         expect(champ.fetch_external_data_exceptions.map(&:code)).to eq([503])
       end
 
-      it { expect(champ).to be_done }
+      it { expect(champ).to be_external_data_settled }
     end
 
     describe 'leaving the degraded state' do
@@ -299,7 +299,7 @@ RSpec.describe ExternalDataConcern do
 
       it 'still reads as degraded' do
         expect(champ).to be_awaiting_fix
-        expect(champ).to be_done
+        expect(champ).to be_external_data_settled
       end
 
       it 'is fetched when the job runs' do

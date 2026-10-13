@@ -112,20 +112,23 @@ class APIEntreprise::API
     return Failure(type: :token_missing, code: 401, retryable: false, raw_response: nil) if token_missing?
     return Failure(type: :token_expired, code: 401, retryable: false, raw_response: nil) if token_expired?
 
-    case client.call(url:, params:, headers: { 'Authorization' => "Bearer #{token.jwt_token}" }, timeout: TIMEOUT)
-    in Success(body:, response:)
-      APIEntreprise::RateLimiter.calibrate!(response, pool)
+    result = client.call(url:, params:, headers: { 'Authorization' => "Bearer #{token.jwt_token}" }, timeout: TIMEOUT)
+    raw_response = result.either(-> { it.response }, -> { it.error.try(:response) })
+    APIEntreprise::RateLimiter.calibrate!(raw_response, pool)
+
+    case result
+    in Success(body:)
       Success(body)
-    in Failure(type: :http, code:, error:)
-      APIEntreprise::RateLimiter.calibrate!(error.try(:response), pool)
-      classify_http_error(code, error.try(:response))
-    in Failure(type: :json | :unexpected_type => type, code:, error:)
+
+    in Failure(type: :http, code:)
+      classify_http_error(code, raw_response)
+
+    in Failure(type: :json | :unexpected_type => type, code:)
       # A 200 we cannot read is a fault on their side that they will fix.
-      APIEntreprise::RateLimiter.calibrate!(error.try(:response), pool)
-      Failure(type:, code:, retryable: true, raw_response: error.try(:response))
-    in Failure(type:, code:, retryable:, error:)
-      APIEntreprise::RateLimiter.calibrate!(error.try(:response), pool)
-      Failure(type:, code:, retryable:, raw_response: error.try(:response))
+      Failure(type:, code:, retryable: true, raw_response:)
+
+    in Failure(type:, code:, retryable:)
+      Failure(type:, code:, retryable:, raw_response:)
     end
   end
 
