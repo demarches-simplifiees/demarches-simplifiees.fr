@@ -93,11 +93,13 @@ module ExternalDataConcern
   end
 
   def pending? = waiting_for_job? || fetching?
-  def done? = fetched? || awaiting_fix? || external_error?
 
   # Both read as degraded everywhere: the champ carries the identifier alone and
   # waits for the API, whether the cron has scheduled its retry yet or not.
   def awaiting_fix? = degraded? || waiting_for_fix?
+
+  def external_data_settled? = fetched? || awaiting_fix? || external_error?
+
   def external_data_not_found? = external_error? && fetch_external_data_exceptions&.last&.not_found?
 
   def has_async_external_data? = false

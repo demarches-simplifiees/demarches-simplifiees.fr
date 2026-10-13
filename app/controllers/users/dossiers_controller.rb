@@ -368,7 +368,7 @@ module Users
       type_de_champ = dossier.find_type_de_champ_by_stable_id!(params[:stable_id], :public, row_id: params[:row_id])
       champ = dossier.project_champ(type_de_champ, row_id: params[:row_id])
 
-      champ.validate(:champ_value) if champ.done?
+      champ.validate(:champ_value) if champ.external_data_settled?
       respond_to do |format|
         format.turbo_stream do
           @to_show, @to_hide, @to_update = champ_to_turbo_update(champ, dossier.flat_champs_public)
