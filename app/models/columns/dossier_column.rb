@@ -22,15 +22,8 @@ class Columns::DossierColumn < Column
 
   def dossier_column? = true
 
-  def sorted_ids(dossiers, order, instructeur:, **)
+  def sorted_ids(dossiers, order, **)
     case table
-    when 'notifications'
-      if order == 'desc'
-        dossiers_id_with_notifications = dossiers.with_notifications(instructeur).order_by_notifications_importance.map(&:id)
-        (dossiers_id_with_notifications + dossiers.order('dossiers.updated_at desc').ids).uniq
-      else
-        dossiers.order('dossiers.updated_at asc').ids
-      end
     when 'followers_instructeurs'
       # LEFT OUTER JOIN allows to keep dossiers without assigned instructeurs yet
       dossiers

@@ -73,7 +73,7 @@ module ColumnsConcern
     dossier_col(table: 'self', column: 'state', type: :enum, options_for_select:, displayable: false)
   end
 
-  def notifications_column = dossier_col(table: 'notifications', column: 'notifications', label: "notifications", filterable: false, displayable: false)
+  def notifications_column = Columns::NotificationsColumn.new(procedure_id: id)
 
   def dossier_notifications_column
     options_for_select = I18n.t('instructeurs.dossiers.filterable_notification').map(&:to_a).map(&:reverse)
