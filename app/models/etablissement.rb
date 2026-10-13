@@ -295,16 +295,6 @@ class Etablissement < ApplicationRecord
     SpreadsheetArchitect.send("to_#{format}".to_sym, bilans_bdf_data)
   end
 
-  def as_degraded_mode?
-    adresse.nil? # TOOD: maybe dedicated column or more robust way
-  end
-
-  def update_champ_value_json!
-    return if champ_data.nil?
-
-    champ_data.update!(value_json: champ_value_json)
-  end
-
   def champ_value_json
     address_data = APIGeoService.parse_etablissement_address(self)
 

@@ -33,14 +33,10 @@
               <% etablissement = champ.etablissement %>
               <% if champ.awaiting_fix? %>
                 <%= render Dossiers::DegradedIdentiteEntrepriseComponent.new(siret: champ.siret, profile: @profile, token_rejected: token_rejected?(champ)) %>
+              <% elsif etablissement.present? && @profile == 'usager' %>
+                <%= render Dossiers::IdentiteEntrepriseForUsagerComponent.new(etablissement:) %>
               <% elsif etablissement.present? %>
-                <% if etablissement.as_degraded_mode? %>
-                  <%= render Dossiers::DegradedIdentiteEntrepriseComponent.new(siret: etablissement.siret, profile: @profile) %>
-                <% elsif @profile == 'usager' %>
-                  <%= render Dossiers::IdentiteEntrepriseForUsagerComponent.new(etablissement:) %>
-                <% else %>
-                  <%= render Dossiers::IdentiteEntrepriseComponent.new(champ:, avis: @avis) %>
-                <% end %>
+                <%= render Dossiers::IdentiteEntrepriseComponent.new(champ:, avis: @avis) %>
               <% end %>
             <% when TypeDeChamp.type_champs.fetch(:iban) %>
               <%= render partial: "shared/champs/iban/show", locals: { champ: champ } %>

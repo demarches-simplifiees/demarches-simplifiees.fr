@@ -38,22 +38,18 @@ FactoryBot.define do
     end
 
     trait :with_entreprise do
-      transient do
-        as_degraded_mode { false }
-      end
-
-      after(:build) do |dossier, evaluator|
+      after(:build) do |dossier, _evaluator|
         if dossier.procedure.for_individual?
           raise 'Inconsistent factory: attempting to create a dossier :with_entreprise on a procedure that is `for_individual?`'
         end
 
-        etablissement = if evaluator.as_degraded_mode
-          Etablissement.new(siret: build(:etablissement).siret)
-        else
-          create(:etablissement, :with_exercices, :with_effectif_mensuel)
-        end
+        dossier.update(etablissement: create(:etablissement, :with_exercices, :with_effectif_mensuel))
+      end
+    end
 
-        dossier.update(etablissement:)
+    trait :with_unverified_demandeur_siret do
+      after(:create) do |dossier, _evaluator|
+        dossier.create_demandeur_siret!(siret: '30613890001294', external_state: 'degraded')
       end
     end
 

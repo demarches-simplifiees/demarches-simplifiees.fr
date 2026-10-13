@@ -2,8 +2,6 @@ fr:
   shared:
     dossiers:
       identite_entreprise:
-        insee_indisponible: "L’INSEE est indisponible, les informations sur l’entreprise arriveront d’ici quelques heures."
-        pas_accepter_refuser: "Il n’est pas possible d’accepter ou de refuser un dossier sans cette étape."
         siret: "SIRET"
         denomination: "Dénomination"
         siret_siege_social: "SIRET du siège social"

@@ -28,9 +28,6 @@ module Recovery
 
         if dossier.etablissement.present?
           Etablissement.insert(dossier.etablissement.attributes)
-          if dossier.etablissement.present?
-            APIEntreprise::EtablissementJob.perform_later(dossier.etablissement.id, dossier.procedure.id)
-          end
 
           dossier.etablissement.exercices.each do |exercice|
             Exercice.insert(exercice.attributes)
@@ -101,8 +98,6 @@ module Recovery
           champ.piece_justificative_file.each { |pj| import(pj) }
 
           if champ.etablissement.present?
-            APIEntreprise::EtablissementJob.perform_later(champ.etablissement.id, dossier.procedure.id)
-
             champ.etablissement.exercices.each do |exercice|
               Exercice.insert(exercice.attributes)
             end

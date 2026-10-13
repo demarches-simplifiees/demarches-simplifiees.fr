@@ -187,24 +187,6 @@ describe 'instructeurs/dossiers/show', type: :view do
     end
   end
 
-  describe 'entreprise degraded mode' do
-    context 'etablissement complete' do
-      let(:dossier) { dossiers.avec_siret }
-
-      it 'contains no warning' do
-        expect(subject).not_to have_text("Les services de l’INSEE sont indisponibles")
-      end
-    end
-
-    context 'etablissement in degraded mode' do
-      let(:dossier) { create(:dossier, :en_construction, :with_entreprise, as_degraded_mode: true) }
-
-      it 'warns the instructeur' do
-        expect(subject).to have_text("Les services de l’INSEE sont indisponibles")
-      end
-    end
-  end
-
   describe 'accuse de lecture ' do
     context 'dossier not termine' do
       let(:dossier) { create(:dossier, :en_instruction, procedure: create(:procedure, :accuse_lecture)) }
@@ -284,6 +266,14 @@ describe 'instructeurs/dossiers/show', type: :view do
           expect(subject).to have_text("À examiner", count: 1)
         end
       end
+    end
+  end
+
+  context 'when the etablissement is complete' do
+    let(:dossier) { dossiers.avec_siret }
+
+    it 'contains no warning' do
+      expect(subject).not_to have_text('Données de l’entreprise non vérifiées')
     end
   end
 

@@ -46,8 +46,8 @@ class BatchOperationProcessOneJob < ApplicationJob
     target_state = TARGET_STATES.fetch(exception.event_name.to_s, exception.originating_state)
     if exception.originating_state == target_state
       I18n.t('instructeurs.dossiers.aasm_error_originating_state', state: dossier_display_state(target_state))
-    elsif exception.failures.include?(:can_terminer?) && dossier.any_etablissement_as_degraded_mode?
-      I18n.t('instructeurs.dossiers.aasm_error_etablissement_as_degraded_mode', champs: dossier.unverified_data_labels, state: dossier_display_state(target_state))
+    elsif exception.failures.include?(:can_terminer?) && dossier.awaiting_external_verification?
+      I18n.t('instructeurs.dossiers.aasm_error_awaiting_external_verification', champs: dossier.unverified_data_labels, state: dossier_display_state(target_state))
     elsif exception.failures.include?(:can_terminer?) && !dossier.champs_private_valid?
       I18n.t('instructeurs.dossiers.aasm_error_annotations_no_url')
     elsif exception.failures.include?(:can_passer_en_instruction?) && dossier.blocked_with_pending_correction?

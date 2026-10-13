@@ -7,8 +7,7 @@ module Types::Champs
     field :etablissement, Types::PersonneMoraleType, null: true
 
     def etablissement
-      etablissement = dataloader.with(Sources::Association, :etablissement).load(object)
-      etablissement unless etablissement&.as_degraded_mode?
+      dataloader.with(Sources::Association, :etablissement).load(object)
     end
   end
 end

@@ -156,10 +156,6 @@ module Maintenance
           expect(champ.reload).to be_idle
         end
 
-        it "unblocks the dossier" do
-          expect { process }.to change { dossier.reload.any_etablissement_as_degraded_mode? }.from(true).to(false)
-        end
-
         it "does not make the dossier look freshly modified to its instructeur" do
           expect { process }.not_to change { dossier.reload.updated_at }
         end

@@ -3,7 +3,7 @@
 <%= render partial: "header", locals: { dossier: @dossier, gallery_attachments: @gallery_attachments, procedure_presentation: @procedure_presentation, notifications: @notifications, notifications_sticker: @notifications_sticker } %>
 
 <div class="fr-container">
-  <% if @dossier.etablissement&.as_degraded_mode? || @dossier.demandeur_siret_awaiting_fix? %>
+  <% if @dossier.demandeur_siret_awaiting_fix? %>
     <div class="fr-grid-row fr-grid-row--center">
       <%= render Dsfr::CalloutComponent.new(title: "Données de l’entreprise non vérifiées", theme: :warning, icon: "fr-icon-feedback-fill") do |c| %>
         <% c.with_html_body do %>

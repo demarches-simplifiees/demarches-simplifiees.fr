@@ -12,7 +12,7 @@
   <div class="container">
     <h1><%= t('.title') %></h1>
 
-    <% if etablissement.nil? || etablissement.as_degraded_mode? %>
+    <% if etablissement.nil? %>
       <%= render Dsfr::CalloutComponent.new(title: t('.unverified_title'), theme: :warning, icon: "fr-icon-feedback-fill") do |c| %>
         <% c.with_body do %>
           <p>

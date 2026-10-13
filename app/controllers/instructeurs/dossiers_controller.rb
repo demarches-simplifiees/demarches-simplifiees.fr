@@ -595,8 +595,8 @@ module Instructeurs
     def aasm_error_message(exception, target_state:)
       if exception.originating_state == target_state
         t('instructeurs.dossiers.aasm_error_originating_state', state: dossier_display_state(target_state, lower: true))
-      elsif exception.failures.include?(:can_terminer?) && dossier.any_etablissement_as_degraded_mode?
-        t('instructeurs.dossiers.aasm_error_etablissement_as_degraded_mode', champs: dossier.unverified_data_labels, state: dossier_display_state(target_state, lower: true))
+      elsif exception.failures.include?(:can_terminer?) && dossier.awaiting_external_verification?
+        t('instructeurs.dossiers.aasm_error_awaiting_external_verification', champs: dossier.unverified_data_labels, state: dossier_display_state(target_state, lower: true))
       elsif exception.failures.include?(:can_terminer?) && !dossier.champs_private_valid?
         t('instructeurs.dossiers.aasm_error_annotations', url: annotations_privees_instructeur_dossier_path(dossier.procedure, dossier, statut: params[:statut]))
       else

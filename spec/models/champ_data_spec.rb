@@ -672,7 +672,7 @@ describe ChampData do
       end
 
       it 'no longer blocks the decision of the instructeur' do
-        expect(dossier.any_etablissement_as_degraded_mode?).to be false
+        expect(dossier.awaiting_external_verification?).to be false
       end
 
       it 'is left out of the cron replay' do

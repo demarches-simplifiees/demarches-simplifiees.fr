@@ -574,7 +574,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_terminer?
-    return false if any_etablissement_as_degraded_mode?
+    return false if awaiting_external_verification?
     return false unless champs_private_valid?
 
     true
@@ -652,8 +652,8 @@ class Dossier < ApplicationRecord
     procedure.sva_svr_enabled? || (procedure.sva_svr_rule? && sva_svr_decision_on.present?)
   end
 
-  def any_etablissement_as_degraded_mode?
-    return true if etablissement&.as_degraded_mode? || demandeur_siret_awaiting_fix?
+  def awaiting_external_verification?
+    return true if demandeur_siret_awaiting_fix?
 
     champs_awaiting_verification.any?
   end
@@ -661,12 +661,12 @@ class Dossier < ApplicationRecord
   # What the instructeur waits for before a decision: « Numéro SIRET » et « Numéro RNA »
   def unverified_data_labels
     labels = champs_awaiting_verification.map { I18n.t('instructeurs.dossiers.unverified_champ', libelle: it.libelle) }
-    labels.unshift(I18n.t('instructeurs.dossiers.unverified_demandeur')) if etablissement&.as_degraded_mode? || demandeur_siret_awaiting_fix?
+    labels.unshift(I18n.t('instructeurs.dossiers.unverified_demandeur')) if demandeur_siret_awaiting_fix?
     labels.to_sentence
   end
 
   def champs_awaiting_verification
-    flat_champs_public.filter { _1.awaiting_fix? || _1.etablissement&.as_degraded_mode? }
+    flat_champs_public.filter(&:awaiting_fix?)
   end
 
   def messagerie_available?

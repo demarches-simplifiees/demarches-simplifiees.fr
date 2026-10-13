@@ -38,7 +38,7 @@ module Maintenance
 
         expect(champ).to be_idle
         expect(champ.fetch_external_data_exceptions).to be_empty
-        expect(dossier.reload.any_etablissement_as_degraded_mode?).to be false
+        expect(dossier.reload.awaiting_external_verification?).to be false
       end
 
       context "when the usager typed a SIRET again in the meantime" do

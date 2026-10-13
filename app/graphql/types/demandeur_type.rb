@@ -12,7 +12,8 @@ module Types
         when Individual
           Types::PersonnePhysiqueType
         when Etablissement
-          if object.as_degraded_mode? && context.has_fragment?(:PersonneMoraleIncomplete)
+          # Unsaved: built from the unverified demandeur SIRET by DossierType#demandeur
+          if object.new_record? && context.has_fragment?(:PersonneMoraleIncomplete)
             Types::PersonneMoraleIncompleteType
           else
             Types::PersonneMoraleType

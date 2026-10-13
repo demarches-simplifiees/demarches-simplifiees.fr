@@ -1,243 +1,225 @@
-<% if etablissement.as_degraded_mode? %>
-  <div class="fr-alert fr-alert--warning fr-alert--sm fr-mb-2w">
-    <p><%= t(".insee_indisponible") %></p>
-
-    <% if profile == "instructeur" %>
-      <p><%= t(".pas_accepter_refuser") %></p>
-    <% end %>
-  </div>
-<% end %>
-
 <div class="<%= class_names("fr-background-alt--grey fr-p-3v" => !local_assigns[:short_identity]) %>">
-  <% if etablissement.as_degraded_mode? %>
-    <%= render Dossiers::RowShowComponent.new(label: t(".siret")) do |c| %>
+  <% if etablissement.diffusable_commercialement == false && profile != 'instructeur' %>
+    <%= render Dossiers::RowShowComponent.new(label: nil) do |c| %>
       <% c.with_value do %>
-        <p class="copy-zone"><%= pretty_siret(etablissement.siret) %></p>
+        <p>
+          <%= t('warning_for_private_info', scope: 'views.shared.dossiers.identite_entreprise', siret: pretty_siret(etablissement.siret)) %>
+        </p>
       <% end %>
     <% end %>
   <% else %>
-    <% if etablissement.diffusable_commercialement == false && profile != 'instructeur' %>
-      <%= render Dossiers::RowShowComponent.new(label: nil) do |c| %>
-        <% c.with_value do %>
-          <p>
-            <%= t('warning_for_private_info', scope: 'views.shared.dossiers.identite_entreprise', siret: pretty_siret(etablissement.siret)) %>
-          </p>
-        <% end %>
+    <%= render Dossiers::RowShowComponent.new(label: t(".denomination")) do |c| %>
+      <% c.with_value do %>
+        <p class="copy-zone"><%= raison_sociale_or_name(etablissement) %></p>
       <% end %>
-    <% else %>
-      <%= render Dossiers::RowShowComponent.new(label: t(".denomination")) do |c| %>
-        <% c.with_value do %>
-          <p class="copy-zone"><%= raison_sociale_or_name(etablissement) %></p>
-        <% end %>
+    <% end %>
+    <%= render Dossiers::RowShowComponent.new(label: t(".siret")) do |c| %>
+      <% c.with_value do %>
+        <p class="copy-zone" data-to-copy="<%= etablissement.siret %>">
+          <%= pretty_siret(etablissement.siret) %>
+        </p>
       <% end %>
-      <%= render Dossiers::RowShowComponent.new(label: t(".siret")) do |c| %>
-        <% c.with_value do %>
-          <p class="copy-zone" data-to-copy="<%= etablissement.siret %>">
-            <%= pretty_siret(etablissement.siret) %>
-          </p>
-        <% end %>
-      <% end %>
-      <% unless local_assigns[:short_identity] %>
-        <% if etablissement.entreprise.siret_siege_social.present? && etablissement.siret != etablissement.entreprise.siret_siege_social %>
-          <%= render Dossiers::RowShowComponent.new(label: t(".siret_siege_social")) do |c| %>
-            <% c.with_value do %>
-              <p class="copy-zone">
-                <%= pretty_siret(etablissement.entreprise.siret_siege_social) %>
-              </p>
-            <% end %>
-          <% end %>
-        <% end %>
-        <%= render Dossiers::RowShowComponent.new(label: t(".forme_juridique")) do |c| %>
+    <% end %>
+    <% unless local_assigns[:short_identity] %>
+      <% if etablissement.entreprise.siret_siege_social.present? && etablissement.siret != etablissement.entreprise.siret_siege_social %>
+        <%= render Dossiers::RowShowComponent.new(label: t(".siret_siege_social")) do |c| %>
           <% c.with_value do %>
             <p class="copy-zone">
-              <%= sanitize(etablissement.entreprise.forme_juridique) %>
+              <%= pretty_siret(etablissement.entreprise.siret_siege_social) %>
             </p>
           <% end %>
         <% end %>
-        <%= render Dossiers::RowShowComponent.new(label: t(".libelle_naf")) do |c| %>
-          <% c.with_value do %>
-            <p class="copy-zone"><%= etablissement.libelle_naf %></p>
-          <% end %>
+      <% end %>
+      <%= render Dossiers::RowShowComponent.new(label: t(".forme_juridique")) do |c| %>
+        <% c.with_value do %>
+          <p class="copy-zone">
+            <%= sanitize(etablissement.entreprise.forme_juridique) %>
+          </p>
         <% end %>
-        <%= render Dossiers::RowShowComponent.new(label: t(".code_naf")) do |c| %>
-          <% c.with_value do %>
-            <p class="copy-zone"><%= etablissement.naf %></p>
-          <% end %>
+      <% end %>
+      <%= render Dossiers::RowShowComponent.new(label: t(".libelle_naf")) do |c| %>
+        <% c.with_value do %>
+          <p class="copy-zone"><%= etablissement.libelle_naf %></p>
         <% end %>
-        <%= render Dossiers::RowShowComponent.new(label: t(".date_creation")) do |c| %>
-          <% c.with_value do %>
-            <p class="copy-zone">
-              <span <%= tag.attributes(data: { to_copy: true }) %>>
-                <%= try_format_date(etablissement.entreprise.date_creation) %>
+      <% end %>
+      <%= render Dossiers::RowShowComponent.new(label: t(".code_naf")) do |c| %>
+        <% c.with_value do %>
+          <p class="copy-zone"><%= etablissement.naf %></p>
+        <% end %>
+      <% end %>
+      <%= render Dossiers::RowShowComponent.new(label: t(".date_creation")) do |c| %>
+        <% c.with_value do %>
+          <p class="copy-zone">
+            <span <%= tag.attributes(data: { to_copy: true }) %>>
+              <%= try_format_date(etablissement.entreprise.date_creation) %>
+            </span>
+
+            <% if etablissement.entreprise_etat_administratif.present? %>
+              <span class="fr-badge fr-badge--sm <%= entreprise_etat_administratif_badge_class(etablissement) %>">
+                <%= humanized_entreprise_etat_administratif(etablissement) %>
               </span>
+            <% end %>
 
-              <% if etablissement.entreprise_etat_administratif.present? %>
-                <span class="fr-badge fr-badge--sm <%= entreprise_etat_administratif_badge_class(etablissement) %>">
-                  <%= humanized_entreprise_etat_administratif(etablissement) %>
-                </span>
-              <% end %>
-
-              <span
-                <%= tag.attributes(data: { copy_message_placeholder: true }) %>
-              ></span>
+            <span
+              <%= tag.attributes(data: { copy_message_placeholder: true }) %>
+            ></span>
+          </p>
+        <% end %>
+      <% end %>
+      <% if profile == 'instructeur' %>
+        <%= render Dossiers::RowShowComponent.new(label: t(".effectif_mensuel", mois: try_format_mois_effectif(etablissement))) do |c| %>
+          <% c.with_value do %>
+            <p class="copy-zone">
+              <%= etablissement.entreprise_effectif_mensuel %>
             </p>
           <% end %>
         <% end %>
-        <% if profile == 'instructeur' %>
-          <%= render Dossiers::RowShowComponent.new(label: t(".effectif_mensuel", mois: try_format_mois_effectif(etablissement))) do |c| %>
-            <% c.with_value do %>
-              <p class="copy-zone">
-                <%= etablissement.entreprise_effectif_mensuel %>
-              </p>
-            <% end %>
-          <% end %>
-          <%= render Dossiers::RowShowComponent.new(label: t(".effectif_annuel", annee: etablissement.entreprise_effectif_annuel_annee)) do |c| %>
-            <% c.with_value do %>
-              <p class="copy-zone">
-                <%= etablissement.entreprise_effectif_annuel %>
-              </p>
-            <% end %>
-          <% end %>
-          <%= render Dossiers::RowShowComponent.new(label: t(".effectif_organisation")) do |c| %>
-            <% c.with_value do %>
-              <p class="copy-zone"><%= effectif(etablissement) %></p>
-            <% end %>
-          <% end %>
-          <%= render Dossiers::RowShowComponent.new(label: t(".numero_tva")) do |c| %>
-            <% c.with_value do %>
-              <p class="copy-zone">
-                <%= etablissement.entreprise.numero_tva_intracommunautaire %>
-              </p>
-            <% end %>
-          <% end %>
-          <%= render partial: "shared/dossiers/normalized_address", locals: { address: AddressProxy.new(defined?(champ) ? champ : etablissement) } %>
-          <%= render Dossiers::RowShowComponent.new(label: t(".capital_social")) do |c| %>
-            <% c.with_value do %>
-              <p class="copy-zone">
-                <%= pretty_currency(etablissement.entreprise.capital_social) %>
-              </p>
-            <% end %>
+        <%= render Dossiers::RowShowComponent.new(label: t(".effectif_annuel", annee: etablissement.entreprise_effectif_annuel_annee)) do |c| %>
+          <% c.with_value do %>
+            <p class="copy-zone">
+              <%= etablissement.entreprise_effectif_annuel %>
+            </p>
           <% end %>
         <% end %>
-        <% if etablissement.exercices.any? %>
-          <%= render Dossiers::RowShowComponent.new(label: t(".chiffre_affaires")) do |c| %>
-            <% c.with_value do %>
-              <% if profile == 'instructeur' %>
-                <details>
-                  <% etablissement.exercices.each_with_index do |exercice, index| %>
-                    <%= "#{exercice.date_fin_exercice.year} : " %>
-                    <%= pretty_currency(exercice.ca) %>
+        <%= render Dossiers::RowShowComponent.new(label: t(".effectif_organisation")) do |c| %>
+          <% c.with_value do %>
+            <p class="copy-zone"><%= effectif(etablissement) %></p>
+          <% end %>
+        <% end %>
+        <%= render Dossiers::RowShowComponent.new(label: t(".numero_tva")) do |c| %>
+          <% c.with_value do %>
+            <p class="copy-zone">
+              <%= etablissement.entreprise.numero_tva_intracommunautaire %>
+            </p>
+          <% end %>
+        <% end %>
+        <%= render partial: "shared/dossiers/normalized_address", locals: { address: AddressProxy.new(defined?(champ) ? champ : etablissement) } %>
+        <%= render Dossiers::RowShowComponent.new(label: t(".capital_social")) do |c| %>
+          <% c.with_value do %>
+            <p class="copy-zone">
+              <%= pretty_currency(etablissement.entreprise.capital_social) %>
+            </p>
+          <% end %>
+        <% end %>
+      <% end %>
+      <% if etablissement.exercices.any? %>
+        <%= render Dossiers::RowShowComponent.new(label: t(".chiffre_affaires")) do |c| %>
+          <% c.with_value do %>
+            <% if profile == 'instructeur' %>
+              <details>
+                <% etablissement.exercices.each_with_index do |exercice, index| %>
+                  <%= "#{exercice.date_fin_exercice.year} : " %>
+                  <%= pretty_currency(exercice.ca) %>
 
-                    <br>
-                  <% end %>
-                </details>
-              <% elsif etablissement.exercices.present? %>
-                <%= t('activemodel.models.exercices_summary', count: etablissement.exercices.count) %>
-              <% end %>
-            <% end %>
-          <% end %>
-        <% end %>
-        <% if etablissement.entreprise_bilans_bdf.present? %>
-          <% if profile == 'instructeur' %>
-            <%= render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
-              locals: { libelle: t(".bilan_resultat_exercice"), key: 'resultat_exercice', etablissement: } %>
-            <%= render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
-              locals: { libelle: t(".bilan_excedent_brut_exploitation"), key: 'excedent_brut_exploitation', etablissement: } %>
-            <%= render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
-              locals: { libelle: t(".bilan_fonds_roulement_net_global"), key: 'fonds_roulement_net_global', etablissement: } %>
-            <%= render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
-              locals: { libelle: t(".bilan_besoin_en_fonds_de_roulement"), key: 'besoin_en_fonds_de_roulement', etablissement: } %>
-            <%= render Dossiers::RowShowComponent.new(label: t(".chiffres_financiers_cles", monnaie: pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie))) do |c| %>
-              <% c.with_value do %>
-                <% if controller.is_a?(Instructeurs::AvisController) %>
-                  <p>
-                    <%= t(".consulter_format") %>
-                    <%= link_to t(".csv"), bilans_bdf_instructeur_avis_path(@avis, format: 'csv') %>,
-                    <%= link_to t(".xlsx"), bilans_bdf_instructeur_avis_path(@avis, format: 'xlsx') %>
-                    <%= t(".ou") %>
-                    <%= link_to t(".ods"), bilans_bdf_instructeur_avis_path(@avis, format: 'ods') %>
-                  </p>
-                <% else %>
-                  <p>
-                    <%= t(".consulter_format") %>
-                    <%= link_to t(".csv"), bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'csv') %>,
-                    <%= link_to t(".xlsx"), bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'xlsx') %>
-                    <%= t(".ou") %>
-                    <%= link_to t(".ods"), bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'ods') %>
-                  </p>
+                  <br>
                 <% end %>
-              <% end %>
-            <% end %>
-          <% else %>
-            <%= render Dossiers::RowShowComponent.new(label: t(".bilans_bdf")) do |c| %>
-              <% c.with_value do %>
-                <p><%= t(".bilans_bdf_message") %></p>
-              <% end %>
+              </details>
+            <% elsif etablissement.exercices.present? %>
+              <%= t('activemodel.models.exercices_summary', count: etablissement.exercices.count) %>
             <% end %>
           <% end %>
         <% end %>
-        <% if etablissement.entreprise_attestation_sociale.attached? %>
-          <%= render Dossiers::RowShowComponent.new(label: t(".attestation_sociale")) do |c| %>
+      <% end %>
+      <% if etablissement.entreprise_bilans_bdf.present? %>
+        <% if profile == 'instructeur' %>
+          <%= render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
+            locals: { libelle: t(".bilan_resultat_exercice"), key: 'resultat_exercice', etablissement: } %>
+          <%= render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
+            locals: { libelle: t(".bilan_excedent_brut_exploitation"), key: 'excedent_brut_exploitation', etablissement: } %>
+          <%= render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
+            locals: { libelle: t(".bilan_fonds_roulement_net_global"), key: 'fonds_roulement_net_global', etablissement: } %>
+          <%= render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
+            locals: { libelle: t(".bilan_besoin_en_fonds_de_roulement"), key: 'besoin_en_fonds_de_roulement', etablissement: } %>
+          <%= render Dossiers::RowShowComponent.new(label: t(".chiffres_financiers_cles", monnaie: pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie))) do |c| %>
             <% c.with_value do %>
-              <% if profile == 'instructeur' %>
+              <% if controller.is_a?(Instructeurs::AvisController) %>
                 <p>
-                  <%= link_to t(".consulter_attestation"), url_for(etablissement.entreprise_attestation_sociale), **external_link_attributes %>
+                  <%= t(".consulter_format") %>
+                  <%= link_to t(".csv"), bilans_bdf_instructeur_avis_path(@avis, format: 'csv') %>,
+                  <%= link_to t(".xlsx"), bilans_bdf_instructeur_avis_path(@avis, format: 'xlsx') %>
+                  <%= t(".ou") %>
+                  <%= link_to t(".ods"), bilans_bdf_instructeur_avis_path(@avis, format: 'ods') %>
                 </p>
               <% else %>
-                <p><%= t(".attestation_sociale_message") %></p>
-              <% end %>
-            <% end %>
-          <% end %>
-        <% end %>
-        <% if etablissement.entreprise_attestation_fiscale.attached? %>
-          <%= render Dossiers::RowShowComponent.new(label: t(".attestation_fiscale")) do |c| %>
-            <% c.with_value do %>
-              <% if profile == 'instructeur' %>
                 <p>
-                  <%= link_to t(".consulter_attestation"), url_for(etablissement.entreprise_attestation_fiscale), **external_link_attributes %>
+                  <%= t(".consulter_format") %>
+                  <%= link_to t(".csv"), bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'csv') %>,
+                  <%= link_to t(".xlsx"), bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'xlsx') %>
+                  <%= t(".ou") %>
+                  <%= link_to t(".ods"), bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'ods') %>
                 </p>
-              <% else %>
-                <p><%= t(".attestation_fiscale_message") %></p>
               <% end %>
             <% end %>
           <% end %>
+        <% else %>
+          <%= render Dossiers::RowShowComponent.new(label: t(".bilans_bdf")) do |c| %>
+            <% c.with_value do %>
+              <p><%= t(".bilans_bdf_message") %></p>
+            <% end %>
+          <% end %>
         <% end %>
-        <% if etablissement.association? %>
-          <%= render Dossiers::RowShowComponent.new(label: t(".numero_rna")) do |c| %>
-            <% c.with_value do %>
-              <p class="copy-zone"><%= etablissement.association_rna %></p>
-            <% end %>
-          <% end %>
-          <%= render Dossiers::RowShowComponent.new(label: t(".titre_association")) do |c| %>
-            <% c.with_value do %>
-              <p class="copy-zone"><%= etablissement.association_titre %></p>
-            <% end %>
-          <% end %>
-          <%= render Dossiers::RowShowComponent.new(label: t(".objet_association")) do |c| %>
-            <% c.with_value do %>
-              <p class="copy-zone"><%= etablissement.association_objet %></p>
-            <% end %>
-          <% end %>
-          <%= render Dossiers::RowShowComponent.new(label: t(".date_creation_association")) do |c| %>
-            <% c.with_value do %>
-              <p class="copy-zone">
-                <%= try_format_date(etablissement.association_date_creation) %>
+      <% end %>
+      <% if etablissement.entreprise_attestation_sociale.attached? %>
+        <%= render Dossiers::RowShowComponent.new(label: t(".attestation_sociale")) do |c| %>
+          <% c.with_value do %>
+            <% if profile == 'instructeur' %>
+              <p>
+                <%= link_to t(".consulter_attestation"), url_for(etablissement.entreprise_attestation_sociale), **external_link_attributes %>
               </p>
+            <% else %>
+              <p><%= t(".attestation_sociale_message") %></p>
             <% end %>
           <% end %>
-          <%= render Dossiers::RowShowComponent.new(label: t(".date_publication")) do |c| %>
-            <% c.with_value do %>
-              <p class="copy-zone">
-                <%= try_format_date(etablissement.association_date_publication) %>
+        <% end %>
+      <% end %>
+      <% if etablissement.entreprise_attestation_fiscale.attached? %>
+        <%= render Dossiers::RowShowComponent.new(label: t(".attestation_fiscale")) do |c| %>
+          <% c.with_value do %>
+            <% if profile == 'instructeur' %>
+              <p>
+                <%= link_to t(".consulter_attestation"), url_for(etablissement.entreprise_attestation_fiscale), **external_link_attributes %>
               </p>
+            <% else %>
+              <p><%= t(".attestation_fiscale_message") %></p>
             <% end %>
           <% end %>
-          <%= render Dossiers::RowShowComponent.new(label: t(".date_declaration")) do |c| %>
-            <% c.with_value do %>
-              <p class="copy-zone">
-                <%= try_format_date(etablissement.association_date_declaration) %>
-              </p>
-            <% end %>
+        <% end %>
+      <% end %>
+      <% if etablissement.association? %>
+        <%= render Dossiers::RowShowComponent.new(label: t(".numero_rna")) do |c| %>
+          <% c.with_value do %>
+            <p class="copy-zone"><%= etablissement.association_rna %></p>
+          <% end %>
+        <% end %>
+        <%= render Dossiers::RowShowComponent.new(label: t(".titre_association")) do |c| %>
+          <% c.with_value do %>
+            <p class="copy-zone"><%= etablissement.association_titre %></p>
+          <% end %>
+        <% end %>
+        <%= render Dossiers::RowShowComponent.new(label: t(".objet_association")) do |c| %>
+          <% c.with_value do %>
+            <p class="copy-zone"><%= etablissement.association_objet %></p>
+          <% end %>
+        <% end %>
+        <%= render Dossiers::RowShowComponent.new(label: t(".date_creation_association")) do |c| %>
+          <% c.with_value do %>
+            <p class="copy-zone">
+              <%= try_format_date(etablissement.association_date_creation) %>
+            </p>
+          <% end %>
+        <% end %>
+        <%= render Dossiers::RowShowComponent.new(label: t(".date_publication")) do |c| %>
+          <% c.with_value do %>
+            <p class="copy-zone">
+              <%= try_format_date(etablissement.association_date_publication) %>
+            </p>
+          <% end %>
+        <% end %>
+        <%= render Dossiers::RowShowComponent.new(label: t(".date_declaration")) do |c| %>
+          <% c.with_value do %>
+            <p class="copy-zone">
+              <%= try_format_date(etablissement.association_date_declaration) %>
+            </p>
           <% end %>
         <% end %>
       <% end %>

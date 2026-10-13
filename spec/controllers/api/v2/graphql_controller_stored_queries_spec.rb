@@ -333,18 +333,6 @@ describe API::V2::GraphqlController do
           expect(gql_data[:dossier][:demandeur][:libelleNaf]).to eq(dossier.etablissement.libelle_naf)
         }
 
-        context 'when in degraded mode' do
-          before { dossier.etablissement.update(adresse: nil) }
-
-          it {
-            expect(gql_errors).to be_nil
-            expect(gql_data[:dossier][:id]).to eq(dossier.to_typed_id)
-            expect(gql_data[:dossier][:demandeur][:__typename]).to eq('PersonneMoraleIncomplete')
-            expect(gql_data[:dossier][:demandeur][:siret]).to eq(dossier.etablissement.siret)
-            expect(gql_data[:dossier][:demandeur][:libelleNaf]).to be_nil
-          }
-        end
-
         context 'when the demandeur SIRET waits for the API' do
           before do
             dossier.etablissement.destroy!

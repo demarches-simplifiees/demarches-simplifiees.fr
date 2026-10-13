@@ -353,7 +353,7 @@ describe BatchOperationProcessOneJob, type: :job do
 
       before do
         allow_any_instance_of(Dossier).to receive(:champs_private_valid?).and_return(false)
-        allow_any_instance_of(Dossier).to receive(:any_etablissement_as_degraded_mode?).and_return(false)
+        allow_any_instance_of(Dossier).to receive(:awaiting_external_verification?).and_return(false)
       end
 
       it 'stores a human readable error message without failing the job' do
