@@ -399,11 +399,12 @@ module Instructeurs
       end
     end
 
-    # Sans changements, un second envoi enregistrerait une correction vide.
+    # Sur les vrais changements, pas sur le buffer : une copie identique à la saisie de l'usager
+    # ou un second envoi enregistreraient une correction vide.
     def proposition
       if !dossier.may_receive_prefill_proposal?
         flash.alert = t('.unavailable')
-      elsif dossier.instructeur_buffer_changes?
+      elsif dossier.instructeur_changed_columns.any?
         dossier.transaction do
           dossier.repasser_en_construction!(instructeur: current_instructeur) if dossier.en_instruction?
           # Le message générique (« afin de poursuivre l'instruction ») est faux ici.

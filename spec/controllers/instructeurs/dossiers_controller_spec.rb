@@ -275,6 +275,19 @@ describe Instructeurs::DossiersController, type: :controller do
       end
     end
 
+    context 'when the buffer holds nothing the usager does not already have' do
+      let(:state) { :en_instruction }
+      let(:send_on_setup) { false }
+
+      it 'leaves the dossier en instruction' do
+        dossier.champ_data.find { it.stable_id == 99 && it.main_stream? }.update!(value: 'Dupont')
+        send_proposal
+
+        expect(dossier.reload).to be_en_instruction
+        expect(flash.notice).to be_nil
+      end
+    end
+
     context 'when the merge fails' do
       let(:state) { :en_instruction }
       let(:send_on_setup) { false }
