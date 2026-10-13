@@ -39,4 +39,15 @@ describe 'instructeur/dossiers/expiration_banner', type: :view do
                                                     duree_conservation_totale: duree_conservation_dossiers_dans_ds))
     end
   end
+
+  context 'with a termine dossier close to expiration' do
+    let(:dossier) { dossiers.accepte }
+
+    before { dossier.update_column(:termine_close_to_expiration_notice_sent_at, 1.week.ago) }
+
+    it 'renders the postpone button' do
+      expect(subject).to have_selector('.fr-callout', text: I18n.t('instructeurs.dossiers.header.banner.title'))
+      expect(subject).to have_button(id: 'test-instructeur-repousser-expiration')
+    end
+  end
 end
