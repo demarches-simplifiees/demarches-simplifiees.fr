@@ -314,4 +314,90 @@ describe Columns::DossierColumn do
       end
     end
   end
+
+  describe '#sorted_ids' do
+    let(:procedure) { create(:procedure, :published) }
+    let(:order) { 'asc' } # Desc works the same, no extra test required
+
+    subject { column.sorted_ids(procedure.dossiers, order) }
+
+    context 'for self table' do
+      context 'for created_at column' do
+        let!(:column) { procedure.find_column(label: 'Date de création') }
+        let!(:recent_dossier) { travel_to(Time.zone.local(2018, 10, 17)) { create(:dossier, procedure:) } }
+        let!(:older_dossier) { travel_to(Time.zone.local(2003, 11, 11)) { create(:dossier, procedure:) } }
+
+        it { is_expected.to eq([older_dossier, recent_dossier].map(&:id)) }
+      end
+
+      context 'for en_construction_at column' do
+        let!(:column) { procedure.find_column(label: 'Date de passage en construction') }
+        let!(:recent_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2018, 10, 17)) }
+        let!(:older_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2013, 1, 1)) }
+
+        it { is_expected.to eq([older_dossier, recent_dossier].map(&:id)) }
+      end
+
+      context 'for updated_at column' do
+        let(:column) { procedure.find_column(label: 'Date du dernier évènement') }
+        let(:recent_dossier) { create(:dossier, procedure:) }
+        let(:older_dossier) { create(:dossier, procedure:) }
+
+        before do
+          recent_dossier.touch(time: Time.zone.local(2018, 9, 25))
+          older_dossier.touch(time: Time.zone.local(2018, 5, 13))
+        end
+
+        it { is_expected.to eq([older_dossier, recent_dossier].map(&:id)) }
+      end
+    end
+
+    context 'for individual table' do
+      let(:procedure) { create(:procedure, :for_individual) }
+
+      let!(:first_dossier) { create(:dossier, procedure:, individual: build(:individual, gender: 'M', prenom: 'Alain', nom: 'Antonelli')) }
+      let!(:last_dossier) { create(:dossier, procedure:, individual: build(:individual, gender: 'Mme', prenom: 'Zora', nom: 'Zemmour')) }
+
+      context 'for gender column' do
+        before do
+          procedure.update!(no_gender: false)
+        end
+
+        let(:column) { procedure.find_column(label: 'Civilité') }
+
+        it { is_expected.to eq([first_dossier, last_dossier].map(&:id)) }
+      end
+
+      context 'for prenom column' do
+        let(:column) { procedure.find_column(label: 'Prénom [Identité du demandeur]') }
+
+        it { is_expected.to eq([first_dossier, last_dossier].map(&:id)) }
+      end
+
+      context 'for nom column' do
+        let(:column) { procedure.find_column(label: 'Nom [Identité du demandeur]') }
+
+        it { is_expected.to eq([first_dossier, last_dossier].map(&:id)) }
+      end
+    end
+
+    context 'for other tables' do
+      # All other columns and tables work the same so it’s ok to test only one
+      let(:column) { procedure.find_column(label: 'Établissement code postal') }
+
+      let!(:huitieme_dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, code_postal: '75008')) }
+      let!(:vingtieme_dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, code_postal: '75020')) }
+
+      it { is_expected.to eq([huitieme_dossier, vingtieme_dossier].map(&:id)) }
+    end
+
+    context 'for etablissement code_naf column (aliased to naf)' do
+      let(:column) { procedure.find_column(label: 'Code NAF') }
+
+      let!(:first_dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, naf: '1234Z')) }
+      let!(:second_dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, naf: '9999Z')) }
+
+      it { is_expected.to eq([first_dossier.id, second_dossier.id]) }
+    end
+  end
 end

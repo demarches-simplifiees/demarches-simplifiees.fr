@@ -710,6 +710,90 @@ describe Columns::ChampColumn do
     end
   end
 
+  describe '#sorted_ids' do
+    let(:procedure) { create(:procedure, :published, public_type_de_champs: [{}], private_type_de_champs: [{}]) }
+    let(:dossiers) { procedure.dossiers }
+
+    subject { column.sorted_ids(dossiers, order, count: dossiers.count) }
+
+    context 'for a public champ' do
+      context 'with no revisions' do
+        let(:column) { procedure.find_column(label: procedure.active_revision.public_root_type_de_champs.first.libelle) }
+
+        let(:beurre_dossier) { create(:dossier, procedure:) }
+        let(:tartine_dossier) { create(:dossier, procedure:) }
+
+        before do
+          beurre_dossier.root_champs_public.first.update(value: 'beurre')
+          tartine_dossier.root_champs_public.first.update(value: 'tartine')
+        end
+
+        context 'asc' do
+          let(:order) { 'asc' }
+
+          it { is_expected.to eq([beurre_dossier, tartine_dossier].map(&:id)) }
+        end
+
+        context 'desc' do
+          let(:order) { 'desc' }
+
+          it { is_expected.to eq([tartine_dossier, beurre_dossier].map(&:id)) }
+        end
+      end
+
+      context 'with a revision adding a new type_de_champ' do
+        let!(:tdc) { { type_champ: :text, libelle: 'nouveau champ' } }
+        let(:column) { procedure.find_column(label: 'nouveau champ') }
+
+        let!(:nothing_dossier) { create(:dossier, procedure:) }
+        let!(:beurre_dossier) { create(:dossier, procedure:) }
+        let!(:tartine_dossier) { create(:dossier, procedure:) }
+
+        before do
+          nothing_dossier
+          procedure.draft_revision.add_type_de_champ(tdc)
+          procedure.publish_revision!(procedure.administrateurs.first)
+          beurre_dossier.root_champs_public.last.update(value: 'beurre')
+          tartine_dossier.root_champs_public.last.update(value: 'tartine')
+        end
+
+        context 'asc' do
+          let(:order) { 'asc' }
+          it { is_expected.to eq([nothing_dossier, beurre_dossier, tartine_dossier].map(&:id)) }
+        end
+
+        context 'desc' do
+          let(:order) { 'desc' }
+          it { is_expected.to eq([tartine_dossier, beurre_dossier, nothing_dossier].map(&:id)) }
+        end
+      end
+    end
+
+    context 'for a private champ' do
+      let(:column) { procedure.find_column(label: procedure.active_revision.private_root_type_de_champs.first.libelle) }
+
+      let(:biere_dossier) { create(:dossier, procedure:) }
+      let(:vin_dossier) { create(:dossier, procedure:) }
+
+      before do
+        biere_dossier.root_champs_private.first.update(value: 'biere')
+        vin_dossier.root_champs_private.first.update(value: 'vin')
+      end
+
+      context 'asc' do
+        let(:order) { 'asc' }
+
+        it { is_expected.to eq([biere_dossier, vin_dossier].map(&:id)) }
+      end
+
+      context 'desc' do
+        let(:order) { 'desc' }
+
+        it { is_expected.to eq([vin_dossier, biere_dossier].map(&:id)) }
+      end
+    end
+  end
+
   private
 
   def expect_type_de_champ_values(type, assertion)
