@@ -5,3 +5,4 @@ en:
   row_added: "New “%{libelle} %{number}” row"
   field_label: "%{libelle}:"
   replaces: "(replaces “%{previous_value}”)"
+  submit_label: "Prefill the application and let the applicant know they can complete it"

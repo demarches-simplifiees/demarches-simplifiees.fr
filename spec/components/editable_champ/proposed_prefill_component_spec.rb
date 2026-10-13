@@ -46,6 +46,7 @@ describe EditableChamp::ProposedPrefillComponent, type: :component do
       expect(subject).to have_selector('.external-champ.trusted-data .source', text: /Source\W+beta\.gouv\.fr/)
       expect(subject).not_to have_text('rnb-api')
       expect(subject).to have_selector('.champ-row', text: /Nom :\s+Dupont/)
+      expect(subject).to have_button('Préremplir le dossier et informer l’usager qu’il peut compléter son dossier')
     end
 
     it 'shows each added row, numbered, with its values' do

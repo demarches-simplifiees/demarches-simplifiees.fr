@@ -247,6 +247,45 @@ describe Instructeurs::DossiersController, type: :controller do
     end
   end
 
+  describe '#proposition' do
+    let(:procedure) { create(:procedure, :published, :for_individual, instructeurs: [instructeur], public_type_de_champs: [{ type: :text, libelle: 'Nom', stable_id: 99 }]) }
+    let(:dossier) { create(:dossier, state, :with_individual, procedure:) }
+    let(:send_on_setup) { true }
+
+    subject(:send_proposal) { patch :proposition, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
+
+    before do
+      dossier.with_instructeur_buffer_stream do
+        dossier.public_champ_for_update('99', updated_by: instructeur.email).assign_attributes(value: 'Dupont')
+      end
+      dossier.save!
+
+      send_proposal if send_on_setup
+    end
+
+    context 'when the dossier is en instruction' do
+      let(:state) { :en_instruction }
+
+      it 'merges the proposal and hands the dossier back to the usager' do
+        expect(dossier.reload).to be_en_construction
+        expect(dossier.instructeur_buffer_changes?).to be false
+        expect(flash.notice).to be_present
+      end
+    end
+
+    context 'when the merge fails' do
+      let(:state) { :en_instruction }
+      let(:send_on_setup) { false }
+
+      it 'leaves the dossier en instruction' do
+        allow_any_instance_of(Dossier).to receive(:instructeur_submit_en_construction!).and_raise(ActiveRecord::RecordNotSaved)
+
+        expect { send_proposal }.to raise_error(ActiveRecord::RecordNotSaved)
+        expect(dossier.reload).to be_en_instruction
+      end
+    end
+  end
+
   describe '#repasser_en_construction' do
     let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
     let(:batch_operation) {}

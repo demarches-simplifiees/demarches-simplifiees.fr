@@ -399,6 +399,20 @@ module Instructeurs
       end
     end
 
+    # Sans changements, un second envoi enregistrerait une correction vide.
+    def proposition
+      if dossier.instructeur_buffer_changes?
+        dossier.transaction do
+          dossier.repasser_en_construction!(instructeur: current_instructeur) if dossier.en_instruction?
+          # Le message générique (« afin de poursuivre l'instruction ») est faux ici.
+          dossier.instructeur_submit_en_construction!(instructeur: current_instructeur, notify: false)
+        end
+        flash.notice = t('.sent')
+      end
+
+      redirect_to annotations_privees_instructeur_dossier_path(dossier.procedure, dossier)
+    end
+
     def print
       @dossier = dossier
       render layout: "print"

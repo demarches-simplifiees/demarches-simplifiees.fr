@@ -5,3 +5,4 @@ fr:
   row_added: "Ajout de l’élément « %{libelle} %{number} »"
   field_label: "%{libelle} :"
   replaces: "(remplace « %{previous_value} »)"
+  submit_label: "Préremplir le dossier et informer l’usager qu’il peut compléter son dossier"

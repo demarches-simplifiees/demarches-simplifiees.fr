@@ -26,6 +26,10 @@ class EditableChamp::ProposedPrefillComponent < ApplicationComponent
     root_group + added_rows(row_columns)
   end
 
+  def submit_path
+    proposition_instructeur_dossier_path(@champ.dossier.procedure, @champ.dossier)
+  end
+
   private
 
   def changed_columns
