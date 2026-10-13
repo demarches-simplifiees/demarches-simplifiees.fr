@@ -763,6 +763,12 @@ describe Instructeurs::ProceduresController, type: :controller do
               expect(assigns(:has_export_notification)).to be(true)
               expect(response.body).to match(/Un nouvel export est prêt/)
             end
+
+            it "anchors the badge to the exports list label" do
+              link = Capybara.string(response.body).find("a[href='#{exports_instructeur_procedure_path(procedure)}']")
+              expect(link).to have_css("span.relative", text: "Liste des exports")
+              expect(link).to have_css("span.relative > span.notifications")
+            end
           end
 
           context 'with last_export_seen_at after the last generated export' do
