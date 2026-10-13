@@ -73,7 +73,7 @@ module ColumnsConcern
     dossier_col(table: 'self', column: 'state', type: :enum, options_for_select:, displayable: false)
   end
 
-  def notifications_column = dossier_col(table: 'notifications', column: 'notifications', label: "notifications", filterable: false, displayable: false)
+  def notifications_column = Columns::NotificationsColumn.new(procedure_id: id)
 
   def dossier_notifications_column
     options_for_select = I18n.t('instructeurs.dossiers.filterable_notification').map(&:to_a).map(&:reverse)
@@ -177,7 +177,7 @@ module ColumnsConcern
 
   def groupe_instructeurs_id_column = dossier_col(table: 'groupe_instructeur', column: 'id', type: :enum)
 
-  def followers_instructeurs_email_column = dossier_col(table: 'followers_instructeurs', column: 'email')
+  def followers_instructeurs_email_column = Columns::FollowersInstructeursColumn.new(procedure_id: id)
 
   def dossier_archived_column = dossier_col(table: 'self', column: 'archived', type: :boolean, displayable: false, filterable: false);
 
@@ -187,7 +187,7 @@ module ColumnsConcern
 
   def user_france_connected_column = dossier_col(table: 'self', column: 'user_from_france_connect?', type: :boolean, filterable: false, displayable: false)
 
-  def dossier_labels_column = dossier_col(table: 'dossier_labels', column: 'label_id', type: :enum, options_for_select: labels.map { [_1.name, _1.id] })
+  def dossier_labels_column = Columns::DossierLabelsColumn.new(procedure_id: id, options_for_select: labels.map { [_1.name, _1.id] })
 
   def dossier_submitted_with_identity_provider_columns
     ['submitted_with_france_connect', 'submitted_with_pro_connect']
@@ -237,7 +237,7 @@ module ColumnsConcern
       user_email_for_display_column,
       followers_instructeurs_email_column,
       groupe_instructeurs_id_column,
-      dossier_col(table: 'avis', column: 'question_answer', filterable: false),
+      Columns::AvisColumn.new(procedure_id: id),
       user_france_connected_column,
       dossier_labels_column,
       dossier_notifications_column,

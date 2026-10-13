@@ -11,16 +11,21 @@ class Columns::DossierColumn < Column
       dossier.individual.public_send(column)
     when 'groupe_instructeur'
       dossier.groupe_instructeur.label
-    when 'dossier_labels'
-      dossier.labels.map(&:name).join(' ')
-    when 'followers_instructeurs'
-      dossier.followers_instructeurs.map(&:email).join(' ')
     when 'traitements'
       dossier.traitements.map(&:instructeur_email).join(' ')
     end
   end
 
   def dossier_column? = true
+
+  def sorted_ids(dossiers, order, **)
+    case table
+    when 'self', 'user', 'individual', 'etablissement', 'groupe_instructeur'
+      (table == 'self' ? dossiers : dossiers.includes(table))
+        .order("#{DossierFilterService.sanitized_column(table, column)} #{order}")
+        .pluck(:id)
+    end
+  end
 
   def filtered_ids(dossiers, filter)
     case filter
@@ -99,19 +104,10 @@ class Columns::DossierColumn < Column
           .includes(:etablissement)
           .filter_ilike(table, column, values)
       end
-    when 'followers_instructeurs'
-      dossiers
-        .includes(:followers_instructeurs)
-        .joins('INNER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
-        .filter_ilike('instructeurs_users', :email, values) # ilike OK, user may want to search by *@domain
     when 'user', 'individual', 'traitements' # user_columns: [email], individual_columns: ['nom', 'prenom', 'gender']
       dossiers
         .includes(table)
         .filter_ilike(table, column, values) # ilike or where column == 'value' are both valid, we opted for ilike
-    when 'dossier_labels'
-      dossiers
-        .joins(:dossier_labels)
-        .where(dossier_labels: { label_id: values })
     when 'groupe_instructeur'
       dossiers
         .joins(:groupe_instructeur)
