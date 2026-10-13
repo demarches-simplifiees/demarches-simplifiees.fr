@@ -830,7 +830,7 @@ describe Users::DossiersController, type: :controller do
 
   describe '#extend_conservation' do
     let(:procedure) { procedures.individual }
-    let(:dossier) { create(:dossier, procedure:, user:) }
+    let(:dossier) { dossiers.brouillon }
     subject { post :extend_conservation, params: { dossier_id: dossier.id } }
     context 'when user logged in' do
       before { sign_in(user) }
@@ -853,12 +853,64 @@ describe Users::DossiersController, type: :controller do
         subject
         expect(flash[:notice]).to eq(I18n.t('views.users.dossiers.archived_dossier', duree_conservation_dossiers_dans_ds: procedure.duree_conservation_dossiers_dans_ds))
       end
+
+      [:en_construction, :en_instruction, :accepte, :refuse].each do |state|
+        context "when the dossier is #{state}" do
+          let(:dossier) { dossiers.public_send(state) }
+
+          it 'leaves the conservation untouched and alerts' do
+            expect { subject }.not_to change { dossier.reload.attributes.values_at('conservation_extension', 'expired_at') }
+            expect(response).to redirect_to(dossier_path(dossier))
+            expect(flash[:alert]).to eq(I18n.t('users.dossiers.conservation_cannot_be_extended'))
+          end
+        end
+      end
+
+      context 'when the dossier belongs to someone else' do
+        let(:user) { users.instructeur }
+        let(:dossier) { dossiers.accepte }
+
+        it 'is forbidden without the conservation alert' do
+          expect { subject }.not_to change { dossier.reload.conservation_extension }
+          expect(response).to redirect_to(root_path)
+          expect(flash[:alert]).to eq(I18n.t('users.dossiers.no_access_html', email: user.email))
+        end
+      end
     end
 
     context 'when not logged in' do
-      it 'fails' do
+      it { is_expected.to redirect_to(new_user_session_path) }
+    end
+  end
+
+  describe '#extend_conservation_and_restore' do
+    let(:procedure) { procedures.individual }
+    subject { post :extend_conservation_and_restore, params: { dossier_id: dossier.id } }
+
+    before do
+      dossier.update!(hidden_by_expired_at: 1.day.ago, hidden_by_reason: :expired)
+      sign_in(user)
+    end
+
+    context 'when the dossier is a brouillon hidden by expiration' do
+      let(:dossier) { dossiers.brouillon }
+
+      it 'restores it and extends its conservation' do
         subject
-        expect { expect(response).to redirect_to(new_user_session_path) }
+        dossier.reload
+        expect(dossier.hidden_by_expired_at).to be_nil
+        expect(dossier.conservation_extension).to eq(procedure.duree_conservation_dossiers_dans_ds.months)
+      end
+    end
+
+    context 'when the dossier is accepte and hidden by expiration' do
+      let(:dossier) { dossiers.accepte }
+
+      it 'keeps it hidden, leaves the conservation untouched and redirects to the trash' do
+        expect { subject }.not_to change { dossier.reload.conservation_extension }
+        expect(dossier.hidden_by_expired_at).to be_present
+        expect(response).to redirect_to(trash_path)
+        expect(flash[:alert]).to eq(I18n.t('users.dossiers.conservation_cannot_be_extended'))
       end
     end
   end
