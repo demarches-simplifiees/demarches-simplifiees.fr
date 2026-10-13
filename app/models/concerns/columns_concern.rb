@@ -177,7 +177,7 @@ module ColumnsConcern
 
   def groupe_instructeurs_id_column = dossier_col(table: 'groupe_instructeur', column: 'id', type: :enum)
 
-  def followers_instructeurs_email_column = dossier_col(table: 'followers_instructeurs', column: 'email')
+  def followers_instructeurs_email_column = Columns::FollowersInstructeursColumn.new(procedure_id: id)
 
   def dossier_archived_column = dossier_col(table: 'self', column: 'archived', type: :boolean, displayable: false, filterable: false);
 

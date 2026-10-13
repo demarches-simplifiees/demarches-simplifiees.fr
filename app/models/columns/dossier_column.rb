@@ -13,8 +13,6 @@ class Columns::DossierColumn < Column
       dossier.groupe_instructeur.label
     when 'dossier_labels'
       dossier.labels.map(&:name).join(' ')
-    when 'followers_instructeurs'
-      dossier.followers_instructeurs.map(&:email).join(' ')
     when 'traitements'
       dossier.traitements.map(&:instructeur_email).join(' ')
     end
@@ -24,14 +22,6 @@ class Columns::DossierColumn < Column
 
   def sorted_ids(dossiers, order, **)
     case table
-    when 'followers_instructeurs'
-      # LEFT OUTER JOIN allows to keep dossiers without assigned instructeurs yet
-      dossiers
-        .includes(:followers_instructeurs)
-        .joins('LEFT OUTER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
-        .order("instructeurs_users.email #{order}")
-        .pluck(:id)
-        .uniq
     when 'avis'
       dossiers.includes(table)
         .order("#{DossierFilterService.sanitized_column(table, column)} #{order}")
@@ -126,11 +116,6 @@ class Columns::DossierColumn < Column
           .includes(:etablissement)
           .filter_ilike(table, column, values)
       end
-    when 'followers_instructeurs'
-      dossiers
-        .includes(:followers_instructeurs)
-        .joins('INNER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
-        .filter_ilike('instructeurs_users', :email, values) # ilike OK, user may want to search by *@domain
     when 'user', 'individual', 'traitements' # user_columns: [email], individual_columns: ['nom', 'prenom', 'gender']
       dossiers
         .includes(table)
