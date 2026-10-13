@@ -250,6 +250,7 @@ describe Instructeurs::DossiersController, type: :controller do
   describe '#proposition' do
     let(:procedure) { create(:procedure, :published, :for_individual, instructeurs: [instructeur], public_type_de_champs: [{ type: :text, libelle: 'Nom', stable_id: 99 }]) }
     let(:dossier) { create(:dossier, state, :with_individual, procedure:) }
+    let(:batch_operation) {}
     let(:send_on_setup) { true }
 
     subject(:send_proposal) { patch :proposition, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
@@ -259,6 +260,7 @@ describe Instructeurs::DossiersController, type: :controller do
         dossier.public_champ_for_update('99', updated_by: instructeur.email).assign_attributes(value: 'Dupont')
       end
       dossier.save!
+      batch_operation
 
       send_proposal if send_on_setup
     end
@@ -281,6 +283,16 @@ describe Instructeurs::DossiersController, type: :controller do
         allow_any_instance_of(Dossier).to receive(:instructeur_submit_en_construction!).and_raise(ActiveRecord::RecordNotSaved)
 
         expect { send_proposal }.to raise_error(ActiveRecord::RecordNotSaved)
+        expect(dossier.reload).to be_en_instruction
+      end
+    end
+
+    context 'when the dossier is in a batch operation' do
+      let(:state) { :en_instruction }
+      let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur:) }
+
+      it 'refuses the proposal' do
+        expect(flash.alert).to eq('Votre action n’a pas été effectuée, ce dossier fait parti d’un traitement de masse.')
         expect(dossier.reload).to be_en_instruction
       end
     end
