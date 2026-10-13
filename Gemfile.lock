@@ -247,7 +247,7 @@ GEM
       ffi (>= 1.15.0)
       logger
     event_stream_parser (1.0.0)
-    excon (1.5.0)
+    excon (1.7.2)
       logger
     factory_bot (6.6.0)
       activesupport (>= 6.1.0)
