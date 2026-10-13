@@ -156,19 +156,7 @@ describe DossierPreloader do
       end
     end
 
-    let(:dossier_includes) do
-      [
-        :user,
-        :individual,
-        :followers_instructeurs,
-        :traitement,
-        :groupe_instructeur,
-        :etablissement,
-        :pending_corrections,
-        { procedure: [:groupe_instructeurs] },
-        { avis: [:claimant, :expert] },
-      ]
-    end
+    let(:dossier_includes) { DossierPreloader::SHEET_EXPORT_INCLUDES }
 
     it 'yields dossiers in depose_at order across batches without materializing all dossiers' do
       all_dossiers = procedure.dossiers
@@ -190,6 +178,7 @@ describe DossierPreloader do
         ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
           batch.each do |dossier|
             dossier.user&.email
+            dossier.user_from_france_connect?
             dossier.individual&.gender
             dossier.traitement&.processed_at
             dossier.groupe_instructeur&.label
