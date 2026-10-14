@@ -310,6 +310,40 @@ describe Dossier, type: :model do
     end
   end
 
+  describe '#instructeur_can_extend_conservation?' do
+    subject { dossier.instructeur_can_extend_conservation? }
+
+    before { dossier.update_column(:expired_at, expired_at) }
+
+    context 'when the dossier is termine and close to expiration' do
+      let(:dossier) { dossiers.accepte }
+      let(:expired_at) { 1.week.from_now }
+
+      it { is_expected.to be(true) }
+    end
+
+    context 'when the dossier is termine but not close to expiration yet' do
+      let(:dossier) { dossiers.accepte }
+      let(:expired_at) { 6.months.from_now }
+
+      it { is_expected.to be(false) }
+    end
+
+    context 'when the dossier is a brouillon close to expiration' do
+      let(:dossier) { dossiers.brouillon }
+      let(:expired_at) { 1.week.from_now }
+
+      it { is_expected.to be(false) }
+    end
+
+    context 'when the dossier is en instruction' do
+      let(:dossier) { dossiers.en_instruction }
+      let(:expired_at) { 1.week.from_now }
+
+      it { is_expected.to be(false) }
+    end
+  end
+
   describe "en_construction never expires (#13178)" do
     # backdated so that it would be close to expiration if en_construction dossiers could expire
     let(:dossier) { dossiers.en_construction.tap { it.update_columns(en_construction_at: 85.days.ago) } }

@@ -637,7 +637,7 @@ module Instructeurs
     end
 
     def ensure_conservation_can_be_extended
-      return if dossier.termine? && dossier.close_to_expiration?
+      return if dossier.instructeur_can_extend_conservation?
 
       flash.alert = t('instructeurs.dossiers.conservation_cannot_be_extended')
       redirect_to instructeur_dossier_path(procedure, dossier)
