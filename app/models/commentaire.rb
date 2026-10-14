@@ -129,6 +129,7 @@ class Commentaire < ApplicationRecord
       discard!
       dossier_pending_response&.respond!
       update! body: ''
+      dossier.publish_event(Events::MessageSupprime, author: instructeur || expert, commentaire_id: id)
     end
 
     piece_jointe.each(&:purge_later) if piece_jointe.attached?

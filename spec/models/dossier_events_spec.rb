@@ -560,6 +560,22 @@ describe 'Dossier events', type: :model do
     end
   end
 
+  describe 'message_supprime' do
+    it 'records the retraction of a message by its sender' do
+      dossier = dossiers.en_construction
+      message = CommentaireService.create!(instructeur, dossier, body: 'Bonjour')
+
+      message.soft_delete!
+
+      expect(event_store).to have_published(
+        an_event(Events::MessageSupprime)
+          .with_data(commentaire_id: message.id)
+          .with_metadata(actor: { type: 'Instructeur', id: instructeur.id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+      expect(message.reload).to be_discarded
+    end
+  end
+
   describe 'request metadata' do
     it 'keeps the request id, not the remote ip' do
       env = Rack::MockRequest.env_for('/', 'REMOTE_ADDR' => '203.0.113.7', 'action_dispatch.request_id' => 'req-1')
