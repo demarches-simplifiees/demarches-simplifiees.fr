@@ -9,7 +9,8 @@ class Champs::ReferentielChamp < ChampData
 
   delegate :exact_match?, :autocomplete?, to: :referentiel, allow_nil: true
 
-  before_save :clear_previous_result, if: -> { external_id_changed? }
+  # Only a replaced identifier has a result to clear: the copy of a champ on a buffer sets it from nil.
+  before_save :clear_previous_result, if: -> { external_id_changed? && external_id_was.present? }
 
   validate :validate_selection_readable
 
