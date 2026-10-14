@@ -20,4 +20,14 @@ describe 'Manage procedure experts', js: true do
     click_button 'Supprimer expert@gouv.fr'
     expect(page).to have_button('Ajouter à la liste', disabled: true)
   end
+
+  scenario 'an email typed without a separator enables the submit button' do
+    visit admin_procedure_experts_path(procedure)
+
+    fill_in 'Emails', with: 'typed-expert@gouv.fr'
+    expect(page).to have_button('Ajouter à la liste', disabled: false)
+
+    click_button 'Ajouter à la liste'
+    expect(page).to have_table(with_rows: [['typed-expert@gouv.fr']])
+  end
 end
