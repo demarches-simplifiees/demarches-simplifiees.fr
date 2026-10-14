@@ -178,6 +178,23 @@ describe 'Dossier events', type: :model do
     end
   end
 
+  describe 'correction_demandee' do
+    it 'records the request after the dossier moved back en construction' do
+      dossier = dossiers.en_instruction
+      commentaire = CommentaireService.build(instructeur, dossier, body: 'Merci de corriger')
+
+      dossier.flag_as_pending_correction!(commentaire)
+
+      expect(dossier.reload).to be_en_construction
+      expect(events_of(dossier).map(&:class)).to eq([Events::DossierRepasseEnConstruction, Events::CorrectionDemandee])
+      expect(event_store).to have_published(
+        an_event(Events::CorrectionDemandee)
+          .with_data(correction_id: dossier.pending_correction.id, reason: 'incorrect')
+          .with_metadata(actor: { type: 'Instructeur', id: instructeur.id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+  end
+
   describe 'request metadata' do
     it 'keeps the request id, not the remote ip' do
       env = Rack::MockRequest.env_for('/', 'REMOTE_ADDR' => '203.0.113.7', 'action_dispatch.request_id' => 'req-1')
