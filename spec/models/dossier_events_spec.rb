@@ -442,6 +442,21 @@ describe 'Dossier events', type: :model do
     end
   end
 
+  describe 'avis_cree' do
+    it 'records each avis requested, by its claimant' do
+      dossier = dossiers.en_instruction
+      avis = Avis.new(introduction: 'Merci de donner votre avis.', dossier:)
+
+      CreateAvisService.call(claimant: instructeur, batch: true, avis:, emails: ['expert-events@exemple.fr'])
+
+      expect(event_store).to have_published(
+        an_event(Events::AvisCree)
+          .with_data(avis_id: dossier.avis.find_by!(claimant: instructeur, introduction: 'Merci de donner votre avis.').id)
+          .with_metadata(actor: { type: 'Instructeur', id: instructeur.id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+  end
+
   describe 'request metadata' do
     it 'keeps the request id, not the remote ip' do
       env = Rack::MockRequest.env_for('/', 'REMOTE_ADDR' => '203.0.113.7', 'action_dispatch.request_id' => 'req-1')

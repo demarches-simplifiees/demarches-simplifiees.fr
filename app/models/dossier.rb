@@ -1083,6 +1083,7 @@ class Dossier < ApplicationRecord
 
   def demander_un_avis!(avis)
     log_dossier_operation(avis.claimant, :demander_un_avis, avis)
+    publish_event(Events::AvisCree, author: avis.claimant, avis_id: avis.id)
   end
 
   def linked_dossiers_for(instructeur_or_expert)
