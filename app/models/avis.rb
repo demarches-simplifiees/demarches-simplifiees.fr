@@ -101,4 +101,8 @@ class Avis < ApplicationRecord
     return false if !remindable_by?(revocator) || answer.present?
     update_column(:reminded_at, Time.zone.now)
   end
+
+  def submit_answer(params)
+    update(params)
+  end
 end
