@@ -55,6 +55,37 @@ describe 'Dossier events', type: :model do
     end
   end
 
+  describe 'dossier_modifie' do
+    it 'records a submission by the usager, with its checkpoint' do
+      dossier = dossiers.en_construction
+      stable_id = dossier.revision.public_root_type_de_champs.first.stable_id
+      dossier.with_update_stream(dossier.user) do
+        dossier.public_champ_for_update(stable_id.to_s, updated_by: dossier.user.email).assign_attributes(value: 'Nouveau nom')
+      end
+      dossier.save!
+
+      dossier.usager_submit_en_construction!
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierModifie)
+          .with_data(revision_id: dossier.revision_id, checkpoint: a_string_starting_with('history:'))
+          .with_metadata(actor: { type: 'User', id: dossier.user_id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+
+    it 'records a submission by an instructeur' do
+      dossier = dossiers.en_construction
+
+      dossier.instructeur_submit_en_construction!(instructeur:, notify: false)
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierModifie)
+          .with_data(revision_id: dossier.revision_id, checkpoint: nil)
+          .with_metadata(actor: { type: 'Instructeur', id: instructeur.id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+  end
+
   describe 'request metadata' do
     it 'keeps the request id, not the remote ip' do
       env = Rack::MockRequest.env_for('/', 'REMOTE_ADDR' => '203.0.113.7', 'action_dispatch.request_id' => 'req-1')

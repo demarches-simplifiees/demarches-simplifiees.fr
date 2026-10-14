@@ -9,6 +9,9 @@ module DossierStateConcern
     self.submitted_revision_id = revision_id
     save!
 
+    # before routing, which may record groupe_instructeur_change
+    publish_event(Events::DossierModifie, author: user, revision_id: submitted_revision_id, checkpoint:)
+
     RoutingEngine.compute(self)
 
     resolve_pending_correction!
@@ -28,6 +31,9 @@ module DossierStateConcern
     checkpoint = merge_instructeur_buffer_stream!
     traitement = self.traitements.instructeur_submit_en_construction(instructeur:, checkpoint:, motivation:)
     save!
+
+    # before routing, which may record groupe_instructeur_change
+    publish_event(Events::DossierModifie, author: instructeur, revision_id: submitted_revision_id, checkpoint:)
 
     RoutingEngine.compute(self)
     render_carte_champs_later!
