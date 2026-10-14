@@ -758,8 +758,7 @@ class Dossier < ApplicationRecord
 
   def extend_conservation_and_restore(conservation_extension, author)
     extend_conservation(conservation_extension)
-    update(hidden_by_expired_at: nil, hidden_by_reason: nil)
-    restore(author)
+    restore(author, expired: true)
   end
 
   def show_procedure_state_warning?
@@ -989,8 +988,10 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def restore(author)
+  def restore(author, expired: false)
     transaction do
+      update(hidden_by_expired_at: nil, hidden_by_reason: nil) if expired
+
       if is_administration?(author)
         update(hidden_by_administration_at: nil)
         DossierNotification.destroy_notifications_by_dossier_and_type(self, :dossier_suppression)
