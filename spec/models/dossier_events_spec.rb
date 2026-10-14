@@ -253,6 +253,84 @@ describe 'Dossier events', type: :model do
     end
   end
 
+  describe 'dossier deletions' do
+    it 'records a deletion by the administration that hides the dossier from it' do
+      dossier = dossiers.refuse
+
+      dossier.hide_and_keep_track!(instructeur, :instructeur_request)
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierSupprimeParAdministration)
+          .with_data(reason: 'instructeur_request', hidden_from_administration: true)
+          .with_metadata(actor: { type: 'Instructeur', id: instructeur.id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+
+    it 'records a deletion by the usager of a terminated dossier, which the administration still sees' do
+      dossier = dossiers.refuse
+
+      dossier.hide_and_keep_track!(dossier.user, :user_request)
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierSupprimeParUsager)
+          .with_data(reason: 'user_request', hidden_from_administration: false)
+          .with_metadata(actor: { type: 'User', id: dossier.user_id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+
+    it 'records a deletion by the usager of a dossier en construction as hiding it from the administration' do
+      dossier = dossiers.en_construction
+
+      dossier.hide_and_keep_track!(dossier.user, :user_request)
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierSupprimeParUsager).with_data(reason: 'user_request', hidden_from_administration: true)
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+
+    it 'records the deletion of a brouillon, never visible by the administration' do
+      dossier = dossiers.brouillon
+
+      dossier.hide_and_keep_track!(dossier.user, :user_request)
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierSupprimeParUsager).with_data(hidden_from_administration: false)
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+
+    it 'records an expiration without actor' do
+      dossier = dossiers.refuse
+
+      dossier.hide_and_keep_track!(:automatic, :expired)
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierExpire).with_data(reason: 'expired', hidden_from_administration: true)
+      ).in_stream(Events.dossier_stream(dossier.id))
+      expect(events_of(dossier).last.metadata.to_h).not_to have_key(:actor)
+    end
+
+    it 'records the second deletion of a hidden dossier as changing nothing for the administration' do
+      dossier = dossiers.refuse
+      dossier.hide_and_keep_track!(instructeur, :instructeur_request)
+
+      dossier.hide_and_keep_track!(dossier.user, :user_request)
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierSupprimeParUsager).with_data(hidden_from_administration: false)
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+
+    it 'records the removal of the démarche with its reason' do
+      dossier = dossiers.en_construction
+
+      procedure.discard_and_keep_track!(procedure.administrateurs.first)
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierSupprimeParAdministration).with_data(reason: 'procedure_removed', hidden_from_administration: true)
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+  end
+
   describe 'request metadata' do
     it 'keeps the request id, not the remote ip' do
       env = Rack::MockRequest.env_for('/', 'REMOTE_ADDR' => '203.0.113.7', 'action_dispatch.request_id' => 'req-1')

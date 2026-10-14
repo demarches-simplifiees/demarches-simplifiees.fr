@@ -971,23 +971,32 @@ class Dossier < ApplicationRecord
   end
 
   def hide_and_keep_track!(author, reason)
-    transaction do
-      if is_administration?(author) && can_be_deleted_by_administration?(reason)
+    # serializes concurrent hides and restores, so the visibility change is recorded once
+    with_lock do
+      was_visible_by_administration = Dossier.visible_by_administration.exists?(id)
+
+      event_class = if is_administration?(author) && can_be_deleted_by_administration?(reason)
         update(hidden_by_administration_at: Time.zone.now, hidden_by_reason: reason)
         log_dossier_operation(author, :supprimer, self)
         DossierNotification.create_notifications_for_non_customisable_type(self, :dossier_suppression) if hidden_by_user?
+        Events::DossierSupprimeParAdministration
       elsif is_user?(author) && can_be_deleted_by_user?
         update(hidden_by_user_at: Time.zone.now, dossier_transfer_id: nil, hidden_by_reason: reason)
         log_dossier_operation(author, :supprimer, self)
         DossierNotification.create_notifications_for_non_customisable_type(self, :dossier_suppression) if hidden_by_administration?
+        Events::DossierSupprimeParUsager
       elsif is_automatic?(author) && can_be_deleted_by_automatic?(reason)
         update(hidden_by_expired_at: Time.zone.now, hidden_by_reason: reason)
         log_automatic_dossier_operation(:supprimer, self)
         DossierNotification.destroy_notifications_by_dossier_and_type(self, :dossier_expirant)
         DossierNotification.create_notifications_for_non_customisable_type(self, :dossier_suppression)
+        Events::DossierExpire
       else
         raise "Unauthorized dossier hide attempt Dossier##{id} by #{author} for reason #{reason}"
       end
+
+      hidden_from_administration = was_visible_by_administration && !Dossier.visible_by_administration.exists?(id)
+      publish_event(event_class, author:, reason: reason.to_s, hidden_from_administration:)
     end
 
     if en_construction? && !hidden_by_administration?
