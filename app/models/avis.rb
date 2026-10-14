@@ -90,10 +90,14 @@ class Avis < ApplicationRecord
   def revoke_by!(revocator)
     return false if !revokable_by?(revocator)
 
-    if answer.present?
-      update!(revoked_at: Time.zone.now)
-    else
-      destroy!
+    transaction do
+      if answer.present?
+        update!(revoked_at: Time.zone.now)
+      else
+        destroy!
+      end
+
+      dossier.publish_event(Events::AvisRevoque, author: revocator, avis_id: id)
     end
   end
 

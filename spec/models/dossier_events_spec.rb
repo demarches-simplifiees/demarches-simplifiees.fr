@@ -542,6 +542,24 @@ describe 'Dossier events', type: :model do
     end
   end
 
+  describe 'avis_revoque' do
+    it 'records the revocation, whether the avis is destroyed or kept' do
+      dossier = dossiers.en_instruction
+      pending_avis = avis.pending
+      answered_avis = create(:avis, dossier:, experts_procedure: experts_procedures.default, claimant: instructeur, answer: 'Avis favorable.')
+
+      pending_avis.revoke_by!(instructeur)
+      answered_avis.revoke_by!(instructeur)
+
+      expect(event_store).to have_published(
+        an_event(Events::AvisRevoque).with_data(avis_id: pending_avis.id).with_metadata(actor: { type: 'Instructeur', id: instructeur.id }),
+        an_event(Events::AvisRevoque).with_data(avis_id: answered_avis.id)
+      ).in_stream(Events.dossier_stream(dossier.id))
+      expect(Avis.exists?(pending_avis.id)).to be(false)
+      expect(answered_avis.reload).to be_revoked
+    end
+  end
+
   describe 'request metadata' do
     it 'keeps the request id, not the remote ip' do
       env = Rack::MockRequest.env_for('/', 'REMOTE_ADDR' => '203.0.113.7', 'action_dispatch.request_id' => 'req-1')
