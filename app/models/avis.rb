@@ -103,6 +103,12 @@ class Avis < ApplicationRecord
   end
 
   def submit_answer(params)
-    update(params)
+    newly_answered = answer.nil?
+
+    transaction do
+      saved = update(params)
+      dossier.publish_event(Events::AvisRepondu, author: expert, avis_id: id) if saved && newly_answered
+      saved
+    end
   end
 end

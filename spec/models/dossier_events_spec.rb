@@ -457,6 +457,27 @@ describe 'Dossier events', type: :model do
     end
   end
 
+  describe 'avis_repondu' do
+    it 'records the first answer of the expert, not later edits nor a refused blank one' do
+      dossier = dossiers.en_instruction
+      pending_avis = avis.pending
+
+      expect { expect(pending_avis.submit_answer(answer: ' ')).to be(false) }
+        .not_to change { events_of(dossier).size }
+
+      pending_avis.submit_answer(answer: 'Avis favorable.')
+
+      expect(event_store).to have_published(
+        an_event(Events::AvisRepondu)
+          .with_data(avis_id: pending_avis.id)
+          .with_metadata(actor: { type: 'Expert', id: pending_avis.expert.id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+
+      expect { pending_avis.submit_answer(answer: 'Avis favorable, complété.') }
+        .not_to change { events_of(dossier).size }
+    end
+  end
+
   describe 'request metadata' do
     it 'keeps the request id, not the remote ip' do
       env = Rack::MockRequest.env_for('/', 'REMOTE_ADDR' => '203.0.113.7', 'action_dispatch.request_id' => 'req-1')
