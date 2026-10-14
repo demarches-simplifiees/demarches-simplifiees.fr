@@ -98,4 +98,33 @@ describe 'Procedure events', type: :model do
       expect(dossier_restore.correlation_id).to eq(restore.event_id)
     end
   end
+
+  describe 'duree_conservation_modifiee' do
+    it 'records the change, raised or lowered, by the administrateur of the request' do
+      before = procedure.duree_conservation_dossiers_dans_ds
+
+      Current.set(user: administrateur.user) do
+        procedure.update!(duree_conservation_dossiers_dans_ds: before - 1)
+      end
+
+      expect(event_store).to have_published(
+        an_event(Events::DureeConservationModifiee)
+          .with_data(before:, after: before - 1)
+          .with_metadata(actor: { type: 'Administrateur', id: administrateur.id })
+      ).in_stream(Events.procedure_stream(procedure.id))
+    end
+
+    it 'records no actor outside the request of an administrateur' do
+      before = procedure.duree_conservation_dossiers_dans_ds
+
+      procedure.update!(duree_conservation_dossiers_dans_ds: before + 1)
+
+      expect(events_of(procedure).last).to be_an_instance_of(Events::DureeConservationModifiee)
+      expect(events_of(procedure).last.metadata.to_h).not_to have_key(:actor)
+    end
+
+    it 'records nothing when the retention is untouched' do
+      expect { procedure.update!(libelle: 'Autre libellé') }.not_to change { events_of(procedure).size }
+    end
+  end
 end

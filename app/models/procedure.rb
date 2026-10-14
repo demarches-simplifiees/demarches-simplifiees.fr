@@ -692,6 +692,9 @@ class Procedure < ApplicationRecord
     return if !previous_changes.include?(:duree_conservation_dossiers_dans_ds)
     before, after = duree_conservation_dossiers_dans_ds_previous_change
     return if [before, after].any?(&:nil?)
+
+    # a callback knows no author: the signed-in administrateur, none from the manager
+    publish_event(Events::DureeConservationModifiee, author: Current.user&.administrateur, before:, after:)
     return if (after - before).negative?
 
     ResetExpiringDossiersJob.perform_later(self)
