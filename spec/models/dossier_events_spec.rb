@@ -530,6 +530,18 @@ describe 'Dossier events', type: :model do
     end
   end
 
+  describe 'dossier_archive and dossier_desarchive' do
+    it 'records both, by the instructeur' do
+      dossier = dossiers.accepte
+
+      dossier.archiver!(instructeur)
+      dossier.desarchiver!(instructeur)
+
+      expect(events_of(dossier).map(&:class)).to eq([Events::DossierArchive, Events::DossierDesarchive])
+      expect(events_of(dossier).map { it.metadata[:actor] }).to all(eq(type: 'Instructeur', id: instructeur.id))
+    end
+  end
+
   describe 'request metadata' do
     it 'keeps the request id, not the remote ip' do
       env = Rack::MockRequest.env_for('/', 'REMOTE_ADDR' => '203.0.113.7', 'action_dispatch.request_id' => 'req-1')

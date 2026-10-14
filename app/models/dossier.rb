@@ -822,11 +822,17 @@ class Dossier < ApplicationRecord
   end
 
   def archiver!(instructeur)
-    update!(archived: true, archived_at: Time.zone.now, archived_by: instructeur.email)
+    transaction do
+      update!(archived: true, archived_at: Time.zone.now, archived_by: instructeur.email)
+      publish_event(Events::DossierArchive, author: instructeur)
+    end
   end
 
-  def desarchiver!
-    update!(archived: false, archived_at: nil, archived_by: nil)
+  def desarchiver!(instructeur = nil)
+    transaction do
+      update!(archived: false, archived_at: nil, archived_by: nil)
+      publish_event(Events::DossierDesarchive, author: instructeur)
+    end
   end
 
   def text_summary
