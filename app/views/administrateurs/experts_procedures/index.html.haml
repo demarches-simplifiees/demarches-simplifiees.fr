@@ -68,7 +68,7 @@
         url: admin_procedure_experts_path(@procedure),
         html: { class: 'form', data: { controller: 'enable-submit-if-filled' } } do |f|
 
-        .instructeur-wrapper{ data: { action: "change->enable-submit-if-filled#fill input->enable-submit-if-filled#fill" } }
+        .instructeur-wrapper{ data: { action: "change->enable-submit-if-filled#fill" } }
           %p#experts-emails Entrez les adresses électroniques des experts que vous souhaitez ajouter à la liste prédéfinie
           %react-fragment
             = render ReactComponent.new "ComboBox/MultiComboBox",

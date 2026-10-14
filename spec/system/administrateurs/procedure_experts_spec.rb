@@ -5,7 +5,7 @@ describe 'Manage procedure experts', js: true do
   let(:procedure) { procedures.individual }
 
   before do
-    procedure.update!(allow_expert_review: true, experts_require_administrateur_invitation: true)
+    procedure.update!(experts_require_administrateur_invitation: true)
     login_as administrateur.user, scope: :user
   end
 
