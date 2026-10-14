@@ -769,8 +769,12 @@ class Dossier < ApplicationRecord
     procedure.discarded? || (brouillon? && !procedure.dossier_can_transition_to_en_construction?)
   end
 
-  def add_label(label)
-    dossier_labels.find_or_create_by(label:)
+  def add_label(label, author: nil)
+    transaction do
+      dossier_label = dossier_labels.find_or_create_by(label:)
+      publish_event(Events::DossierLabelAjoute, author:, label_id: label.id) if dossier_label.previously_new_record?
+      dossier_label
+    end
   end
 
   def remove_label(label)

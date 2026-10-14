@@ -478,6 +478,21 @@ describe 'Dossier events', type: :model do
     end
   end
 
+  describe 'dossier_label_ajoute' do
+    it 'records a label added, once even when repeated' do
+      dossier = dossiers.en_construction
+      label = procedure.labels.create!(name: 'À relancer', color: 'green_emeraude')
+
+      expect { 2.times { dossier.add_label(label, author: instructeur) } }
+        .to change { events_of(dossier).size }.by(1)
+      expect(event_store).to have_published(
+        an_event(Events::DossierLabelAjoute)
+          .with_data(label_id: label.id)
+          .with_metadata(actor: { type: 'Instructeur', id: instructeur.id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+  end
+
   describe 'request metadata' do
     it 'keeps the request id, not the remote ip' do
       env = Rack::MockRequest.env_for('/', 'REMOTE_ADDR' => '203.0.113.7', 'action_dispatch.request_id' => 'req-1')
