@@ -1,22 +1,18 @@
 # frozen_string_literal: true
 
 class SessionFailureApp < Devise::FailureApp
-  REDIRECT_HEADER = 'X-Sign-In-Path'
-
-  # Marks a flash that explains why a session ended, so the next failure keeps
-  # it instead of writing the generic message over it.
+  # Marks a flash that explains why a session ended, so the next failure keeps it.
   SESSION_ENDED_KEY = :session_ended
 
   def respond
-    # Read once, and not again: the hook fires on opportunistic fetches too, so
-    # a later unrelated failure in the same request must not inherit this.
+    # Read once: the hook fires on opportunistic fetches too, and a later failure
+    # must not inherit this.
     @end_reason = request.env.delete(SessionRegistrableConcern.end_reason_key(scope))
 
     return super if warden_options[:recall].present?
 
-    # Devise's 401 body goes to a client that reloads and discards it -- and by
-    # then the scope is logged out, so no later request recomputes why. The
-    # flash is the only thing that reaches the page they land on.
+    # The client discards the 401 body, and by then nothing recomputes why: the
+    # flash is all that reaches the page they land on.
     if http_auth?
       remember_why! if @end_reason.present? || request.flash[SESSION_ENDED_KEY]
 
@@ -25,10 +21,10 @@ class SessionFailureApp < Devise::FailureApp
 
     return super if !turbo_frame_request?
 
+    # Nothing to tell the client: it reloads, and the server answers that with the
+    # right scope's sign in page.
     remember_why!
-    store_location!
 
-    headers[REDIRECT_HEADER] = scope_url
     self.status = :unauthorized
     self.content_type = 'text/plain'
     self.response_body = ''
@@ -42,16 +38,10 @@ class SessionFailureApp < Devise::FailureApp
 
   private
 
-  # The reason exists on the first rejected request only: the scope is logged
-  # out by then, so nothing recomputes it. The client that gets this 401 throws
-  # the body away and reloads, and that reload is another failure -- which would
-  # write the generic message over ours. Marked and kept, the way Devise keeps its
-  # own `:timedout` message.
-  #
-  # The one place that writes it, so no branch can mark a message it explains or
-  # overwrite one already marked. A page carrying several lazy frames fails once
-  # per frame, so the explanation is kept for as long as failures keep coming --
-  # each hop being another failure, it cannot outlive the trouble it explains.
+  # The reason exists on the first rejected request only, and every request that
+  # follows is another failure that would write the generic message over it.
+  # Marked and kept, the way Devise keeps its own `:timedout`, and written here
+  # alone so the two branches cannot disagree.
   def remember_why!
     if request.flash[SESSION_ENDED_KEY] && @end_reason.blank?
       request.flash.keep(:alert)
@@ -72,33 +62,8 @@ class SessionFailureApp < Devise::FailureApp
     redirect_to redirect_url
   end
 
-  # The frame URL is a modal fragment; what the user was looking at is the page
-  # around it. Devise's GET-only rule does not apply: the destination is the
-  # referer, a page the browser just rendered.
-  def store_location!
-    return super if !turbo_frame_request?
-
-    location = page_around_the_frame
-
-    # An unusable referer is no reason to store nothing: without this the sign
-    # in lands on the root rather than where the person was.
-    return super if location.blank?
-
-    store_location_for(scope, location)
-  end
-
-  def page_around_the_frame
-    uri = SameOriginUri.parse(request.referer, request)
-
-    return if uri.nil? || uri.path.blank?
-
-    [uri.path, uri.query].compact.join('?')
-  end
-
-  # Frames only, not every Turbo request: a form submission or a stream follows
-  # a redirect perfectly well, and answering those with a 401 would put their
-  # recovery in the hands of the JavaScript. A frame cannot -- the sign in page
-  # would render inside it.
+  # Frames only: a stream follows a redirect, a frame cannot -- the sign in page
+  # would render inside it. Any method, the recovery being a reload.
   def turbo_frame_request?
     request.headers['Turbo-Frame'].present?
   end
