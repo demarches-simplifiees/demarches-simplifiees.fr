@@ -32,6 +32,15 @@ describe Logic::BinaryOperator do
       expect(ds_not_eq(constant(2), empty).compute).to be(false)
       expect(ds_exclude(constant(['val1']), empty).compute).to be(false)
     end
+
+    # a draft condition left behind when the admin changed the type of the
+    # champ it reads, evaluated on a test dossier
+    it 'is false when the operands cannot be compared', :aggregate_failures do
+      expect(ds_include(constant(true), constant('val1')).compute).to be(false)
+      expect(greater_than(constant('abc'), constant(0)).compute).to be(false)
+      expect(less_than(constant(5), constant('abc')).compute).to be(false)
+      expect(ds_include(constant('abc'), constant(5)).compute).to be(false)
+    end
   end
 
   describe '#sources' do

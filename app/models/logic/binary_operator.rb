@@ -45,7 +45,7 @@ class Logic::BinaryOperator < Logic::Term
 
     return false if l.nil? || r.nil?
 
-    l.send(operation, r) || false
+    safe_apply(l, r)
   end
 
   def to_s(type_de_champs) = "(#{@left.to_s(type_de_champs)} #{operation} #{@right.to_s(type_de_champs)})"
@@ -54,5 +54,13 @@ class Logic::BinaryOperator < Logic::Term
     self.class == other.class &&
       @left == other.left &&
       @right == other.right
+  end
+
+  private
+
+  def safe_apply(left, right)
+    left.send(operation, right) || false
+  rescue NoMethodError, ArgumentError, TypeError
+    false
   end
 end
