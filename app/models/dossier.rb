@@ -766,6 +766,18 @@ class Dossier < ApplicationRecord
     procedure.discarded? || (brouillon? && !procedure.dossier_can_transition_to_en_construction?)
   end
 
+  def add_label(label)
+    dossier_labels.find_or_create_by(label:)
+  end
+
+  def remove_label(label)
+    dossier_label = dossier_labels.find_by(label:)
+    return if dossier_label.nil?
+
+    dossier_label.destroy
+    dossier_label
+  end
+
   def assign_to_groupe_instructeur(groupe_instructeur, mode, author = nil)
     return if groupe_instructeur.present? && groupe_instructeur.procedure != procedure
     return if self.groupe_instructeur == groupe_instructeur && mode == self.dossier_assignment&.mode
