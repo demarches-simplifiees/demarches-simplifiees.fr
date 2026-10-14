@@ -740,7 +740,7 @@ class Dossier < ApplicationRecord
 
   def update_expired_at = update_column(:expired_at, expiration_date)
 
-  def expiration_can_be_extended?
+  def usager_can_extend_conservation?
     brouillon?
   end
 

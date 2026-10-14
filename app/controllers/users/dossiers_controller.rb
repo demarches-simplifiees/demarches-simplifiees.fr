@@ -23,7 +23,7 @@ module Users
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE + TRASH_ACTIONS
     before_action :redirect_if_hidden_or_deleted_dossier, only: [:show]
     before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
-    before_action :ensure_expiration_can_be_extended, only: [:extend_conservation, :extend_conservation_and_restore]
+    before_action :ensure_usager_can_extend_conservation, only: [:extend_conservation, :extend_conservation_and_restore]
     before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_siret, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :update, :champ, :revert_prefill]
     before_action :ensure_dossier_can_be_filled, only: [:brouillon, :modifier, :submit_brouillon, :submit_en_construction, :update]
     before_action :ensure_dossier_can_be_viewed, only: [:show]
@@ -610,8 +610,8 @@ module Users
       end
     end
 
-    def ensure_expiration_can_be_extended
-      return if dossier.expiration_can_be_extended?
+    def ensure_usager_can_extend_conservation
+      return if dossier.usager_can_extend_conservation?
 
       flash.alert = t('users.dossiers.conservation_cannot_be_extended')
       redirect_to dossier.hidden_by_expired? ? trash_path : dossier_path(dossier)

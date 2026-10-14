@@ -332,7 +332,7 @@ describe Dossier, type: :model do
     end
 
     it "cannot extend conservation" do
-      expect(dossier.expiration_can_be_extended?).to be(false)
+      expect(dossier.usager_can_extend_conservation?).to be(false)
     end
   end
 

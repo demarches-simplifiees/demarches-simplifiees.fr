@@ -12,7 +12,7 @@
         - elsif dossier.termine?
           = t('users.dossiers.header.banner.states.termine')
 
-      - if dossier.expiration_can_be_extended?
+      - if dossier.usager_can_extend_conservation?
         - c.with_bottom do
           = button_to users_dossier_repousser_expiration_path(dossier), class: 'fr-btn', id: 'test-user-repousser-expiration' do
             = t('users.dossiers.header.banner.button_delay_expiration', count: dossier.procedure.duree_conservation_dossiers_dans_ds)

@@ -98,7 +98,7 @@
               </span>
             <% end %>
           <% else %>
-            <% if dossier.expiration_can_be_extended? %>
+            <% if dossier.usager_can_extend_conservation? %>
               <%= button_to users_dossier_repousser_expiration_and_restore_path(dossier), class: 'fr-btn fr-btn--sm' do %>
                 <%= t("views.users.dossiers.dossier_action.restore_and_extend_conservation_html", id: dossier.id, duree_conservation_dossiers_dans_ds: dossier.procedure.duree_conservation_dossiers_dans_ds) %>
               <% end %>
