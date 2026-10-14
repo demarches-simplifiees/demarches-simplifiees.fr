@@ -367,6 +367,7 @@ module DossierStateConcern
     EmailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:sans_suite))
 
     log_dossier_operation(instructeur, :classer_sans_suite, self)
+    publish_event(Events::DossierSansSuite, author: instructeur)
   end
 
   def after_commit_classer_sans_suite(h)
