@@ -1,0 +1,18 @@
+fr:
+  intro: "Cet utilisateur ne peut pas être supprimé :"
+  administrateur_html: "il est <a href=\"%{url}\">administrateur</a> : supprimer ce rôle d’abord, depuis sa fiche administrateur."
+  instructeur_html: "il est <a href=\"%{url}\">instructeur</a> : supprimer ce rôle d’abord, depuis sa fiche instructeur."
+  answered_avis:
+    one: "il a répondu à un avis :"
+    other: "il a répondu à %{count} avis :"
+  answered_avis_row_html: "%{dossier} (%{procedure}), demandé par %{claimant} le %{date}"
+  requested_avis:
+    one: "il a demandé un avis à un autre expert :"
+    other: "il a demandé %{count} avis à d’autres experts :"
+  requested_avis_row_html: "%{dossier} (%{procedure}), demandé à %{expert} le %{date}"
+  more: "et %{count} autres"
+  avis_hint: "Ces avis font partie de l’historique des dossiers : il ne pourra être supprimé qu’une fois ces dossiers supprimés."
+  commentaires:
+    one: "il a écrit un message dans la messagerie d’un dossier, conservé avec son auteur."
+    other: "il a écrit %{count} messages dans la messagerie de dossiers, conservés avec leur auteur."
+  dossier: "dossier nº %{id}"

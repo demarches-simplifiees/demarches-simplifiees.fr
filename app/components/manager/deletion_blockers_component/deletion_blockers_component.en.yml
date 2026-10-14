@@ -1,0 +1,18 @@
+en:
+  intro: "This user cannot be deleted:"
+  administrateur_html: "they are an <a href=\"%{url}\">administrator</a>: remove that role first, from their administrator page."
+  instructeur_html: "they are a <a href=\"%{url}\">reviewer</a>: remove that role first, from their reviewer page."
+  answered_avis:
+    one: "they answered an opinion request:"
+    other: "they answered %{count} opinion requests:"
+  answered_avis_row_html: "%{dossier} (%{procedure}), requested by %{claimant} on %{date}"
+  requested_avis:
+    one: "they requested an opinion from another expert:"
+    other: "they requested %{count} opinions from other experts:"
+  requested_avis_row_html: "%{dossier} (%{procedure}), requested from %{expert} on %{date}"
+  more: "and %{count} more"
+  avis_hint: "These opinions belong to the applications’ history: the user can only be deleted once those applications are deleted."
+  commentaires:
+    one: "they wrote a message in an application’s messaging, kept with its author."
+    other: "they wrote %{count} messages in applications’ messaging, kept with their author."
+  dossier: "application no. %{id}"
