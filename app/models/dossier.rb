@@ -21,6 +21,7 @@ class Dossier < ApplicationRecord
   include DossierChampsConcern
   include DossierExportConcern
   include DossierValidateConcern
+  include EventStreamConcern
 
   enum :state, {
     brouillon:       'brouillon',
@@ -775,6 +776,10 @@ class Dossier < ApplicationRecord
 
     dossier_label.destroy
     dossier_label
+  end
+
+  def publish_event(event_class, author: nil, **data)
+    super(event_class, author:, procedure_id: revision.procedure_id, **data)
   end
 
   def assign_to_groupe_instructeur(groupe_instructeur, mode, author = nil)
