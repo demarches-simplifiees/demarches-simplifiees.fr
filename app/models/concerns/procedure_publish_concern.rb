@@ -6,6 +6,8 @@ module ProcedurePublishConcern
   def publish_or_reopen!(administrateur, path)
     new_revision = false
     transaction do
+      was_publiee = publiee?
+
       if brouillon?
         reset!
       elsif draft_changed?
@@ -23,6 +25,9 @@ module ProcedurePublishConcern
       elsif may_publish?
         publish!(administrateur, nil)
       end
+
+      # a transition records its own event
+      publish_event(Events::DemarcheRepubliee, author: administrateur, revision_id: published_revision_id) if was_publiee && new_revision
     end
 
     if new_revision
@@ -35,7 +40,10 @@ module ProcedurePublishConcern
   def publish_revision!(administrateur)
     reset!
 
-    transaction { publish_new_revision(administrateur) }
+    transaction do
+      publish_new_revision(administrateur)
+      publish_event(Events::DemarcheRepubliee, author: administrateur, revision_id: published_revision_id)
+    end
 
     dossiers
       .state_not_termine
@@ -73,10 +81,12 @@ module ProcedurePublishConcern
 
     touch(:published_at)
     publish_new_revision(administrateur)
+    publish_event(Events::DemarchePubliee, author: administrateur, revision_id: published_revision_id)
   end
 
   def after_republish(administrateur, canonical_procedure = nil)
     touch(:published_at)
+    publish_event(Events::DemarcheRepubliee, author: administrateur, revision_id: published_revision_id)
   end
 
   def after_close
