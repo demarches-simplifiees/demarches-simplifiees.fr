@@ -44,6 +44,9 @@ module DossierStateConcern
 
     save!
 
+    # before routing and the automatic transitions, which record their own events
+    publish_event(Events::DossierDepose, author: user, revision_id: submitted_revision_id)
+
     RoutingEngine.compute(self)
 
     if !procedure.send_combined_declarative_email? # otherwise posted by the automatic transition

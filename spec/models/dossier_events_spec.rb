@@ -40,4 +40,28 @@ describe 'Dossier events', type: :model do
       expect(events_of(dossier).last.metadata.to_h).not_to have_key(:actor)
     end
   end
+
+  describe 'dossier_depose' do
+    it 'records the deposit with the submitted revision, by the usager' do
+      dossier = dossiers.brouillon
+
+      dossier.passer_en_construction!
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierDepose)
+          .with_data(revision_id: dossier.revision_id)
+          .with_metadata(actor: { type: 'User', id: dossier.user_id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+  end
+
+  describe 'request metadata' do
+    it 'keeps the request id, not the remote ip' do
+      env = Rack::MockRequest.env_for('/', 'REMOTE_ADDR' => '203.0.113.7', 'action_dispatch.request_id' => 'req-1')
+
+      event_store.with_request_metadata(env) do
+        expect(event_store.metadata).to eq(request_id: 'req-1')
+      end
+    end
+  end
 end
