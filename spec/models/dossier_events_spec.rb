@@ -86,6 +86,29 @@ describe 'Dossier events', type: :model do
     end
   end
 
+  describe 'dossier_en_instruction' do
+    it 'records the transition by an instructeur' do
+      dossier = dossiers.en_construction
+
+      dossier.passer_en_instruction!(instructeur:)
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierEnInstruction).with_metadata(actor: { type: 'Instructeur', id: instructeur.id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+
+    it 'records the automatic transition of a declarative démarche after the deposit, without actor' do
+      declarative_procedure = create(:procedure, :published, :for_individual, declarative_with_state: 'en_instruction')
+      dossier = create(:dossier, :brouillon, :with_individual, procedure: declarative_procedure)
+
+      dossier.passer_en_construction!
+
+      events = events_of(dossier)
+      expect(events.map(&:class)).to eq([Events::DossierDepose, Events::DossierEnInstruction])
+      expect(events.last.metadata.to_h).not_to have_key(:actor)
+    end
+  end
+
   describe 'request metadata' do
     it 'keeps the request id, not the remote ip' do
       env = Rack::MockRequest.env_for('/', 'REMOTE_ADDR' => '203.0.113.7', 'action_dispatch.request_id' => 'req-1')

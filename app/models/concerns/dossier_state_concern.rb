@@ -118,6 +118,7 @@ module DossierStateConcern
     resolve_pending_correction!
 
     log_dossier_operation(instructeur, :passer_en_instruction)
+    publish_event(Events::DossierEnInstruction, author: instructeur)
   end
 
   def after_commit_passer_en_instruction(h)
@@ -157,6 +158,8 @@ module DossierStateConcern
     else
       log_automatic_dossier_operation(:passer_en_instruction)
     end
+
+    publish_event(Events::DossierEnInstruction)
   end
 
   def after_commit_passer_automatiquement_en_instruction(h = {})
