@@ -189,6 +189,7 @@ module DossierStateConcern
     save!
 
     log_dossier_operation(instructeur, :repasser_en_construction)
+    publish_event(Events::DossierRepasseEnConstruction, author: instructeur)
   end
 
   def after_commit_repasser_en_construction

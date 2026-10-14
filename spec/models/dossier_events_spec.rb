@@ -154,6 +154,18 @@ describe 'Dossier events', type: :model do
     end
   end
 
+  describe 'dossier_repasse_en_construction' do
+    it 'records the transition by an instructeur' do
+      dossier = dossiers.en_instruction
+
+      dossier.repasser_en_construction!(instructeur:)
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierRepasseEnConstruction).with_metadata(actor: { type: 'Instructeur', id: instructeur.id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+  end
+
   describe 'request metadata' do
     it 'keeps the request id, not the remote ip' do
       env = Rack::MockRequest.env_for('/', 'REMOTE_ADDR' => '203.0.113.7', 'action_dispatch.request_id' => 'req-1')
