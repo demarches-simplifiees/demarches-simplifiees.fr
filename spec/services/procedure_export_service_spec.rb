@@ -115,7 +115,6 @@ describe ProcedureExportService do
             "epci",
             "epci (Code)",
             "epci (Département)",
-            "cojo",
             "formatted",
             "rnf",
             "rnf (Nom)",

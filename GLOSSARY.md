@@ -388,7 +388,6 @@ differs).
 | `epci` | EPCI | EPCI (inter-municipal body) | settled | |
 | `pays` | Pays | Country | settled | |
 | `carte` | Carte | Map | settled | Current: "Card". |
-| `cojo` | Accréditation Paris 2024 | Paris 2024 accreditation | settled | |
 | `referentiel` | Référentiel configurable | Reference dataset | proposed | |
 | `pre_rempli` | Pré-rempli | Prefilled | settled | |
 | `quotient_familial` | Quotient familial | Family quotient | settled | API Particulier. |
@@ -455,3 +454,4 @@ differs).
   model, field types, retention, frozen surfaces. API v3 vocabulary aligned
   with the API v3 design record (Reviewer, Team, Opinion, DecisionNotice,
   Field/FieldValue, Decision/StateChange).
+- **2026-10-05** — `cojo` (Accréditation Paris 2024) removed from the field types.

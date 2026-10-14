@@ -38,7 +38,7 @@ describe TypesDeChampEditor::TypeDeChampSelectorComponent, type: :component do
     end
 
     it 'leaves out the legacy number type and the types behind a disabled flag' do
-      expect(values).not_to include('number', 'cojo')
+      expect(values).not_to include('number', 'pre_rempli')
     end
   end
 
@@ -59,9 +59,9 @@ describe TypesDeChampEditor::TypeDeChampSelectorComponent, type: :component do
   end
 
   describe 'a type behind an enabled feature flag' do
-    let(:procedure) { create(:procedure, public_type_de_champs: [{ type: :text }]).tap { Flipper.enable(:cojo_type_de_champ, _1) } }
+    let(:procedure) { create(:procedure, public_type_de_champs: [{ type: :text }]).tap { Flipper.enable(:pre_rempli_type_de_champ, _1) } }
 
-    it { expect(values).to include('cojo') }
+    it { expect(values).to include('pre_rempli') }
   end
 
   describe 'public-only and private-only types' do

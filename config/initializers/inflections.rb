@@ -13,7 +13,6 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'AAH'
   inflect.acronym 'AEEH'
   inflect.acronym 'ARS'
-  inflect.acronym 'COJO'
   inflect.acronym 'API'
   inflect.acronym 'ASN1'
   inflect.acronym 'IP'
