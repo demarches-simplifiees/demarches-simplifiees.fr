@@ -21,7 +21,7 @@ RSpec.describe APIEntreprise::ServiceJob, type: :job do
     Geocoder.configure(lookup: :test)
   end
 
-  subject { described_class.new.perform(service.id) }
+  subject { described_class.perform_now(service.id) }
 
   it "update service with address, updates departement, geocode" do
     allow(Geocoder).to receive(:search)
@@ -50,6 +50,13 @@ RSpec.describe APIEntreprise::ServiceJob, type: :job do
         .to_return(body: "{}", status: 404)
 
       expect { subject }.not_to change { service.reload.attributes }
+    end
+
+    it "raises a retryable error when API Entreprise is unavailable" do
+      stub_request(:get, %r{https://entreprise.api.gouv.fr/v4\/insee\/sirene\/etablissements\/#{siret}})
+        .to_return(body: "{}", status: 503)
+
+      expect { subject }.to raise_error(RetryableFetchError)
     end
 
     it "supports empty geocode result" do

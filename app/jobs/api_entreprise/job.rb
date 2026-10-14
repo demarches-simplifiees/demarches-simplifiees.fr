@@ -43,7 +43,6 @@ class APIEntreprise::Job < ApplicationJob
     'AttestationSocialeJob' => APIEntreprise::HealthChecker::PROVIDERS[:urssaf_attestation_sociale],
     'AttestationFiscaleJob' => APIEntreprise::HealthChecker::PROVIDERS[:dgfip_attestation_fiscale],
     'BilansBdfJob' => APIEntreprise::HealthChecker::PROVIDERS[:banque_de_france_bilans],
-    'ServiceJob' => APIEntreprise::HealthChecker::PROVIDERS[:insee_sirene],
   }.freeze
 
   # If by the time the job runs the Etablissement has been deleted, ignore the job
