@@ -16,7 +16,7 @@
         - elsif dossier.termine?
           = t('instructeurs.dossiers.header.banner.states.termine')
 
-      - if dossier.termine?
+      - if dossier.termine? && dossier.close_to_expiration?
         - c.with_bottom do
           = button_to repousser_expiration_instructeur_dossier_path(dossier.procedure, dossier), class: 'fr-btn', id: 'test-instructeur-repousser-expiration' do
             = t('instructeurs.dossiers.header.banner.button_delay_expiration')

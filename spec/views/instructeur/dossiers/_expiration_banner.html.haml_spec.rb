@@ -40,4 +40,15 @@ describe 'instructeur/dossiers/expiration_banner', type: :view do
       expect(subject).to have_button(id: 'test-instructeur-repousser-expiration')
     end
   end
+
+  context 'with a termine dossier that has expired' do
+    let(:dossier) { dossiers.accepte }
+
+    before { dossier.update_column(:termine_close_to_expiration_notice_sent_at, 3.weeks.ago) }
+
+    it 'does not render the postpone button' do
+      expect(subject).to have_selector('.fr-callout', text: I18n.t('instructeurs.dossiers.header.banner.title_expired'))
+      expect(subject).not_to have_button(id: 'test-instructeur-repousser-expiration')
+    end
+  end
 end
