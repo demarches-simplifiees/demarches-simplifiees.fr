@@ -31,7 +31,7 @@ module Maintenance
       end
 
       it "leaves out a stub tied to a champ" do
-        dossiers.entreprise_en_instruction.champ_data.first.update_columns(etablissement_id: stub.id)
+        dossiers.entreprise_en_instruction.champ_data.first.update_columns(type: 'Champs::SiretChamp', etablissement_id: stub.id)
 
         expect(described_class.collection).not_to include(stub)
       end
