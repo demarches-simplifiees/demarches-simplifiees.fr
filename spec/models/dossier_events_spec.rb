@@ -227,7 +227,7 @@ describe 'Dossier events', type: :model do
         end
       end
 
-      it 'comes after dossier_depose at the deposit' do
+      it 'comes after dossier_depose when the routing at the deposit reassigns' do
         dossier = dossiers.brouillon
 
         dossier.passer_en_construction!
@@ -515,6 +515,18 @@ describe 'Dossier events', type: :model do
 
       expect { label.destroy! }.not_to change { events_of(dossier).size }
       expect(dossier.labels).to be_empty
+    end
+  end
+
+  describe 'the groupe at the deposit' do
+    it 'is carried by dossier_depose, from the routing of the brouillon' do
+      dossier = dossiers.brouillon
+
+      dossier.passer_en_construction!
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierDepose).with_data(groupe_instructeur_id: procedure.defaut_groupe_instructeur.id)
+      ).in_stream(Events.dossier_stream(dossier.id))
     end
   end
 
