@@ -759,6 +759,9 @@ class Dossier < ApplicationRecord
 
   def extend_conservation_and_restore(conservation_extension, author)
     extend_conservation(conservation_extension)
+    # with_lock in restore raises on unsaved changes
+    return if has_changes_to_save?
+
     restore(author, expired: true)
   end
 
@@ -1009,7 +1012,10 @@ class Dossier < ApplicationRecord
   end
 
   def restore(author, expired: false)
-    transaction do
+    with_lock do
+      was_visible_by_administration = Dossier.visible_by_administration.exists?(id)
+      reason = hidden_by_reason
+
       update(hidden_by_expired_at: nil, hidden_by_reason: nil) if expired
 
       if is_administration?(author)
@@ -1030,6 +1036,10 @@ class Dossier < ApplicationRecord
       end
 
       log_dossier_operation(author, :restaurer, self)
+
+      event_class = is_administration?(author) ? Events::DossierRestaureParAdministration : Events::DossierRestaureParUsager
+      restored_to_administration = !was_visible_by_administration && Dossier.visible_by_administration.exists?(id)
+      publish_event(event_class, author:, reason:, restored_to_administration:)
     end
   end
 

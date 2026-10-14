@@ -331,6 +331,82 @@ describe 'Dossier events', type: :model do
     end
   end
 
+  describe 'dossier restores' do
+    it 'records a restore by the administration that brings the dossier back to it' do
+      dossier = dossiers.refuse
+      dossier.hide_and_keep_track!(instructeur, :instructeur_request)
+
+      dossier.restore(instructeur)
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierRestaureParAdministration)
+          .with_data(reason: 'instructeur_request', restored_to_administration: true)
+          .with_metadata(actor: { type: 'Instructeur', id: instructeur.id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+
+    it 'records a restore by the usager of a terminated dossier, which the administration never lost' do
+      dossier = dossiers.refuse
+      dossier.hide_and_keep_track!(dossier.user, :user_request)
+
+      dossier.restore(dossier.user)
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierRestaureParUsager)
+          .with_data(reason: 'user_request', restored_to_administration: false)
+          .with_metadata(actor: { type: 'User', id: dossier.user_id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+
+    it 'records the restore of an expired-hidden dossier through a conservation extension' do
+      dossier = dossiers.refuse
+      dossier.hide_and_keep_track!(:automatic, :expired)
+
+      dossier.extend_conservation_and_restore(1.month, instructeur)
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierRestaureParAdministration).with_data(reason: 'expired', restored_to_administration: true)
+      ).in_stream(Events.dossier_stream(dossier.id))
+      expect(dossier.reload.hidden_by_expired_at).to be_nil
+      expect(dossier.hidden_by_reason).to be_nil
+    end
+
+    it 'records nothing when the extension of an expired-hidden dossier fails validation' do
+      dossier = dossiers.refuse
+      dossier.hide_and_keep_track!(:automatic, :expired)
+      allow(dossier).to receive(:valid?).and_return(false)
+
+      expect { dossier.extend_conservation_and_restore(1.month, instructeur) }
+        .not_to change { events_of(dossier).size }
+      expect(dossier.reload.hidden_by_expired_at).to be_present
+    end
+
+    it 'records the restore of an expired-hidden dossier by a new conservation period of the démarche' do
+      dossier = dossiers.refuse
+      dossier.update!(termine_close_to_expiration_notice_sent_at: 3.weeks.ago)
+      dossier.hide_and_keep_track!(:automatic, :expired)
+
+      ResetExpiringDossiersJob.perform_now(procedure)
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierRestaureParAdministration).with_data(reason: 'expired', restored_to_administration: true)
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+
+    it 'records the restore of the démarche with its reason' do
+      dossier = dossiers.en_construction
+      administrateur = procedure.administrateurs.first
+      procedure.discard_and_keep_track!(administrateur)
+
+      procedure.restore(administrateur)
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierRestaureParAdministration).with_data(reason: 'procedure_removed', restored_to_administration: true)
+      ).in_stream(Events.dossier_stream(dossier.id))
+      expect(dossier.reload.hidden_by_administration_at).to be_nil
+    end
+  end
+
   describe 'request metadata' do
     it 'keeps the request id, not the remote ip' do
       env = Rack::MockRequest.env_for('/', 'REMOTE_ADDR' => '203.0.113.7', 'action_dispatch.request_id' => 'req-1')
