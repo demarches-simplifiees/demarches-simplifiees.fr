@@ -112,6 +112,14 @@ class Commentaire < ApplicationRecord
       sent_by_instructeur?
   end
 
+  # Once saved; system messages are not recorded.
+  def record_message_cree
+    return if sent_by_system?
+
+    author = instructeur || expert || User.find_by(email:)
+    dossier.publish_event(Events::MessageCree, author:, commentaire_id: id)
+  end
+
   def cancel_correction!
     dossier_correction&.cancel!
   end

@@ -18,12 +18,17 @@ class CommentaireService
   end
 
   def self.persist!(message)
-    message.save!
+    message.transaction do
+      message.save!
+      message.record_message_cree
+    end
     message
   end
 
   def self.persist(message)
-    message.save
+    message.transaction do
+      message.record_message_cree if message.save
+    end
     message
   end
 

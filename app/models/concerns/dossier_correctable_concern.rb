@@ -19,10 +19,13 @@ module DossierCorrectableConcern
     return unless may_flag_as_pending_correction?
 
     reason ||= :incorrect
+    newly_created_commentaire = commentaire.new_record?
 
     transaction do
       commentaire.dossier_correction = corrections.build(commentaire:, reason:)
       commentaire.dossier_correction.save!
+
+      commentaire.record_message_cree if newly_created_commentaire
 
       create_dossier_notifications(commentaire.instructeur)
 

@@ -186,7 +186,7 @@ describe 'Dossier events', type: :model do
       dossier.flag_as_pending_correction!(commentaire)
 
       expect(dossier.reload).to be_en_construction
-      expect(events_of(dossier).map(&:class)).to eq([Events::DossierRepasseEnConstruction, Events::CorrectionDemandee])
+      expect(events_of(dossier).map(&:class)).to eq([Events::MessageCree, Events::DossierRepasseEnConstruction, Events::CorrectionDemandee])
       expect(event_store).to have_published(
         an_event(Events::CorrectionDemandee)
           .with_data(correction_id: dossier.pending_correction.id, reason: 'incorrect')
@@ -404,6 +404,41 @@ describe 'Dossier events', type: :model do
         an_event(Events::DossierRestaureParAdministration).with_data(reason: 'procedure_removed', restored_to_administration: true)
       ).in_stream(Events.dossier_stream(dossier.id))
       expect(dossier.reload.hidden_by_administration_at).to be_nil
+    end
+  end
+
+  describe 'message_cree' do
+    it 'records a message by an instructeur' do
+      dossier = dossiers.en_construction
+
+      message = CommentaireService.create!(instructeur, dossier, body: 'Bonjour')
+
+      expect(event_store).to have_published(
+        an_event(Events::MessageCree)
+          .with_data(commentaire_id: message.id)
+          .with_metadata(actor: { type: 'Instructeur', id: instructeur.id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+
+    it 'records a message by the usager' do
+      dossier = dossiers.en_construction
+
+      message = CommentaireService.create(dossier.user, dossier, body: 'Bonjour')
+
+      expect(event_store).to have_published(
+        an_event(Events::MessageCree)
+          .with_data(commentaire_id: message.id)
+          .with_metadata(actor: { type: 'User', id: dossier.user_id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+
+    it 'records nothing for a system message nor for an invalid one' do
+      dossier = dossiers.en_construction
+
+      expect { CommentaireService.create!(CONTACT_EMAIL, dossier, body: 'system') }
+        .not_to change { events_of(dossier).size }
+      expect { CommentaireService.create(instructeur, dossier, body: '') }
+        .not_to change { events_of(dossier).size }
     end
   end
 
