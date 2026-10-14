@@ -13,6 +13,19 @@ RSpec.describe Manager::AdministrateurConfirmationsController, type: :controller
 
   let(:procedure) { create(:procedure, administrateurs: [inviter_administrateur]) }
 
+  shared_examples "administrateur already added" do
+    before do
+      procedure.administrateurs << invited_administrateur
+      sign_in confirmer_super_admin
+    end
+
+    it "redirects to the procedure with a notice" do
+      expect { subject }.not_to change { procedure.administrateurs.count }
+      expect(flash[:notice]).to eq("Cet administrateur a déjà été ajouté à cette démarche.")
+      expect(response).to redirect_to(manager_procedure_path(procedure))
+    end
+  end
+
   describe "GET #new" do
     subject(:new_request) do
       get :new, params: {
@@ -53,6 +66,8 @@ RSpec.describe Manager::AdministrateurConfirmationsController, type: :controller
 
       it_behaves_like "current admin is allowed to confirm adding another one"
     end
+
+    it_behaves_like "administrateur already added"
 
     describe 'edge cases' do
       context 'when the environment is development' do
@@ -131,6 +146,8 @@ RSpec.describe Manager::AdministrateurConfirmationsController, type: :controller
 
       it_behaves_like "current admin is allowed to confirm adding another one"
     end
+
+    it_behaves_like "administrateur already added"
 
     describe 'edge cases' do
       context 'when the environment is development' do

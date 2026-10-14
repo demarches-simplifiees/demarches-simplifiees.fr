@@ -58,7 +58,7 @@ describe Manager::ConfirmationUrlsController, type: :controller do
         end
 
         it do
-          expect(flash[:alert]).to match(/Cet administrateur a déjà été ajouté/)
+          expect(flash[:notice]).to eq("Cet administrateur a déjà été ajouté à cette démarche.")
           expect(response).to redirect_to(manager_procedure_path(procedure))
         end
       end

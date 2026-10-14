@@ -2,8 +2,11 @@
 
 module Manager
   class AdministrateurConfirmationsController < Manager::ApplicationController
+    include AdministrateurAlreadyAddedConcern
+
     before_action :set_procedure
     before_action :decrypt_params
+    before_action :ensure_not_already_added
     before_action :ensure_not_inviter, unless: -> { Rails.env.development? }
     before_action :ensure_not_invited, unless: -> { Rails.env.development? }
 
@@ -12,13 +15,18 @@ module Manager
     end
 
     def create
-      administrateur = Administrateur.by_email(@invited_email)
       AdministrateursProcedure.create!(procedure: @procedure, administrateur: administrateur)
       flash[:notice] = "L’administrateur \"#{administrateur.email}\" a été ajouté à la démarche."
       redirect_to manager_procedure_path(@procedure)
     end
 
     private
+
+    attr_reader :procedure
+
+    def administrateur
+      @administrateur ||= Administrateur.by_email(@invited_email)
+    end
 
     def ensure_not_inviter
       redirect_unallowed if @inviter_id.to_i == current_super_admin.id
