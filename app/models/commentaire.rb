@@ -120,8 +120,13 @@ class Commentaire < ApplicationRecord
     dossier.publish_event(Events::MessageCree, author:, commentaire_id: id)
   end
 
-  def cancel_correction!
-    dossier_correction&.cancel!
+  def cancel_correction!(author = instructeur)
+    return if dossier_correction.nil?
+
+    transaction do
+      dossier_correction.cancel!
+      dossier.publish_event(Events::CorrectionAnnulee, author:, correction_id: dossier_correction.id)
+    end
   end
 
   def soft_delete!

@@ -576,6 +576,35 @@ describe 'Dossier events', type: :model do
     end
   end
 
+  describe 'correction_annulee' do
+    it 'records the cancellation of a pending correction by the instructeur' do
+      dossier = dossiers.en_construction
+      commentaire = CommentaireService.build(instructeur, dossier, body: 'Merci de corriger')
+      dossier.flag_as_pending_correction!(commentaire)
+      correction = dossier.pending_correction
+
+      commentaire.cancel_correction!
+
+      expect(event_store).to have_published(
+        an_event(Events::CorrectionAnnulee)
+          .with_data(correction_id: correction.id)
+          .with_metadata(actor: { type: 'Instructeur', id: instructeur.id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+      expect(correction.reload).to be_cancelled
+    end
+
+    it 'credits the instructeur who cancels, not the one who asked' do
+      dossier = dossiers.en_construction
+      commentaire = CommentaireService.build(instructeur, dossier, body: 'Merci de corriger')
+      dossier.flag_as_pending_correction!(commentaire)
+      commentaire.cancel_correction!(instructeurs.admin)
+
+      expect(event_store).to have_published(
+        an_event(Events::CorrectionAnnulee).with_metadata(actor: { type: 'Instructeur', id: instructeurs.admin.id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+  end
+
   describe 'request metadata' do
     it 'keeps the request id, not the remote ip' do
       env = Rack::MockRequest.env_for('/', 'REMOTE_ADDR' => '203.0.113.7', 'action_dispatch.request_id' => 'req-1')
