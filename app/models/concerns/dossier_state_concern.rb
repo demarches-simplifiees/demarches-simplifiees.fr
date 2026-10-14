@@ -296,6 +296,7 @@ module DossierStateConcern
     EmailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:refuse))
 
     log_dossier_operation(instructeur, :refuser, self)
+    publish_event(Events::DossierRefuse, author: instructeur)
   end
 
   def after_commit_refuser(h)
@@ -333,6 +334,7 @@ module DossierStateConcern
     EmailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:refuse))
 
     log_automatic_dossier_operation(:refuser, self)
+    publish_event(Events::DossierRefuse)
   end
 
   def after_commit_refuser_automatiquement
