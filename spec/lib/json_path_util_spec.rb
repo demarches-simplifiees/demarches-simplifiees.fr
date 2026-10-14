@@ -86,6 +86,12 @@ describe JSONPathUtil do
       expect(result).to eq({})
     end
   end
+  describe '.on_safe' do
+    it 'finds nothing under a scalar, rather than parsing a string as JSON' do
+      expect(described_class.on_safe('ACME', '$.nom')).to eq([])
+    end
+  end
+
   describe '.filter_selectable_datasources' do
     context 'when given an Hash' do
       let(:hash) do
