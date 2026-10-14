@@ -9,7 +9,7 @@ module DossierStateConcern
     self.submitted_revision_id = revision_id
     save!
 
-    # before routing, which may record groupe_instructeur_change
+    # before routing, which may record dossier_route
     publish_event(Events::DossierModifie, author: user, revision_id: submitted_revision_id, checkpoint:)
 
     RoutingEngine.compute(self)
@@ -32,7 +32,7 @@ module DossierStateConcern
     traitement = self.traitements.instructeur_submit_en_construction(instructeur:, checkpoint:, motivation:)
     save!
 
-    # before routing, which may record groupe_instructeur_change
+    # before routing, which may record dossier_route
     publish_event(Events::DossierModifie, author: instructeur, revision_id: submitted_revision_id, checkpoint:)
 
     RoutingEngine.compute(self)

@@ -790,17 +790,23 @@ class Dossier < ApplicationRecord
 
     track_assigned_dossier_without_groupe_instructeur if groupe_instructeur.nil?
 
-    update!(groupe_instructeur:, groupe_instructeur_updated_at: Time.zone.now)
-    update!(forced_groupe_instructeur: true) if mode == DossierAssignment.modes.fetch(:manual)
+    transaction do
+      update!(groupe_instructeur:, groupe_instructeur_updated_at: Time.zone.now)
+      update!(forced_groupe_instructeur: true) if mode == DossierAssignment.modes.fetch(:manual)
 
-    create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, author&.email)
+      create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, author&.email)
 
-    if !brouillon?
-      unfollow_stale_instructeurs
-      update_notifications(previous_groupe_instructeur, groupe_instructeur) if previous_groupe_instructeur.present?
+      if !brouillon?
+        unfollow_stale_instructeurs
+        update_notifications(previous_groupe_instructeur, groupe_instructeur) if previous_groupe_instructeur.present?
 
-      if author.present?
-        log_dossier_operation(author, :changer_groupe_instructeur, self)
+        if author.present?
+          log_dossier_operation(author, :changer_groupe_instructeur, self)
+        end
+      end
+
+      if !brouillon? && previous_groupe_instructeur != groupe_instructeur
+        publish_event(Events::DossierRoute, author:, groupe_instructeur_id: groupe_instructeur.id, mode: mode.to_s)
       end
     end
   end

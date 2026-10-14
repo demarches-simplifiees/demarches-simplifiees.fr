@@ -195,6 +195,64 @@ describe 'Dossier events', type: :model do
     end
   end
 
+  describe 'dossier_route' do
+    let(:other_groupe) { procedure.groupe_instructeurs.create!(label: 'Autre groupe') }
+
+    it 'records a reassignment with the new groupe and the mode' do
+      dossier = dossiers.en_construction
+
+      dossier.assign_to_groupe_instructeur(other_groupe, DossierAssignment.modes.fetch(:manual), instructeur)
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierRoute)
+          .with_data(groupe_instructeur_id: other_groupe.id, mode: 'manual')
+          .with_metadata(actor: { type: 'Instructeur', id: instructeur.id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+
+    it 'records nothing when the groupe does not change, nor for a brouillon' do
+      dossier = dossiers.en_construction
+      expect { dossier.assign_to_groupe_instructeur(dossier.groupe_instructeur, DossierAssignment.modes.fetch(:manual), instructeur) }
+        .not_to change { events_of(dossier).size }
+
+      brouillon = dossiers.brouillon
+      expect { brouillon.assign_to_groupe_instructeur(other_groupe, DossierAssignment.modes.fetch(:auto)) }
+        .not_to change { events_of(brouillon).size }
+    end
+
+    context 'when the routing reassigns the dossier' do
+      before do
+        allow(RoutingEngine).to receive(:compute) do |routed|
+          routed.assign_to_groupe_instructeur(other_groupe, DossierAssignment.modes.fetch(:auto))
+        end
+      end
+
+      it 'comes after dossier_depose at the deposit' do
+        dossier = dossiers.brouillon
+
+        dossier.passer_en_construction!
+
+        expect(events_of(dossier).map(&:class)).to eq([Events::DossierDepose, Events::DossierRoute])
+      end
+
+      it 'comes after dossier_modifie on a submission by the usager' do
+        dossier = dossiers.en_construction
+
+        dossier.usager_submit_en_construction!
+
+        expect(events_of(dossier).map(&:class)).to eq([Events::DossierModifie, Events::DossierRoute])
+      end
+
+      it 'comes after dossier_modifie on a submission by an instructeur' do
+        dossier = dossiers.en_construction
+
+        dossier.instructeur_submit_en_construction!(instructeur:, notify: false)
+
+        expect(events_of(dossier).map(&:class)).to eq([Events::DossierModifie, Events::DossierRoute])
+      end
+    end
+  end
+
   describe 'request metadata' do
     it 'keeps the request id, not the remote ip' do
       env = Rack::MockRequest.env_for('/', 'REMOTE_ADDR' => '203.0.113.7', 'action_dispatch.request_id' => 'req-1')
