@@ -94,7 +94,7 @@ module Instructeurs
       requested_labels = @dossier.procedure.labels.where(id: requested_label_ids)
 
       requested_labels.each { @dossier.add_label(it, author: current_instructeur) }
-      @dossier.labels.unscope(:order).where.not(id: requested_labels.ids).find_each { @dossier.remove_label(it) }
+      @dossier.labels.unscope(:order).where.not(id: requested_labels.ids).find_each { @dossier.remove_label(it, author: current_instructeur) }
 
       render :change_state
     end

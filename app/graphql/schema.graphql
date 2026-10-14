@@ -3120,6 +3120,11 @@ input DossierSupprimerLabelInput {
   """
   clientMutationId: String
   dossierId: ID!
+
+  """
+  Instructeur qui retire le label.
+  """
+  instructeurId: ID
   labelId: ID!
 }
 

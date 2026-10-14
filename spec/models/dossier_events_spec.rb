@@ -493,6 +493,31 @@ describe 'Dossier events', type: :model do
     end
   end
 
+  describe 'dossier_label_supprime' do
+    it 'records a label removed, not a second removal' do
+      dossier = dossiers.en_construction
+      label = procedure.labels.create!(name: 'À relancer', color: 'green_emeraude')
+      dossier.add_label(label)
+
+      expect { 2.times { dossier.remove_label(label, author: instructeur) } }
+        .to change { events_of(dossier).size }.by(1)
+      expect(event_store).to have_published(
+        an_event(Events::DossierLabelSupprime)
+          .with_data(label_id: label.id)
+          .with_metadata(actor: { type: 'Instructeur', id: instructeur.id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+
+    it 'records nothing when the label itself is destroyed' do
+      dossier = dossiers.en_construction
+      label = procedure.labels.create!(name: 'Éphémère', color: 'green_emeraude')
+      dossier.add_label(label)
+
+      expect { label.destroy! }.not_to change { events_of(dossier).size }
+      expect(dossier.labels).to be_empty
+    end
+  end
+
   describe 'request metadata' do
     it 'keeps the request id, not the remote ip' do
       env = Rack::MockRequest.env_for('/', 'REMOTE_ADDR' => '203.0.113.7', 'action_dispatch.request_id' => 'req-1')

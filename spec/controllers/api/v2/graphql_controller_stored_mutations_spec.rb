@@ -840,7 +840,7 @@ describe API::V2::GraphqlController do
 
     context 'dossierSupprimerLabel' do
       let(:label) { create(:label, procedure:) }
-      let(:variables) { { input: { dossierId: dossier.to_typed_id, labelId: label.to_typed_id } } }
+      let(:variables) { { input: { dossierId: dossier.to_typed_id, labelId: label.to_typed_id, instructeurId: instructeur.to_typed_id } } }
       let(:operation_name) { 'dossierSupprimerLabel' }
 
       context 'success' do
@@ -853,6 +853,9 @@ describe API::V2::GraphqlController do
           expect(gql_data[:dossierSupprimerLabel][:dossier][:labels]).to eq([])
           expect(gql_data[:dossierSupprimerLabel][:label]).to eq(id: label.to_typed_id, name: label.name, color: label.color)
           expect(dossier.reload.labels).to be_empty
+          expect(Events.store).to have_published(
+            an_event(Events::DossierLabelSupprime).with_metadata(actor: { type: 'Instructeur', id: instructeur.id })
+          ).in_stream(Events.dossier_stream(dossier.id))
         }
       end
 

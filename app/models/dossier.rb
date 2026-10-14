@@ -777,12 +777,15 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def remove_label(label)
+  def remove_label(label, author: nil)
     dossier_label = dossier_labels.find_by(label:)
     return if dossier_label.nil?
 
-    dossier_label.destroy
-    dossier_label
+    transaction do
+      dossier_label.destroy
+      publish_event(Events::DossierLabelSupprime, author:, label_id: label.id) if dossier_label.destroyed?
+      dossier_label
+    end
   end
 
   def publish_event(event_class, author: nil, **data)
