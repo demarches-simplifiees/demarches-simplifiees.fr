@@ -15,7 +15,7 @@ module Manager
     end
 
     def create
-      AdministrateursProcedure.create!(procedure: @procedure, administrateur: administrateur)
+      AdministrateursProcedure.create_or_find_by!(procedure: @procedure, administrateur:)
       flash[:notice] = "L’administrateur \"#{administrateur.email}\" a été ajouté à la démarche."
       redirect_to manager_procedure_path(@procedure)
     end

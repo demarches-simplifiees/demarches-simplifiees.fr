@@ -173,6 +173,19 @@ RSpec.describe Manager::AdministrateurConfirmationsController, type: :controller
         it { expect(flash[:error]).to match(/Le lien que vous avez utilisé est invalide/) }
       end
 
+      context 'when a concurrent confirmation adds the administrateur after the check' do
+        before do
+          sign_in confirmer_super_admin
+          allow(controller).to receive(:ensure_not_already_added)
+          procedure.administrateurs << invited_administrateur
+        end
+
+        it "does not fail on the unique index" do
+          expect { create_request }.not_to change { procedure.administrateurs.count }
+          expect(response).to redirect_to(manager_procedure_path(procedure))
+        end
+      end
+
       context 'when the procedure_id is tampered in the URL' do
         let(:other_procedure) { create(:procedure) }
 
