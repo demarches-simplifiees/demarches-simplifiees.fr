@@ -1,0 +1,65 @@
+<div class="deletion-blockers">
+  <p><%= t(".intro") %></p>
+
+  <ul>
+    <% if blockers[:administrateur] %>
+      <li>
+        <%= t(".administrateur_html", url: manager_administrateur_path(blockers[:administrateur])) %>
+      </li>
+    <% end %>
+
+    <% if blockers[:instructeur] %>
+      <li>
+        <%= t(".instructeur_html", url: manager_instructeur_path(blockers[:instructeur])) %>
+      </li>
+    <% end %>
+
+    <% if blockers[:answered_avis] %>
+      <li>
+        <%= t(".answered_avis", count: blockers[:answered_avis].count) %>
+
+        <ul>
+          <% avis_rows(blockers[:answered_avis]).each do |avis| %>
+            <li>
+              <%= t(".answered_avis_row_html", dossier: dossier_link(avis), procedure: procedure_link(avis), claimant: avis.claimant&.email, date: l(avis.created_at.to_date)) %>
+            </li>
+          <% end %>
+
+          <% if hidden_count(blockers[:answered_avis]).positive? %>
+            <li>
+              <%= t(".more", count: hidden_count(blockers[:answered_avis])) %>
+            </li>
+          <% end %>
+        </ul>
+      </li>
+    <% end %>
+
+    <% if blockers[:requested_avis] %>
+      <li>
+        <%= t(".requested_avis", count: blockers[:requested_avis].count) %>
+
+        <ul>
+          <% avis_rows(blockers[:requested_avis]).each do |avis| %>
+            <li>
+              <%= t(".requested_avis_row_html", dossier: dossier_link(avis), procedure: procedure_link(avis), expert: avis.expert&.email, date: l(avis.created_at.to_date)) %>
+            </li>
+          <% end %>
+
+          <% if hidden_count(blockers[:requested_avis]).positive? %>
+            <li>
+              <%= t(".more", count: hidden_count(blockers[:requested_avis])) %>
+            </li>
+          <% end %>
+        </ul>
+      </li>
+    <% end %>
+
+    <% if blockers[:commentaires] %>
+      <li><%= t(".commentaires", count: blockers[:commentaires].count) %></li>
+    <% end %>
+  </ul>
+
+  <% if blockers[:answered_avis] || blockers[:requested_avis] %>
+    <p><%= t(".avis_hint") %></p>
+  <% end %>
+</div>

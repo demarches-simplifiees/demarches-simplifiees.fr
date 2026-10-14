@@ -24,8 +24,9 @@ describe Manager::UsersController, type: :controller do
     context 'when the user cannot be deleted' do
       let(:user) { administrateurs.default.user }
 
-      it 'does not offer the deletion' do
+      it 'explains what blocks it instead of offering the deletion' do
         expect(response.body).not_to include(delete_edit_manager_user_path(user))
+        expect(response.body).to include(manager_administrateur_path(administrateurs.default))
       end
     end
 

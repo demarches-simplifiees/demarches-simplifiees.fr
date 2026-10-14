@@ -56,8 +56,6 @@
       <%= link_to(t("administrate.actions.destroy"),
                   delete_edit_manager_user_path(page.resource),
                   class: "button button--danger") %>
-    <% else %>
-      <span><%= t(".cannot_be_deleted") %></span>
     <% end %>
 
     <% if !user.confirmed? %>
@@ -67,6 +65,8 @@
 </header>
 
 <section class="main-content__body">
+  <%= render Manager::DeletionBlockersComponent.new(user:) %>
+
   <%= render partial: 'manager/application/user_meta', locals: { user: user } %>
 
   <dl>

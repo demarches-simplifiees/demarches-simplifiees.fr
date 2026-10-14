@@ -322,7 +322,7 @@ class User < ApplicationRecord
   def delete_and_keep_track_dossiers_also_delete_user(super_admin, reason:)
     transaction do
       if !can_be_deleted?
-        raise "Cannot delete this user: administrateur, instructeur, or expert still referenced by a procedure, an avis or a message"
+        raise "Cannot delete this user: administrateur, instructeur, or expert still named by an avis or a message"
       end
 
       # delete invites
