@@ -301,6 +301,21 @@ describe Champs::ReferentielChamp, type: :model do
     end
   end
 
+  describe 'copy on the user buffer' do
+    let(:dossier) { create(:dossier, :en_construction, procedure:) }
+
+    it 'keeps the fetched data of the main stream' do
+      referentiel_champ.update_columns(external_id: 'ABC', value: 'ACME', data: { 'nom' => 'ACME' }, external_state: 'fetched')
+
+      reloaded = Dossier.find(dossier.id)
+      copy = reloaded.with_update_stream(reloaded.user) do
+        reloaded.champ_for_update(reloaded.find_type_de_champ_by_stable_id(referentiel_champ.stable_id), updated_by: 'test')
+      end
+
+      expect(copy.reload).to have_attributes(external_id: 'ABC', value: 'ACME', data: { 'nom' => 'ACME' })
+    end
+  end
+
   describe 'data=' do
     subject { referentiel_champ.update(data:) }
 
