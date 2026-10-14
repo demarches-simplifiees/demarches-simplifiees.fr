@@ -30,8 +30,11 @@ class Cron::RetryDegradedExternalDataJob < Cron::CronJob
 
   private
 
+  # Whatever blocks the token blocks every retry it covers, so it is filtered
+  # here rather than discovered champ by champ once the batch is already full.
   def retryable_batch
-    with_a_usable_token(degraded_records)
+    degraded_records
+      .merge(Procedure.with_usable_api_entreprise_token)
       .limit(batch_size)
       .preload(dossier: :procedure)
   end
@@ -43,26 +46,5 @@ class Cron::RetryDegradedExternalDataJob < Cron::CronJob
       .merge(Procedure.kept)
       .where(champs: { stream: Dossier::NON_HISTORY_STREAMS })
       .where(dossiers: { hidden_by_administration_at: nil, hidden_by_expired_at: nil })
-  end
-
-  # Whatever blocks the token blocks every retry it covers, so it is filtered
-  # here rather than discovered champ by champ once the batch is already full.
-  def with_a_usable_token(champs)
-    champs = champs
-      .where(procedures: { api_entreprise_token_rejected_at: [nil, ..Procedure::TOKEN_REJECTION_HOLDS_FOR.ago] })
-      .where.not(procedures: { id: procedures_with_an_unusable_token })
-
-    return champs if Procedure.instance_api_entreprise_token.usable?
-
-    champs.where.not(procedures: { api_entreprise_token: nil })
-  end
-
-  # No SQL predicate decodes a JWT, so this one check stays in Ruby — over the
-  # procedures carrying a token of their own, not over the degraded backlog.
-  def procedures_with_an_unusable_token
-    Procedure
-      .where.not(api_entreprise_token: nil)
-      .pluck(:id, :api_entreprise_token)
-      .filter_map { |id, token| id if !APIEntrepriseToken.new(token).usable? }
   end
 end

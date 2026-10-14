@@ -12,6 +12,23 @@ module APIEntrepriseTokenConcern
   class_methods do
     # Shared by every procedure that carries none of its own.
     def instance_api_entreprise_token = APIEntrepriseToken.new(ENV['API_ENTREPRISE_KEY'])
+
+    def with_usable_api_entreprise_token
+      procedures = where(api_entreprise_token_rejected_at: [nil, ..TOKEN_REJECTION_HOLDS_FOR.ago])
+        .where.not(id: ids_with_an_unusable_api_entreprise_token)
+
+      return procedures if instance_api_entreprise_token.usable?
+
+      procedures.where.not(api_entreprise_token: nil)
+    end
+
+    # No SQL predicate decodes a JWT, so this one check stays in Ruby — over the
+    # procedures carrying a token of their own, not over the degraded backlog.
+    def ids_with_an_unusable_api_entreprise_token
+      where.not(api_entreprise_token: nil)
+        .pluck(:id, :api_entreprise_token)
+        .filter_map { |id, token| id if !APIEntrepriseToken.new(token).usable? }
+    end
   end
 
   def api_entreprise_token
