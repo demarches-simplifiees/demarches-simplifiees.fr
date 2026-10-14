@@ -413,6 +413,7 @@ module DossierStateConcern
     EmailTemplatePresenterService.create_commentaire_for_state(self, DossierOperationLog.operations.fetch(:repasser_en_instruction))
 
     log_dossier_operation(instructeur, :repasser_en_instruction)
+    publish_event(Events::DossierRepasseEnInstruction, author: instructeur)
   end
 
   def after_commit_repasser_en_instruction(h)
