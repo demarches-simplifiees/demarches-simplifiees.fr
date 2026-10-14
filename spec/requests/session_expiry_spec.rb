@@ -5,7 +5,6 @@ describe 'session deadlines', type: :request do
 
   # Every context names its own `user`; the sign in is the same for all of them.
   before do
-    Flipper.enable_actor(:session_registry, user)
     post_user_session(user)
   end
 
@@ -89,27 +88,6 @@ describe 'session deadlines', type: :request do
 
     it 'is not bounded by an absolute deadline the way an agent is' do
       expect(user.session_max_lifetime).to eq(User::USAGER_SESSION_MAX_LIFETIME)
-    end
-  end
-
-  # The check is gated; the stamp that feeds it is not. Gating both would
-  # freeze `last_seen_on` and sign everyone out when the flag reopened.
-  context 'the registry flag closed, then opened again' do
-    let(:user) { users.usager }
-
-    it 'does not sign out someone who kept coming back meanwhile' do
-      Flipper.disable_actor(:session_registry, user)
-
-      travel(10.days) { get profil_path }
-      travel(20.days) { get profil_path }
-
-      Flipper.enable_actor(:session_registry, user)
-
-      travel(25.days) do
-        get profil_path
-
-        expect(response).to have_http_status(:ok)
-      end
     end
   end
 

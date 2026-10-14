@@ -3,8 +3,6 @@
 describe 'super admin session lifetime', type: :request do
   let(:super_admin) { create(:super_admin, :with_otp) }
 
-  before { Flipper.enable_actor(:session_registry, super_admin) }
-
   def sign_in_super_admin(remember_me: false) = post_super_admin_session(super_admin, remember_me:)
 
   # Busy the whole time on purpose: an inactivity timeout would let this pass.

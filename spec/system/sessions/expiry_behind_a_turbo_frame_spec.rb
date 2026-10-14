@@ -18,7 +18,6 @@ describe 'a session that dies behind a turbo frame', js: true do
   let!(:procedure) { procedures.individual }
 
   before do
-    Flipper.enable_actor(:session_registry, instructeur.user)
     login_as(instructeur.user, scope: :user)
     visit instructeur_procedures_path
   end
