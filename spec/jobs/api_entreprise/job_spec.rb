@@ -101,7 +101,6 @@ RSpec.describe APIEntreprise::Job, type: :job do
       expect(APIEntreprise::ExercicesJob.new.api_pool).to eq(250)
       expect(APIEntreprise::AssociationJob.new.api_pool).to eq(250)
       expect(APIEntreprise::BilansBdfJob.new.api_pool).to eq(250)
-      expect(APIEntreprise::ServiceJob.new.api_pool).to eq(250)
       expect(APIEntreprise::EffectifsJob.new.api_pool).to eq(50)
       expect(APIEntreprise::EffectifsAnnuelsJob.new.api_pool).to eq(50)
       expect(APIEntreprise::AttestationSocialeJob.new.api_pool).to eq(100)
@@ -124,7 +123,6 @@ RSpec.describe APIEntreprise::Job, type: :job do
       expect(APIEntreprise::AttestationSocialeJob.new.ping_key_for_job).to eq('urssaf/attestation_sociale')
       expect(APIEntreprise::AttestationFiscaleJob.new.ping_key_for_job).to eq('dgfip/attestation_fiscale')
       expect(APIEntreprise::BilansBdfJob.new.ping_key_for_job).to eq('banque_de_france/bilans')
-      expect(APIEntreprise::ServiceJob.new.ping_key_for_job).to eq('insee/sirene')
     end
 
     it 'returns nil for unknown job classes (fail-open)' do
@@ -134,11 +132,12 @@ RSpec.describe APIEntreprise::Job, type: :job do
 
   describe 'PING_KEY_BY_JOB completeness' do
     it 'covers all job classes in app/jobs/api_entreprise/' do
-      job_files = Rails.root.glob('app/jobs/api_entreprise/*_job.rb')
-      job_class_names = job_files.map { |f| File.basename(f, '.rb').camelize }
+      job_class_names = Rails.root.glob('app/jobs/api_entreprise/*_job.rb')
+        .map { "APIEntreprise::#{File.basename(it, '.rb').camelize}".constantize }
+        .filter { it < described_class }
+        .map { it.name.demodulize }
 
-      mapped = described_class::PING_KEY_BY_JOB.keys
-      expect(mapped).to match_array(job_class_names)
+      expect(described_class::PING_KEY_BY_JOB.keys).to match_array(job_class_names)
     end
   end
 
