@@ -109,6 +109,27 @@ describe 'Dossier events', type: :model do
     end
   end
 
+  describe 'dossier_accepte' do
+    it 'records the decision by an instructeur' do
+      dossier = dossiers.en_instruction
+
+      dossier.accepter!(instructeur:, motivation: 'ok')
+
+      expect(event_store).to have_published(
+        an_event(Events::DossierAccepte).with_metadata(actor: { type: 'Instructeur', id: instructeur.id })
+      ).in_stream(Events.dossier_stream(dossier.id))
+    end
+
+    it 'records the automatic decision of a declarative démarche after the deposit' do
+      declarative_procedure = create(:procedure, :published, :for_individual, declarative_with_state: 'accepte')
+      dossier = create(:dossier, :brouillon, :with_individual, procedure: declarative_procedure)
+
+      dossier.passer_en_construction!
+
+      expect(events_of(dossier).map(&:class)).to eq([Events::DossierDepose, Events::DossierAccepte])
+    end
+  end
+
   describe 'request metadata' do
     it 'keeps the request id, not the remote ip' do
       env = Rack::MockRequest.env_for('/', 'REMOTE_ADDR' => '203.0.113.7', 'action_dispatch.request_id' => 'req-1')

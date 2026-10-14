@@ -216,6 +216,7 @@ module DossierStateConcern
     EmailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:accepte))
 
     log_dossier_operation(instructeur, :accepter, self)
+    publish_event(Events::DossierAccepte, author: instructeur)
   end
 
   def after_commit_accepter(h)
@@ -260,6 +261,7 @@ module DossierStateConcern
     EmailTemplatePresenterService.create_commentaire_for_state(self, state)
 
     log_automatic_dossier_operation(:accepter, self)
+    publish_event(Events::DossierAccepte)
   end
 
   def after_commit_accepter_automatiquement
