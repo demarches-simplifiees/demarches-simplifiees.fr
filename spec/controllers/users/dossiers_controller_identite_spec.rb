@@ -47,7 +47,7 @@ describe Users::DossiersController, type: :controller do
   describe 'identite turbo_stream persists the persona choice' do
     let(:procedure) { procedures.individual }
     let(:dossier) { dossiers.brouillon }
-    let(:now) { Time.zone.parse('01/01/2100') }
+    let(:now) { Time.current.change(usec: 0) }
 
     before { sign_in(user) }
 
@@ -126,7 +126,7 @@ describe Users::DossiersController, type: :controller do
 
     context 'with correct individual and dossier params' do
       let(:dossier_params) { { individual_attributes: { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } } }
-      let(:now) { Time.zone.parse('01/01/2100') }
+      let(:now) { Time.current.change(usec: 0) }
       before do
         travel_to(now) do
           subject

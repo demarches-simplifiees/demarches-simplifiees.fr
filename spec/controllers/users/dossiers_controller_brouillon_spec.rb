@@ -52,7 +52,7 @@ describe Users::DossiersController, type: :controller do
     let!(:dossier) { create(:dossier, user:, procedure:) }
     let(:first_champ) { dossier.root_champs_public.first }
     let(:value) { 'beautiful value' }
-    let(:now) { Time.zone.parse('01/01/2100') }
+    let(:now) { Time.current.change(usec: 0) }
     let(:payload) { { id: dossier.id } }
 
     subject do
@@ -217,7 +217,7 @@ describe Users::DossiersController, type: :controller do
     let(:piece_justificative_champ) { dossier.root_champs_public.last }
     let(:value) { 'beautiful value' }
     let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
-    let(:now) { Time.zone.parse('01/01/2100') }
+    let(:now) { Time.current.change(usec: 0) }
 
     let(:submit_payload) do
       {
@@ -389,7 +389,7 @@ describe Users::DossiersController, type: :controller do
       it 'updates the champs' do
         subject
         expect(response).to have_http_status(:ok)
-        expect(dossier.reload.updated_at.year).to eq(2100)
+        expect(dossier.reload.updated_at).to eq(now)
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon))
         expect(dossier.reload.brouillon_close_to_expiration_notice_sent_at).to be_nil
         expect(first_champ.reload.value).to eq('beautiful value')

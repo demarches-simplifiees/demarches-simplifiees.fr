@@ -323,13 +323,13 @@ describe Manager::AdministrateursController, type: :controller do
       end
 
       context "when the link has expired" do
-        let(:q) { valid_q(expires_in: 1.day) }
+        let(:q) { valid_q(expires_in: 1.minute) }
 
         before { sign_in confirmer_super_admin }
 
         it "does not merge" do
           q
-          travel_to(2.days.from_now) { create_request }
+          travel_to(2.minutes.from_now) { create_request }
 
           expect(procedure.reload.administrateurs).to eq([old_administrateur])
           expect(flash[:error]).to match(/Le lien que vous avez utilisé est invalide/)

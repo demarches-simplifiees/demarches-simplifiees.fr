@@ -4,7 +4,7 @@ describe Experts::AvisController, type: :controller do
   context 'with an expert signed in' do
     render_views
 
-    let(:now) { Time.zone.parse('01/02/2345') }
+    let(:now) { Time.current.change(usec: 0) }
     let(:instructeur) { create(:instructeur) }
     let(:instructeur_without_instant_avis_notification) { create(:instructeur) }
     let!(:instructeur_with_instant_avis_notification) { create(:instructeur) }

@@ -393,6 +393,8 @@ describe 'The user', js: true do
 
     travel_to((months_before_expiration.months).from_now) do
       user_old_dossier.update(brouillon_close_to_expiration_notice_sent_at: 3.weeks.ago)
+      # Months later: no session survives that, so the visitor signs in again.
+      login_as(user, scope: :user)
       visit brouillon_dossier_path(user_old_dossier)
       expect(page).to have_css('.fr-callout__title', text: 'Votre dossier a expiré', visible: true)
       find('#test-user-repousser-expiration').click

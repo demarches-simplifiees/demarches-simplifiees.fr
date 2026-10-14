@@ -49,8 +49,12 @@ describe TrustedDeviceConcern, type: :controller do
       expect(response).to have_http_status(:forbidden)
     end
 
+    # Another device, not this one: revoking every row would close the session
+    # this spec is browsing with, and a signed out visitor has no instructeur to
+    # be trusted as.
     it 'keeps trusting it when a single device is closed elsewhere' do
-      user.revoke_sessions!(reason: :logout_device)
+      elsewhere = user.open_user_session!('another browser')
+      UserSession.where(id: elsewhere.id).revoke_all!(:logout_device)
       sign_in(user.reload)
 
       get :check
