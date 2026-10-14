@@ -53,4 +53,29 @@ describe 'Procedure events', type: :model do
       expect(events_of(procedure).last).to be_an_instance_of(Events::DemarcheRepubliee)
     end
   end
+
+  describe 'demarche_close and demarche_depubliee' do
+    it 'records a close by an administrateur, and an automatic one without actor' do
+      procedure.close!(administrateur)
+      expect(event_store).to have_published(
+        an_event(Events::DemarcheClose).with_metadata(actor: { type: 'Administrateur', id: administrateur.id })
+      ).in_stream(Events.procedure_stream(procedure.id))
+
+      procedure.publish_or_reopen!(administrateur, procedure.path)
+      procedure.close!
+      expect(events_of(procedure).last).to be_an_instance_of(Events::DemarcheClose)
+      expect(events_of(procedure).last.metadata.to_h).not_to have_key(:actor)
+    end
+
+    it 'records the depublication of the démarche another one takes the path of' do
+      other_procedure = create(:procedure, administrateurs: [administrateur], zones: [zones.default])
+
+      other_procedure.publish_or_reopen!(administrateur, procedure.path)
+
+      expect(event_store).to have_published(
+        an_event(Events::DemarcheDepubliee).with_metadata(actor: { type: 'Administrateur', id: administrateur.id })
+      ).in_stream(Events.procedure_stream(procedure.id))
+      expect(procedure.reload).to be_depubliee
+    end
+  end
 end
