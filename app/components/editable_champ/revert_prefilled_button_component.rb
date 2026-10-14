@@ -10,6 +10,6 @@ class EditableChamp::RevertPrefilledButtonComponent < ApplicationComponent
   end
 
   def revert_path
-    revert_prefill_champ_dossier_path(@champ.dossier, stable_id: @champ.stable_id)
+    revert_prefill_champ_dossier_path(@champ.dossier, public_id: @champ.public_id)
   end
 end

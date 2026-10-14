@@ -20,6 +20,23 @@ RSpec.describe EditableChamp::RevertPrefilledButtonComponent, type: :component d
     end
   end
 
+  context 'when champ is a child of a repetition' do
+    let(:public_type_de_champs) { [{ type: :repetition, mandatory: false, children: [{ type: :text }] }] }
+    let(:champ) do
+      repetition = dossier.revision.public_root_type_de_champs.first
+      row_id = dossier.repetition_add_row(repetition, updated_by: 'test')
+      dossier.champ_for_update(dossier.revision.children_of(repetition).first, row_id:, updated_by: 'test')
+    end
+
+    before do
+      champ.update!(prefilled: true, value: 'modified', prefilled_original_value: { 'value' => 'original' })
+    end
+
+    it 'targets the champ of its row' do
+      expect(subject).to have_css("button[formaction$='/champs/#{champ.public_id}/revert_prefill']")
+    end
+  end
+
   context 'when champ is prefilled but not modified' do
     before do
       champ.update!(prefilled: true, value: 'original', prefilled_original_value: { 'value' => 'original' })

@@ -65,7 +65,7 @@ scope module: 'users', defaults: { nav_bar_profile: :user } do
       post 'check_completude', to: 'dossiers#check_completude'
       post 'notify_owner_for_changes', to: 'dossiers#notify_owner_for_changes'
       get 'champs/:stable_id', to: 'dossiers#champ', as: :champ
-      patch 'champs/:stable_id/revert_prefill', to: 'dossiers#revert_prefill', as: :revert_prefill_champ
+      patch 'champs/:public_id/revert_prefill', to: 'dossiers#revert_prefill', as: :revert_prefill_champ
       get 'merci'
       get 'ami-consent', to: 'ami_consents#show', as: :ami_consent
       post 'ami-consent', to: 'ami_consents#create', as: :create_ami_consent
