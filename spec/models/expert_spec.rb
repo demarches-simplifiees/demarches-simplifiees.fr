@@ -291,6 +291,29 @@ RSpec.describe Expert, type: :model do
     end
   end
 
+  describe '#deletion_blockers' do
+    let(:expert) { create(:expert) }
+
+    subject { expert.deletion_blockers }
+
+    context 'without anything naming the expert' do
+      it { is_expected.to be_empty }
+    end
+
+    context 'with an answered avis, a requested avis and a message' do
+      let!(:answered_avis) { create(:avis, :with_answer, experts_procedure: create(:experts_procedure, expert:)) }
+      let!(:requested_avis) { create(:avis, claimant: expert) }
+      let!(:commentaire) { create(:commentaire, expert:, email: expert.email) }
+
+      it 'lists each of them under its cause' do
+        expect(subject.keys).to eq([:answered_avis, :requested_avis, :commentaires])
+        expect(subject[:answered_avis]).to contain_exactly(answered_avis)
+        expect(subject[:requested_avis]).to contain_exactly(requested_avis)
+        expect(subject[:commentaires]).to contain_exactly(commentaire)
+      end
+    end
+  end
+
   describe '#destroy_unanswered_avis!' do
     let(:expert) { create(:expert) }
     let(:experts_procedure) { create(:experts_procedure, expert:, procedure: procedures.individual) }

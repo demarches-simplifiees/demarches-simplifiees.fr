@@ -309,7 +309,14 @@ class User < ApplicationRecord
   end
 
   def can_be_deleted?
-    !administrateur? && !instructeur? && (expert.nil? || expert.can_be_deleted?)
+    deletion_blockers.empty?
+  end
+
+  # The roles and records that keep the account alive, keyed by cause, for the manager.
+  def deletion_blockers
+    blockers = { administrateur:, instructeur: }.compact
+    blockers.merge!(expert.deletion_blockers) if expert
+    blockers
   end
 
   def delete_and_keep_track_dossiers_also_delete_user(super_admin, reason:)

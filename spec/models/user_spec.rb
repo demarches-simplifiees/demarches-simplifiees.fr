@@ -488,6 +488,23 @@ describe User, type: :model do
     end
   end
 
+  describe '#deletion_blockers' do
+    it 'is empty for a plain usager' do
+      expect(create(:user).deletion_blockers).to be_empty
+    end
+
+    it 'names the roles, then what still names the expert' do
+      user = administrateurs.default.user
+
+      expect(user.deletion_blockers.keys).to eq([:administrateur, :instructeur])
+      expect(user.deletion_blockers[:administrateur]).to eq(administrateurs.default)
+    end
+
+    it 'merges the expert blockers' do
+      expect(experts.default.user.deletion_blockers.keys).to eq([:answered_avis])
+    end
+  end
+
   describe '#delete_and_keep_track_dossiers_also_delete_user' do
     let(:super_admin) { create(:super_admin) }
     let(:user) { create(:user) }

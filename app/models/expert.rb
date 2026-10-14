@@ -21,7 +21,21 @@ class Expert < ApplicationRecord
   # requested, a message. An unanswered avis is disposable, as when an
   # instructeur revokes one, and a link without avis only feeds autocompletion.
   def can_be_deleted?
-    !involved_in_avis? && commentaires.none?
+    deletion_blockers.empty?
+  end
+
+  # The records that keep the expert alive, keyed by cause, for the manager.
+  def deletion_blockers
+    { answered_avis:, requested_avis:, commentaires: }.filter { |_, scope| scope.exists? }
+  end
+
+  # Avis drop their default join on dossiers: only existence matters.
+  def answered_avis
+    Avis.unscope(:joins).with_answer.where(experts_procedure_id: experts_procedures.select(:id))
+  end
+
+  def requested_avis
+    Avis.unscope(:joins).where(claimant: self)
   end
 
   # Locks the rows so an answer given meanwhile waits and then hits a gone avis.
@@ -99,14 +113,5 @@ class Expert < ApplicationRecord
     Avis
       .where(claimant_id: old_expert.id, claimant_type: Expert.name)
       .update_all(claimant_id: id)
-  end
-
-  private
-
-  # Avis drop their default join on dossiers: only existence matters.
-  def involved_in_avis?
-    avis_scope = Avis.unscope(:joins)
-    avis_scope.with_answer.exists?(experts_procedure_id: experts_procedures.select(:id)) ||
-      avis_scope.exists?(claimant: self)
   end
 end
