@@ -321,6 +321,7 @@ class User < ApplicationRecord
       # delete invites
       Invite.where(dossier: dossiers).destroy_all
 
+      expert&.destroy_unanswered_avis!
       delete_and_keep_track_dossiers(super_admin, reason:)
       destroy!
     end

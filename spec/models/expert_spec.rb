@@ -234,10 +234,19 @@ RSpec.describe Expert, type: :model do
       it { is_expected.to be true }
     end
 
-    context 'when attached to a kept procedure' do
+    # The link only feeds the instructeurs' autocompletion.
+    context 'when attached to a kept procedure without avis' do
       before { create(:experts_procedure, expert:, procedure: procedures.individual) }
 
-      it { is_expected.to be false }
+      it { is_expected.to be true }
+    end
+
+    context 'when invited by the administrateur of a kept procedure without avis' do
+      let(:procedure) { create(:procedure, experts_require_administrateur_invitation: true) }
+
+      before { create(:experts_procedure, expert:, procedure:) }
+
+      it { is_expected.to be true }
     end
 
     context 'when only attached to a discarded procedure' do
@@ -251,14 +260,20 @@ RSpec.describe Expert, type: :model do
       it { is_expected.to be true }
     end
 
-    context 'when its link to a kept procedure was revoked' do
-      before { create(:experts_procedure, expert:, procedure: procedures.individual, revoked_at: Time.zone.now) }
-
-      it { is_expected.to be true }
+    # An instructeur revoking an unanswered avis destroys it: it is disposable.
+    context 'when it was asked an avis it has not answered' do
+      it { expect(experts.second.can_be_deleted?).to be true }
     end
 
-    context 'when it still has avis' do
+    context 'when it answered an avis' do
       it { expect(experts.default.can_be_deleted?).to be false }
+    end
+
+    # The answer stays visible to the instructeurs with a revoked badge.
+    context 'when its answered avis was revoked' do
+      before { create(:avis, :with_answer, revoked_at: Time.zone.now, experts_procedure: create(:experts_procedure, expert:)) }
+
+      it { is_expected.to be false }
     end
 
     # The avis requested from another expert would otherwise lose its claimant.
@@ -273,6 +288,38 @@ RSpec.describe Expert, type: :model do
       before { create(:commentaire, expert:, email: expert.email) }
 
       it { is_expected.to be false }
+    end
+  end
+
+  describe '#destroy_unanswered_avis!' do
+    let(:expert) { create(:expert) }
+    let(:experts_procedure) { create(:experts_procedure, expert:, procedure: procedures.individual) }
+    let(:dossier) { create(:dossier, :en_instruction, procedure: procedures.individual) }
+    let!(:unanswered_avis) { create(:avis, :with_introduction, dossier:, experts_procedure:) }
+    let!(:answered_avis) { create(:avis, :with_answer, dossier:, experts_procedure:) }
+    let!(:notification) { create(:dossier_notification, dossier:, instructeur: instructeurs.default, notification_type: :attente_avis) }
+
+    subject { expert.destroy_unanswered_avis! }
+
+    it 'destroys the unanswered avis only, with its file' do
+      expect { subject }.to change { ActiveStorage::Attachment.where(record: unanswered_avis).count }.from(1).to(0)
+
+      expect(Avis.find_by(id: unanswered_avis.id)).to be_nil
+      expect(Avis.find_by(id: answered_avis.id)).to be_present
+    end
+
+    it 'clears the pending avis notification of the dossier' do
+      expect { subject }.to change { DossierNotification.exists?(notification.id) }.from(true).to(false)
+    end
+
+    context 'when another expert still has to answer on the dossier' do
+      before { create(:avis, dossier:) }
+
+      it 'keeps the pending avis notification' do
+        subject
+
+        expect(DossierNotification.exists?(notification.id)).to be true
+      end
     end
   end
 end

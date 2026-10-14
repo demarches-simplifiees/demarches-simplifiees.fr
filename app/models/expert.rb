@@ -4,7 +4,7 @@ class Expert < ApplicationRecord
   include GrantsSessionLifetimeConcern
 
   belongs_to :user
-  # Only revoked links or links to discarded procedures remain once can_be_deleted?
+  # Once can_be_deleted?, the links carry no answered avis and go with the expert.
   has_many :experts_procedures, dependent: :delete_all
   has_many :procedures, through: :experts_procedures
   has_many :avis, through: :experts_procedures
@@ -17,9 +17,25 @@ class Expert < ApplicationRecord
     user.email
   end
 
-  # Nothing may still name the expert: a live link, an avis, a message.
+  # Nothing of value may still name the expert: an answered avis, an avis it
+  # requested, a message. An unanswered avis is disposable, as when an
+  # instructeur revokes one, and a link without avis only feeds autocompletion.
   def can_be_deleted?
-    !linked_to_kept_procedure? && !involved_in_avis? && commentaires.none?
+    !involved_in_avis? && commentaires.none?
+  end
+
+  # Locks the rows so an answer given meanwhile waits and then hits a gone avis.
+  def destroy_unanswered_avis!
+    unanswered_avis = Avis.unscope(:joins).where(experts_procedure_id: experts_procedures.select(:id), answer: nil)
+    dossier_ids = unanswered_avis.distinct.pluck(:dossier_id)
+
+    unanswered_avis.lock.find_each(&:destroy!)
+
+    Dossier.where(id: dossier_ids).find_each do |dossier|
+      if dossier.avis.without_answer.empty?
+        DossierNotification.destroy_notifications_by_dossier_and_type(dossier, :attente_avis)
+      end
+    end
   end
 
   # Dossiers the expert can currently access, excluding those whose avis has been
@@ -87,14 +103,10 @@ class Expert < ApplicationRecord
 
   private
 
-  def linked_to_kept_procedure?
-    experts_procedures.not_revoked.exists?(procedure_id: Procedure.select(:id))
-  end
-
   # Avis drop their default join on dossiers: only existence matters.
   def involved_in_avis?
     avis_scope = Avis.unscope(:joins)
-    avis_scope.exists?(experts_procedure_id: experts_procedures.select(:id)) ||
+    avis_scope.with_answer.exists?(experts_procedure_id: experts_procedures.select(:id)) ||
       avis_scope.exists?(claimant: self)
   end
 end

@@ -468,9 +468,15 @@ describe User, type: :model do
     end
 
     context 'when the user is an expert' do
-      context 'with avis' do
+      context 'with an answered avis' do
         it 'cannot be deleted' do
           expect(experts.default.user.can_be_deleted?).to be false
+        end
+      end
+
+      context 'with an unanswered avis only' do
+        it 'can be deleted' do
+          expect(experts.second.user.can_be_deleted?).to be true
         end
       end
 
@@ -566,9 +572,9 @@ describe User, type: :model do
         expect(ExpertsProcedure.where(expert_id: expert.id)).to be_empty
       end
 
-      # An avis requested after the check: its foreign key rolls the deletion back.
-      context 'when an avis appears after the check' do
-        let!(:avis) { create(:avis, experts_procedure: create(:experts_procedure, expert:, procedure: procedures.individual)) }
+      # An avis answered after the check: its foreign key rolls the deletion back.
+      context 'when an answered avis appears after the check' do
+        let!(:avis) { create(:avis, :with_answer, experts_procedure: create(:experts_procedure, expert:, procedure: procedures.individual)) }
 
         before { allow(user).to receive(:can_be_deleted?).and_return(true) }
 
@@ -579,6 +585,21 @@ describe User, type: :model do
           expect(User.find_by(id: user.id)).to be_present
           expect(Avis.find_by(id: avis.id)).to be_present
         end
+      end
+    end
+
+    context 'when the user is an expert with an unanswered avis' do
+      let(:expert) { create(:expert, user:) }
+      let(:experts_procedure) { create(:experts_procedure, expert:, procedure: procedures.individual) }
+      let!(:avis) { create(:avis, dossier: dossiers.en_instruction, experts_procedure:) }
+
+      it 'deletes the user, its expert role, the link and the avis' do
+        user.delete_and_keep_track_dossiers_also_delete_user(super_admin, reason:)
+
+        expect(User.find_by(id: user.id)).to be_nil
+        expect(Expert.find_by(id: expert.id)).to be_nil
+        expect(ExpertsProcedure.find_by(id: experts_procedure.id)).to be_nil
+        expect(Avis.find_by(id: avis.id)).to be_nil
       end
     end
 
