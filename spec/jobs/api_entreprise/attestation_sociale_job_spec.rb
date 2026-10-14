@@ -6,7 +6,7 @@ RSpec.describe APIEntreprise::AttestationSocialeJob, type: :job do
   let(:etablissement) { create(:etablissement, siret: siret) }
   let(:siret) { '41816609600069' }
   let(:siren) { '418166096' }
-  let(:procedure) { create(:procedure) }
+  let(:procedure) { create(:procedure, api_entreprise_token: JWT.encode({ exp: 2.months.from_now.to_i }, nil, 'none')) }
   let(:body) { File.read('spec/fixtures/files/api_entreprise/attestation_sociale.json') }
   let(:status) { 200 }
 
@@ -19,10 +19,20 @@ RSpec.describe APIEntreprise::AttestationSocialeJob, type: :job do
     allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
-  subject { APIEntreprise::AttestationSocialeJob.new.perform(etablissement.id, procedure.id) }
+  subject { described_class.perform_now(etablissement.id, procedure.id) }
 
   it 'updates etablissement' do
     subject
     expect(Etablissement.find(etablissement.id).entreprise_attestation_sociale).to be_attached
+  end
+
+  context 'when the provider fails' do
+    let(:status) { 503 }
+
+    it 'waits in the table for the cron' do
+      expect { subject }.not_to raise_error
+      expect(ParkedAPIEntrepriseFetch.find_by(etablissement:, job: 'AttestationSocialeJob'))
+        .to have_attributes(procedure_id: procedure.id, code: 503)
+    end
   end
 end

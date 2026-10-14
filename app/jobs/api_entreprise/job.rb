@@ -1,21 +1,8 @@
 # frozen_string_literal: true
 
 class APIEntreprise::Job < ApplicationJob
-  class RetryableError < StandardError; end
-  class ProviderDownError < RetryableError; end
-
-  # The upstream provider behind API Entreprise failed in a way a retry may fix
-  # (5xx, timeout); reported once the Sidekiq attempt threshold is reached.
-  class UpstreamError < StandardError
-    include SentryFingerprint::ProviderOutage
-
-    def initialize(message, provider:)
-      @provider = provider
-      super(message)
-    end
-  end
-
   include Dry::Monads[:result]
+  include APIEntrepriseExternalDataConcern
 
   queue_as :default
 
@@ -48,20 +35,6 @@ class APIEntreprise::Job < ApplicationJob
   # If by the time the job runs the Etablissement has been deleted, ignore the job
   discard_on ActiveRecord::RecordNotFound
 
-  # Skip job if provider is known to be down, then check rate limit.
-  # Health check first (cheap Redis read), rate limiter second.
-  before_perform do
-    ping_key = ping_key_for_job
-    if ping_key && !APIEntreprise::HealthChecker.provider_up?(ping_key)
-      raise ProviderDownError, "#{self.class.name}: provider #{ping_key} is down, retrying later"
-    end
-
-    pool = api_pool
-    if APIEntreprise::RateLimiter.throttled?(pool)
-      raise RetryableError, "#{self.class.name}: rate limited (pool #{pool}), retrying later"
-    end
-  end
-
   def log_job_exception(exception)
     if etablissement.present?
       if etablissement.dossier.present?
@@ -78,29 +51,30 @@ class APIEntreprise::Job < ApplicationJob
     @etablissement = Etablissement.find(etablissement_id)
   end
 
-  # Centralizes monad unwrap for adapter results.
-  # Success(params) with data → yields params to block
-  # Success({}) → no-op (resource not found, nothing to update)
-  # Failure(retryable: true) → re-raises to trigger job retry
-  # Failure(retryable: false) → logs and no-op (forbidden, 451, etc.)
   def with_adapter(adapter)
-    result = adapter.to_params
+    if !api_entreprise_token_usable?
+      mark_parked_fetch_out_of_queue
+      return
+    end
 
-    case result
+    code = api_unavailable_code
+    return park_fetch(code) if code
+
+    case adapter.to_params
     in Success(params) if params.present?
+      release_parked_fetch
       yield params
     in Success
-      nil
-    in Failure(retryable: true, type: :rate_limited, code:, **)
-      raise RetryableError, "#{self.class.name}: rate limited by API (pool #{api_pool}), retrying later"
-    in Failure(retryable: true, type:, code:, raw_response:, **)
-      raise UpstreamError.new(format_error(type, code, raw_response), provider: self.class.name)
+      release_parked_fetch
+    in Failure(retryable: true, code:, **)
+      park_fetch(code)
     in Failure(retryable: false, type:, code:, **)
-      Rails.logger.info("APIEntreprise non-retryable failure: type=#{type} code=#{code}")
-      nil
-    else
-      raise "Unexpected adapter result: #{result.inspect}"
+      Rails.logger.info("APIEntreprise non-retryable failure: job=#{self.class.name.demodulize} etablissement=#{etablissement_id} type=#{type} code=#{code}")
+      release_parked_fetch
     end
+  rescue StandardError
+    release_parked_fetch
+    raise
   end
 
   # Pool derived from job class name via POOL_BY_JOB.
@@ -116,12 +90,32 @@ class APIEntreprise::Job < ApplicationJob
 
   private
 
-  def format_error(type, code, raw_response)
-    message = "API Entreprise error: type=#{type} code=#{code}"
-    if raw_response.present?
-      uri = URI.parse(raw_response.effective_url) rescue nil
-      message += " url=#{uri&.host}#{uri&.path} body=#{raw_response.body.truncate(500)}"
-    end
-    message
+  def etablissement_id = arguments.first
+
+  def procedure = @procedure ||= Procedure.find(arguments.second)
+
+  def api_unavailable_code
+    return 503 if ping_key_for_job && !APIEntreprise::HealthChecker.provider_up?(ping_key_for_job)
+
+    429 if APIEntreprise::RateLimiter.throttled?(api_pool)
+  end
+
+  def api_entreprise_token_usable?
+    return true if procedure.api_entreprise_token_usable?
+
+    alert_global_token_refused(procedure.api_entreprise_token.unusable_reason, 401) if !procedure.specific_api_entreprise_token?
+    false
+  end
+
+  def park_fetch(code)
+    ParkedAPIEntrepriseFetch.park!(etablissement_id:, job: self.class.name.demodulize, procedure_id: arguments.second, arguments:, code:)
+  end
+
+  def mark_parked_fetch_out_of_queue
+    ParkedAPIEntrepriseFetch.where(etablissement_id:, job: self.class.name.demodulize).update_all(enqueued_at: nil)
+  end
+
+  def release_parked_fetch
+    ParkedAPIEntrepriseFetch.release!(etablissement_id:, job: self.class.name.demodulize)
   end
 end

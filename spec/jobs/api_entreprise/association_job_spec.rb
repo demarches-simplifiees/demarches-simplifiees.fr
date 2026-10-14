@@ -4,7 +4,7 @@ RSpec.describe APIEntreprise::AssociationJob, type: :job do
   let(:siret) { '50480511000013' }
   let(:siren) { siret[0..8] }
   let(:etablissement) { create(:etablissement, siret: siret) }
-  let(:procedure) { create(:procedure) }
+  let(:procedure) { create(:procedure, api_entreprise_token: JWT.encode({ exp: 2.months.from_now.to_i }, nil, 'none')) }
   let(:procedure_id) { procedure.id }
   let(:body) { File.read('spec/fixtures/files/api_entreprise/associations.json') }
   let(:status) { 200 }
@@ -15,7 +15,7 @@ RSpec.describe APIEntreprise::AssociationJob, type: :job do
     allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
-  subject { APIEntreprise::AssociationJob.new.perform(etablissement.id, procedure_id) }
+  subject { described_class.perform_now(etablissement.id, procedure_id) }
 
   it 'updates etablissement' do
     subject
@@ -39,6 +39,16 @@ RSpec.describe APIEntreprise::AssociationJob, type: :job do
 
     it "ignores the error" do
       expect { subject }.not_to raise_error
+    end
+  end
+
+  context 'when the provider fails' do
+    let(:status) { 503 }
+
+    it 'waits in the table for the cron' do
+      expect { subject }.not_to raise_error
+      expect(ParkedAPIEntrepriseFetch.find_by(etablissement:, job: 'AssociationJob'))
+        .to have_attributes(procedure_id: procedure.id, code: 503)
     end
   end
 end
