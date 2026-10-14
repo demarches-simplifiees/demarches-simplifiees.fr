@@ -78,4 +78,24 @@ describe 'Procedure events', type: :model do
       expect(procedure.reload).to be_depubliee
     end
   end
+
+  describe 'demarche_supprimee and demarche_restauree' do
+    it 'records both, the dossier events of each correlated to it' do
+      dossier = dossiers.en_construction
+
+      procedure.discard_and_keep_track!(administrateur)
+      removal = events_of(procedure).reverse.find { it.is_a?(Events::DemarcheSupprimee) }
+      expect(removal.metadata[:actor]).to eq(type: 'Administrateur', id: administrateur.id)
+      dossier_removal = event_store.read.stream(Events.dossier_stream(dossier.id)).to_a.last
+      expect(dossier_removal).to be_an_instance_of(Events::DossierSupprimeParAdministration)
+      expect(dossier_removal.correlation_id).to eq(removal.event_id)
+      expect(dossier_removal.causation_id).to eq(removal.event_id)
+
+      procedure.restore(administrateur)
+      restore = events_of(procedure).reverse.find { it.is_a?(Events::DemarcheRestauree) }
+      dossier_restore = event_store.read.stream(Events.dossier_stream(dossier.id)).to_a.last
+      expect(dossier_restore).to be_an_instance_of(Events::DossierRestaureParAdministration)
+      expect(dossier_restore.correlation_id).to eq(restore.event_id)
+    end
+  end
 end

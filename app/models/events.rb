@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 # Domain events, recorded in the event store (Rails Event Store) inside the
-# business transaction that produces them. Events are thin: ids and the
-# actor, never champ values, message bodies or emails.
+# business transaction that produces them, except the removal of a démarche
+# (Procedure#discard_and_keep_track!), which has none. Events are thin: ids
+# and the actor, never champ values, message bodies or emails.
 #
 # Every event of a dossier is appended to its own stream and linked to the
 # stream of its démarche; the events of a démarche are appended to that

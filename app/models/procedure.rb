@@ -621,11 +621,14 @@ class Procedure < ApplicationRecord
     if brouillon?
       reset!
     elsif publiee?
-      close!
+      close!(author)
     end
 
-    dossiers.visible_by_administration.find_each do |dossier|
-      dossier.hide_and_keep_track!(author, :procedure_removed)
+    event = publish_event(Events::DemarcheSupprimee, author:)
+    Events.store.with_metadata(correlation_id: event.event_id, causation_id: event.event_id) do
+      dossiers.visible_by_administration.find_each do |dossier|
+        dossier.hide_and_keep_track!(author, :procedure_removed)
+      end
     end
 
     discard!
@@ -646,7 +649,12 @@ class Procedure < ApplicationRecord
   end
 
   def restore(author)
-    if discarded? && undiscard
+    return if !discarded?
+
+    event = transaction { publish_event(Events::DemarcheRestauree, author:) if undiscard }
+    return if event.nil?
+
+    Events.store.with_metadata(correlation_id: event.event_id, causation_id: event.event_id) do
       dossiers.hidden_by_procedure_removed.find_each do |dossier|
         dossier.restore(author)
       end
