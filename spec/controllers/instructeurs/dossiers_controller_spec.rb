@@ -1989,34 +1989,57 @@ describe Instructeurs::DossiersController, type: :controller do
   end
 
   describe '#extend_conservation' do
+    let(:dossier) { dossiers.accepte }
+    let(:expired_at) { 1.week.from_now }
     subject { post :extend_conservation, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' } }
-    context 'when user logged in' do
-      it 'works' do
-        expect(subject).to redirect_to(instructeur_dossier_path(procedure, dossier))
-      end
 
+    before { dossier.update_columns(expired_at:) }
+
+    context 'when the dossier is termine and close to expiration' do
       it 'extends conservation_extension by 1 month' do
         subject
         expect(dossier.reload.conservation_extension).to eq(1.month)
-      end
-
-      it 'flashed notice success' do
-        subject
+        expect(response).to redirect_to(instructeur_dossier_path(procedure, dossier))
         expect(flash[:notice]).to eq(I18n.t('views.instructeurs.dossiers.archived_dossier'))
       end
     end
 
+    shared_examples 'a refused extension' do
+      it 'leaves the conservation untouched and alerts' do
+        expect { subject }.not_to change { dossier.reload.attributes.values_at('conservation_extension', 'expired_at') }
+        expect(response).to redirect_to(instructeur_dossier_path(procedure, dossier))
+        expect(flash[:alert]).to eq(I18n.t('instructeurs.dossiers.conservation_cannot_be_extended'))
+      end
+    end
+
+    context 'when the dossier is termine but not close to expiration yet' do
+      let(:expired_at) { 6.months.from_now }
+
+      it_behaves_like 'a refused extension'
+    end
+
+    context 'when the dossier is termine and already expired' do
+      let(:expired_at) { 1.day.ago }
+
+      it_behaves_like 'a refused extension'
+    end
+
+    context 'when the dossier is en instruction' do
+      let(:dossier) { dossiers.en_instruction }
+      let(:expired_at) { nil }
+
+      it_behaves_like 'a refused extension'
+    end
+
     context 'with dossier in batch_operation' do
-       let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
-       it do
-         expect { subject }.not_to change { dossier.reload.conservation_extension }
-         is_expected.to redirect_to(instructeur_dossier_path(dossier.procedure, dossier))
-       end
-       it 'flashes message' do
-         subject
-         expect(flash.alert).to eq("Votre action n’a pas été effectuée, ce dossier fait parti d’un traitement de masse.")
-       end
-     end
+      let!(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
+
+      it do
+        expect { subject }.not_to change { dossier.reload.conservation_extension }
+        is_expected.to redirect_to(instructeur_dossier_path(procedure, dossier))
+        expect(flash.alert).to eq("Votre action n’a pas été effectuée, ce dossier fait parti d’un traitement de masse.")
+      end
+    end
   end
 
   describe '#restore' do

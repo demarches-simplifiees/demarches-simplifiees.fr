@@ -15,6 +15,7 @@ module Instructeurs
 
     before_action :redirect_on_dossier_not_found, only: [:show, :show_submitted_revision]
     before_action :redirect_on_dossier_in_batch_operation, only: [:archive, :unarchive, :follow, :unfollow, :passer_en_instruction, :repasser_en_construction, :proposition, :repasser_en_instruction, :terminer, :restore, :destroy, :extend_conservation]
+    before_action :ensure_conservation_can_be_extended, only: [:extend_conservation]
     before_action :dossier_with_champs, only: [:show, :show_submitted_revision]
     before_action :dossier_with_submitted_revision, only: [:show_submitted_revision]
     before_action :set_gallery_attachments, only: [:show, :pieces_jointes, :annotations_privees, :avis, :messagerie, :personnes_impliquees, :reaffectation, :rendez_vous, :rdv_connection]
@@ -633,6 +634,13 @@ module Instructeurs
         flash.alert = "Votre action n’a pas été effectuée, ce dossier fait parti d’un traitement de masse."
         redirect_back_or_to(instructeur_dossier_path(procedure, dossier_in_batch))
       end
+    end
+
+    def ensure_conservation_can_be_extended
+      return if dossier.termine? && dossier.close_to_expiration?
+
+      flash.alert = t('instructeurs.dossiers.conservation_cannot_be_extended')
+      redirect_to instructeur_dossier_path(procedure, dossier)
     end
 
     def set_gallery_attachments

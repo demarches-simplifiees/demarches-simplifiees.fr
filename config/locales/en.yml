@@ -1075,6 +1075,7 @@ en:
     dossiers:
       deleted_by_instructeur: "The folder has been deleted"
       impossible_deletion: "Unable to delete : the folder is not processed"
+      conservation_cannot_be_extended: "Only the retention period of a decided, expiring application can be extended."
       restore: "The folder has been restored"
       message_sent: "Message sent"
       message_sent_with_pending_response: "Message sent and file marked PENDING RESPONSE"
