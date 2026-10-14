@@ -8,6 +8,7 @@ class DossierOperationLog < ApplicationRecord
     demander_une_correction: 'demander_une_correction',
     demander_a_completer: 'demander_a_completer',
     demander_une_mise_a_jour: 'demander_une_mise_a_jour',
+    transmettre_un_complement: 'transmettre_un_complement',
     repasser_en_instruction: 'repasser_en_instruction',
     accepter: 'accepter',
     refuser: 'refuser',

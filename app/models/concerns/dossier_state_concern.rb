@@ -18,8 +18,9 @@ module DossierStateConcern
     DossierNotification.create_notification(self, :dossier_modifie)
   end
 
+  # Par une demande de complément, dont la transition n'a pas de garde SVA/SVR.
   def may_receive_prefill_proposal?
-    en_construction? || may_repasser_en_construction?
+    en_construction? || may_repasser_en_construction_with_pending_correction?
   end
 
   # `notify: false` pour un appelant qui informe l'usager autrement, ou pas encore.

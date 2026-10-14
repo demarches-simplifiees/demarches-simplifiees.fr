@@ -247,92 +247,6 @@ describe Instructeurs::DossiersController, type: :controller do
     end
   end
 
-  describe '#proposition' do
-    let(:procedure) { create(:procedure, :published, :for_individual, instructeurs: [instructeur], public_type_de_champs: [{ type: :text, libelle: 'Nom', stable_id: 99 }]) }
-    let(:dossier) { create(:dossier, state, :with_individual, procedure:) }
-    let(:batch_operation) {}
-    let(:send_on_setup) { true }
-
-    subject(:send_proposal) { patch :proposition, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
-
-    before do
-      dossier.with_instructeur_buffer_stream do
-        dossier.public_champ_for_update('99', updated_by: instructeur.email).assign_attributes(value: 'Dupont')
-      end
-      dossier.save!
-      batch_operation
-
-      send_proposal if send_on_setup
-    end
-
-    context 'when the dossier is en instruction' do
-      let(:state) { :en_instruction }
-
-      it 'merges the proposal and hands the dossier back to the usager' do
-        expect(dossier.reload).to be_en_construction
-        expect(dossier.instructeur_buffer_changes?).to be false
-        expect(flash.notice).to be_present
-      end
-    end
-
-    context 'when the buffer holds nothing the usager does not already have' do
-      let(:state) { :en_instruction }
-      let(:send_on_setup) { false }
-
-      it 'leaves the dossier en instruction' do
-        dossier.champ_data.find { it.stable_id == 99 && it.main_stream? }.update!(value: 'Dupont')
-        send_proposal
-
-        expect(dossier.reload).to be_en_instruction
-        expect(flash.notice).to be_nil
-      end
-    end
-
-    context 'when the merge fails' do
-      let(:state) { :en_instruction }
-      let(:send_on_setup) { false }
-
-      it 'leaves the dossier en instruction' do
-        allow_any_instance_of(Dossier).to receive(:instructeur_submit_en_construction!).and_raise(ActiveRecord::RecordNotSaved)
-
-        expect { send_proposal }.to raise_error(ActiveRecord::RecordNotSaved)
-        expect(dossier.reload).to be_en_instruction
-      end
-    end
-
-    context 'when the dossier is in a batch operation' do
-      let(:state) { :en_instruction }
-      let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur:) }
-
-      it 'refuses the proposal' do
-        expect(flash.alert).to eq('Votre action n’a pas été effectuée, ce dossier fait parti d’un traitement de masse.')
-        expect(dossier.reload).to be_en_instruction
-      end
-    end
-
-    shared_examples 'a dossier that cannot receive the proposal' do
-      it 'leaves the dossier and the proposal untouched' do
-        expect(flash.alert).to eq('Ce dossier ne peut pas repasser en construction, il ne peut donc pas être prérempli.')
-        expect(dossier.reload.state).to eq(state.to_s)
-        expect(dossier.instructeur_buffer_changes?).to be true
-        expect(dossier.traitements.map(&:event)).not_to include(:depose_correction_instructeur)
-      end
-    end
-
-    context 'when the dossier is accepte' do
-      let(:state) { :accepte }
-
-      it_behaves_like 'a dossier that cannot receive the proposal'
-    end
-
-    context 'when the procedure is SVA and the dossier en instruction' do
-      let(:procedure) { create(:procedure, :published, :for_individual, :sva, instructeurs: [instructeur], public_type_de_champs: [{ type: :text, libelle: 'Nom', stable_id: 99 }]) }
-      let(:state) { :en_instruction }
-
-      it_behaves_like 'a dossier that cannot receive the proposal'
-    end
-  end
-
   describe '#repasser_en_construction' do
     let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
     let(:batch_operation) {}
@@ -817,6 +731,99 @@ describe Instructeurs::DossiersController, type: :controller do
 
         expect(response).to have_http_status(:ok)
         expect(response.body).to include('Le dossier est déjà accepté.')
+      end
+    end
+  end
+
+  describe '#proposition' do
+    let(:procedure) { create(:procedure, :published, :for_individual, public_type_de_champs: [{ type: :text, stable_id: 99 }], instructeurs: [instructeur]) }
+    let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure:) }
+
+    subject { patch :proposition, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
+
+    def prefilled_value
+      dossier.reload.with_main_stream { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(99)).value }
+    end
+
+    before do
+      dossier.with_instructeur_buffer_stream do
+        dossier.public_champ_for_update('99', updated_by: instructeur.email).update!(value: 'Prérempli')
+      end
+    end
+
+    it 'prefills the dossier and asks the usager to complete it, in a single message' do
+      expect { subject }.to change { dossier.commentaires.count }.by(1)
+
+      expect(dossier.reload).to be_en_construction
+      expect(dossier.pending_correction).to be_dossier_complement
+      expect(dossier.pending_correction.commentaire.body).to eq(I18n.t('instructeurs.dossiers.proposition.message'))
+      expect(prefilled_value).to eq('Prérempli')
+      expect(flash.notice).to eq(I18n.t('instructeurs.dossiers.proposition.sent'))
+    end
+
+    context 'when a correction is already pending' do
+      before { create(:dossier_correction, dossier:) }
+
+      it 'merges nothing and says why' do
+        expect { subject }.not_to change { dossier.commentaires.count }
+
+        expect(prefilled_value).to be_nil
+        expect(dossier.reload.corrections.map(&:reason)).to eq(['incorrect'])
+        expect(flash.alert).to eq(I18n.t('instructeurs.dossiers.proposition.already_pending'))
+      end
+    end
+
+    context 'when the dossier is terminé' do
+      let(:dossier) { create(:dossier, :accepte, :with_individual, procedure:) }
+
+      it 'merges nothing and says why' do
+        expect { subject }.not_to change { dossier.commentaires.count }
+
+        expect(prefilled_value).to be_nil
+        expect(flash.alert).to eq(I18n.t('instructeurs.dossiers.proposition.termine'))
+      end
+    end
+
+    context 'when the procedure is SVA' do
+      let(:procedure) { create(:procedure, :published, :for_individual, :sva, public_type_de_champs: [{ type: :text, stable_id: 99 }], instructeurs: [instructeur]) }
+
+      it 'still requests the complement: the correction suspends the decision date' do
+        subject
+
+        expect(dossier.reload).to be_en_construction
+        expect(dossier.pending_correction).to be_dossier_complement
+      end
+    end
+
+    context 'when the buffer holds nothing the usager does not already have' do
+      before { dossier.champ_data.find { it.stable_id == 99 && it.main_stream? }.update!(value: 'Prérempli') }
+
+      it 'merges nothing and asks nothing' do
+        expect { subject }.not_to change { dossier.commentaires.count }
+
+        expect(dossier.reload).to be_en_instruction
+        expect(dossier.corrections).to be_empty
+      end
+    end
+
+    context 'when the merge fails' do
+      it 'leaves the dossier en instruction without a correction' do
+        allow_any_instance_of(Dossier).to receive(:instructeur_submit_en_construction!).and_raise(ActiveRecord::RecordNotSaved)
+
+        expect { subject }.to raise_error(ActiveRecord::RecordNotSaved)
+        expect(dossier.reload).to be_en_instruction
+        expect(dossier.corrections).to be_empty
+      end
+    end
+
+    context 'when the dossier is in a batch operation' do
+      before { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur:) }
+
+      it 'refuses the proposal' do
+        subject
+
+        expect(flash.alert).to eq('Votre action n’a pas été effectuée, ce dossier fait parti d’un traitement de masse.')
+        expect(dossier.reload).to be_en_instruction
       end
     end
   end
