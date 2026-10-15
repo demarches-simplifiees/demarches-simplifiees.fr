@@ -1082,10 +1082,8 @@ class Dossier < ApplicationRecord
     end
   end
 
-  # Suppression silencieuse d'un brouillon expiré jamais notifié (preview ou
-  # procédure non-notifiable). Pas de DeletedDossier ni d'email, comme la
-  # suppression de brouillon existante.
-  def purge_without_notice
+  # Pas de DeletedDossier, comme la suppression d'un brouillon par l'usager.
+  def purge_draft
     purge_freeing_champs_cascade
   end
 
@@ -1183,7 +1181,9 @@ class Dossier < ApplicationRecord
   def purge_freeing_champs_cascade
     transaction do
       yield if block_given?
-      champ_data.in_batches(of: 50).each(&:destroy_all)
+      champ_data.in_batches(of: 50).each do |champs|
+        champs.preload(:dossier, :geo_areas, piece_justificative_file_attachments: :blob, static_map_attachment: :blob).destroy_all
+      end
       destroy
     rescue => e
       Sentry.capture_exception(e, tags: { dossier: id })
