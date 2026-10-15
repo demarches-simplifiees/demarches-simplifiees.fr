@@ -1078,6 +1078,7 @@ fr:
     dossiers:
       deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
       impossible_deletion: "Supression impossible : le dossier n’est pas traité"
+      conservation_cannot_be_extended: "Seule la durée de conservation d’un dossier traité et expirant peut être prolongée."
       restore: "Le dossier a bien été restauré"
       message_sent: "Message envoyé"
       message_sent_with_pending_response: "Message envoyé et dossier marqué EN ATTENTE DE RÉPONSE"
