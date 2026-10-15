@@ -96,6 +96,24 @@ describe Champs::AddressChamp do
     end
   end
 
+  context "with an international address without department code" do
+    before do
+      champ.update_columns(value_json: {
+        "label" => "1 rue X, Bruxelles 1000 Belgique",
+        "city_name" => "Bruxelles",
+        "not_in_ban" => "true",
+        "postal_code" => "1000",
+        "country_code" => "BE",
+        "street_address" => "1 rue X",
+      })
+    end
+
+    it do
+      expect(champ.full_address?).to be_truthy
+      expect(champ.commune).to be_nil
+    end
+  end
+
   context 'interaction with new address_component' do
     context 'when the address was filled from the ban' do
       let(:value_json) do
