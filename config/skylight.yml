@@ -3,3 +3,6 @@
 authentication: <%= ENV['SKYLIGHT_AUTHENTICATION_KEY'] || '' %>
 ignored_endpoints:
   - PingController#index
+
+prune_large_traces: false
+report_max_spans_exceeded: true
