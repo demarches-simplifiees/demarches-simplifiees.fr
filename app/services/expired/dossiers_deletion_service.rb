@@ -9,7 +9,7 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
   # failure mid-run can lose is bounded to one batch (a retry starts over from
   # the scopes, which no longer match the dossiers already flagged or hidden).
   # A batch grows past this size rather than splitting a user's dossiers.
-  TERMINE_BATCH_SIZE = 1000
+  BATCH_SIZE = 1000
 
   def process_never_touched_dossiers_brouillon; delete_never_touched_brouillons; end
 
@@ -54,7 +54,7 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
       .limit(TERMINE_NOTICES_LIMIT_PER_DAY)
       .pluck(:id, :user_id)
 
-    each_termine_batch(ids_and_user_ids) do |dossiers|
+    each_batch_by_user(ids_and_user_ids, Dossier.state_termine) do |dossiers|
       send_expiration_notices(dossiers, :termine_close_to_expiration_notice_sent_at)
     end
   end
@@ -92,7 +92,7 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
       .limit(TERMINE_DELETION_LIMIT_PER_DAY)
       .pluck(:id, :user_id)
 
-    each_termine_batch(ids_and_user_ids) do |dossiers|
+    each_batch_by_user(ids_and_user_ids, Dossier.state_termine) do |dossiers|
       delete_expired_and_notify(dossiers, notify_on_closed_procedures_to_user: true)
     end
   end
@@ -100,17 +100,18 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
   private
 
   # All the dossiers of one user land in the same batch, hence in the same mail.
-  def each_termine_batch(ids_and_user_ids)
+  def each_batch_by_user(ids_and_user_ids, scope)
     batches = [[]]
     ids_and_user_ids.group_by(&:last).each_value do |user_dossiers|
-      batches << [] if batches.last.size >= TERMINE_BATCH_SIZE
+      batches << [] if batches.last.size >= BATCH_SIZE
       batches.last.concat(user_dossiers.map(&:first))
     end
 
     batches.each do |ids|
-      # The state is checked again at processing time: a dossier sent back to
-      # instruction since the selection must be neither flagged nor hidden.
-      yield Dossier.where(id: ids).state_termine if ids.any?
+      # The scope is checked again at processing time: a dossier that left it
+      # since the selection, such as a termine dossier sent back to instruction,
+      # is skipped.
+      yield scope.where(id: ids) if ids.any?
     end
   end
 
