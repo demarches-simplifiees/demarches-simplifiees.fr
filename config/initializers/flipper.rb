@@ -42,7 +42,6 @@ features = [
   :brevo_api_delivery,
   :dossier_vide_weasyprint,
   :s3_storage,
-  :session_registry,
 ]
 
 def database_exists?

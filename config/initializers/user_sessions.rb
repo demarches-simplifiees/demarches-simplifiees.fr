@@ -9,7 +9,6 @@
 # NoMatchingPatternError and lands in Sentry.
 Warden::Manager.after_set_user do |record, warden, options|
   next unless record.is_a?(SessionRegistrableConcern)
-  next unless Flipper.enabled?(:session_registry, record)
 
   scope = options[:scope]
 

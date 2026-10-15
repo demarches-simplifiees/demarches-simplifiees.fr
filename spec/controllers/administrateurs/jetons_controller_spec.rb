@@ -116,12 +116,14 @@ describe Administrateurs::JetonsController, type: :controller do
       end
 
       context "when the token has expired" do
-        let!(:procedure) { create(:procedure, :with_api_particulier_token, administrateur: admin) }
+        # Issued in the past rather than read in the future: the token lives two
+        # months, and a request three months from now has no session left.
+        let!(:procedure) do
+          travel_to(3.months.ago) { create(:procedure, :with_api_particulier_token, administrateur: admin) }
+        end
 
         it do
-          travel_to(3.months.from_now) do
-            expect(subject.body).to have_content('Votre jeton API Particulier est expiré')
-          end
+          expect(subject.body).to have_content('Votre jeton API Particulier est expiré')
         end
       end
     end

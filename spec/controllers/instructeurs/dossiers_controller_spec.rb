@@ -1481,7 +1481,7 @@ describe Instructeurs::DossiersController, type: :controller do
     let(:public_type_de_champs) { [] }
     let(:dossier) { create(:dossier, :en_construction, :with_populated_annotations, procedure: procedure) }
     let(:another_instructeur) { create(:instructeur) }
-    let(:now) { Time.zone.parse('01/01/2100') }
+    let(:now) { Time.current.change(usec: 0) }
 
     let(:champ_repetition) { dossier.root_champs_private.fourth }
     let(:champ_text) { champ_repetition.rows.first.flat_children.first }

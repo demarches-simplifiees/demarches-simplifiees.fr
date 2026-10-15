@@ -9,7 +9,6 @@ describe 'setting a password outside the reset form', type: :request do
   let(:user) { users.usager }
 
   before do
-    Flipper.enable_actor(:session_registry, user)
     post_user_session(user)
 
     set_the_password

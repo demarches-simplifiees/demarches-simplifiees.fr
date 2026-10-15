@@ -12,7 +12,7 @@ describe Users::DossiersController, type: :controller do
     let(:procedure) { create(:procedure, :for_individual, :published, *procedure_traits, public_type_de_champs:) }
     let(:public_type_de_champs) { [{ type: :text, mandatory: false }] }
     let(:dossier) { create(:dossier, :en_construction, :with_individual, *dossier_traits, procedure:, user: owner).tap { _1.with_update_stream(_1.user) } }
-    let(:now) { Time.zone.parse('01/01/2100') }
+    let(:now) { Time.current.change(usec: 0) }
     let(:params) { { id: dossier.id } }
     let(:champs) { dossier.root_champs_public }
     let(:make_changes) do
@@ -211,7 +211,7 @@ describe Users::DossiersController, type: :controller do
     let(:piece_justificative_champ_user_buffer) { dossier.with_update_stream(dossier.user) { dossier.root_champs_public.last } }
     let(:value) { 'beautiful value' }
     let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
-    let(:now) { Time.zone.parse('01/01/2100') }
+    let(:now) { Time.current.change(usec: 0) }
 
     let(:submit_payload) do
       {
@@ -375,7 +375,7 @@ describe Users::DossiersController, type: :controller do
 
     context 'when the champ is a phone number' do
       let(:public_type_de_champs) { [{ type: :phone }] }
-      let(:now) { Time.zone.parse('01/01/2100') }
+      let(:now) { Time.current.change(usec: 0) }
 
       let(:submit_payload) do
         {

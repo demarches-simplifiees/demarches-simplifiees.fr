@@ -7,8 +7,6 @@ describe 'the session failure app', type: :request do
   let(:password) { users.default_password }
   let(:usager) { users.usager }
 
-  before { Flipper.enable_actor(:session_registry, usager) }
-
   context 'when the session has been revoked' do
     before do
       post_user_session(usager)
@@ -113,8 +111,6 @@ describe 'the session failure app', type: :request do
   # Two scopes share one request. The usager's session is fetched by
   # `set_sentry_user` on every page, the manager's by its own filter.
   it 'does not show one scope reason on another scope sign in page' do
-    Flipper.enable_actor(:session_registry, super_admin)
-
     post_user_session(usager)
     usager.revoke_sessions!(reason: :logout_all)
 

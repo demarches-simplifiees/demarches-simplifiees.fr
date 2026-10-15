@@ -9,9 +9,7 @@ describe 'the session registry', type: :request do
 
   def super_admin_sessions = UserSession.where(sessionable: super_admin)
 
-  context 'when the feature is open for the account' do
-    before { Flipper.enable_actor(:session_registry, super_admin) }
-
+  context 'when a super admin signs in' do
     it 'registers a row when a super admin signs in' do
       expect { sign_in_super_admin }.to change { super_admin_sessions.count }.by(1)
     end
@@ -70,18 +68,6 @@ describe 'the session registry', type: :request do
       expect(response).to redirect_to(new_super_admin_session_path)
     end
 
-    it 'adopts a session opened before the registry rather than reject it' do
-      Flipper.disable_actor(:session_registry, super_admin)
-      sign_in_super_admin
-      expect(super_admin_sessions).to be_empty
-      Flipper.enable_actor(:session_registry, super_admin)
-
-      get manager_root_path
-
-      expect(response).to have_http_status(:ok)
-      expect(super_admin_sessions.count).to eq(1)
-    end
-
     it 'signs nobody out when the hook raises' do
       sign_in_super_admin
       allow(UserSession).to receive(:find_by).and_raise('boom')
@@ -112,17 +98,6 @@ describe 'the session registry', type: :request do
       expect(response).to have_http_status(:ok)
     end
 
-    it 'lets the request through when the feature check itself raises' do
-      sign_in_super_admin
-      allow(Flipper).to receive(:enabled?).and_call_original
-      allow(Flipper).to receive(:enabled?).with(:session_registry, anything).and_raise('flipper is down')
-      expect(Sentry).to receive(:capture_exception)
-
-      get manager_root_path
-
-      expect(response).to have_http_status(:ok)
-    end
-
     it 'revokes the row on sign out, with reason sign_out' do
       sign_in_super_admin
 
@@ -132,23 +107,8 @@ describe 'the session registry', type: :request do
     end
   end
 
-  context 'when the feature is closed for the account' do
-    it 'lets a revoked session through: the hook is a no-op' do
-      Flipper.enable_actor(:session_registry, super_admin)
-      sign_in_super_admin
-      super_admin.revoke_sessions!(reason: :logout_all)
-      Flipper.disable_actor(:session_registry, super_admin)
-
-      get manager_root_path
-
-      expect(response).to have_http_status(:ok)
-    end
-  end
-
   context 'when a usager signs in' do
     let(:user) { users.usager }
-
-    before { Flipper.enable_actor(:session_registry, user) }
 
     def user_sessions = UserSession.where(sessionable: user)
 
@@ -169,8 +129,6 @@ describe 'the session registry', type: :request do
       let(:user) { users.usager }
       let(:token) { user.send(:set_reset_password_token) }
       let(:new_password) { "#{users.default_password} (neuf)" }
-
-      before { Flipper.enable_actor(:session_registry, user) }
 
       def activate
         patch users_activate_path,
@@ -193,18 +151,6 @@ describe 'the session registry', type: :request do
 
       expect(user_sessions.sole.expires_at)
         .to be_within(1.minute).of(User::USAGER_SESSION_MAX_LIFETIME.from_now)
-    end
-
-    it 'adopts a session opened before the registry rather than reject it' do
-      Flipper.disable_actor(:session_registry, user)
-      post_user_session(user, user_agent: chrome_on_mac)
-      expect(user_sessions).to be_empty
-      Flipper.enable_actor(:session_registry, user)
-
-      get dossiers_path
-
-      expect(response).to have_http_status(:ok)
-      expect(user_sessions.count).to eq(1)
     end
   end
 end
