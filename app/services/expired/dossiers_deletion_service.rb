@@ -83,7 +83,7 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
   def delete_expired_brouillons_without_notice
     Dossier.brouillon_expired_without_notice
       .limit(BROUILLON_WITHOUT_NOTICE_DELETION_LIMIT_PER_DAY)
-      .in_batches { |batch| batch.each(&:purge_without_notice) }
+      .in_batches { |batch| batch.each(&:purge_draft) }
   end
 
   def delete_expired_termine_and_notify

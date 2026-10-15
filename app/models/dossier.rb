@@ -1082,10 +1082,8 @@ class Dossier < ApplicationRecord
     end
   end
 
-  # Suppression silencieuse d'un brouillon expiré jamais notifié (preview ou
-  # procédure non-notifiable). Pas de DeletedDossier ni d'email, comme la
-  # suppression de brouillon existante.
-  def purge_without_notice
+  # Pas de DeletedDossier, comme la suppression d'un brouillon par l'usager.
+  def purge_draft
     purge_freeing_champs_cascade
   end
 

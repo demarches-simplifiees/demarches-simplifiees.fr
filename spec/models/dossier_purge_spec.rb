@@ -67,20 +67,20 @@ describe Dossier, type: :model do
     end
   end
 
-  describe '#purge_without_notice' do
+  describe '#purge_draft' do
     let(:dossier) { create(:dossier) }
 
     it 'destroys the dossier and its champs without creating a DeletedDossier' do
       expect(DeletedDossier).not_to receive(:create_from_dossier)
 
-      dossier.purge_without_notice
+      dossier.purge_draft
 
       expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'destroys champs in batches of 50 before destroying the dossier' do
       expect(dossier.champ_data).to receive(:in_batches).with(hash_including(of: 50)).at_least(:once).and_call_original
-      dossier.purge_without_notice
+      dossier.purge_draft
     end
 
     context 'with multiple champs spanning several in_batches' do
@@ -97,13 +97,13 @@ describe Dossier, type: :model do
 
       it 'destroys all champs even when count exceeds in_batches size' do
         expect(dossier.champ_data.count).to be > 50
-        dossier.purge_without_notice
+        dossier.purge_draft
         expect(ChampData.where(dossier_id: dossier.id)).to be_empty
       end
 
       it 'does not read the associations of each champ one by one' do
         champs_count = dossier.champ_data.count
-        selects = count_queries(matching: /\ASELECT .*FROM "(active_storage_attachments|geo_areas|dossiers)"/) { dossier.purge_without_notice }
+        selects = count_queries(matching: /\ASELECT .*FROM "(active_storage_attachments|geo_areas|dossiers)"/) { dossier.purge_draft }
         expect(selects).to be < champs_count
       end
     end
@@ -120,7 +120,7 @@ describe Dossier, type: :model do
       before { ChampData.where(id: champ.id).update_all(type: 'Champs::CnafChamp') }
 
       it 'destroys the dossier instead of aborting the purge' do
-        expect { dossier.purge_without_notice }.not_to raise_error
+        expect { dossier.purge_draft }.not_to raise_error
         expect(ChampData.where(id: champ.id)).not_to exist
         expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
@@ -138,7 +138,7 @@ describe Dossier, type: :model do
       end
 
       it 'rolls back so no champ is destroyed and does not propagate the exception' do
-        expect { dossier.purge_without_notice }.not_to raise_error
+        expect { dossier.purge_draft }.not_to raise_error
         expect(ChampData.where(id: champ.id)).to exist
       end
     end
