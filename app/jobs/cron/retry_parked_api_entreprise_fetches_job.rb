@@ -5,6 +5,7 @@ class Cron::RetryParkedAPIEntrepriseFetchesJob < Cron::CronJob
 
   KEPT_FOR = 1.month
   REPLAYED_EVERY = 2.hours
+  RETRIED_DAILY_EVERY = 1.day
   SPREAD_OVER = 110.minutes
   LOST_AFTER = 1.day
   ENQUEUED_TOGETHER = 1_000
@@ -46,7 +47,8 @@ class Cron::RetryParkedAPIEntrepriseFetchesJob < Cron::CronJob
     return if job_classes_by_name.empty?
 
     batch = not_in_queue
-      .where(job: job_classes_by_name.keys, updated_at: ..REPLAYED_EVERY.ago)
+      .where(job: job_classes_by_name.keys)
+      .and(due_for_replay)
       .joins(:procedure)
       .merge(Procedure.with_usable_api_entreprise_token)
       .order(:created_at)
@@ -69,6 +71,11 @@ class Cron::RetryParkedAPIEntrepriseFetchesJob < Cron::CronJob
 
   def not_in_queue
     ParkedAPIEntrepriseFetch.where(enqueued_at: nil).or(ParkedAPIEntrepriseFetch.where(enqueued_at: ..LOST_AFTER.ago))
+  end
+
+  def due_for_replay
+    ParkedAPIEntrepriseFetch.where(daily_failures: nil, updated_at: ..REPLAYED_EVERY.ago)
+      .or(ParkedAPIEntrepriseFetch.where.not(daily_failures: nil).where(updated_at: ..RETRIED_DAILY_EVERY.ago))
   end
 
   def provider_up?(job_class)
