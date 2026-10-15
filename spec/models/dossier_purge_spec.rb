@@ -100,6 +100,12 @@ describe Dossier, type: :model do
         dossier.purge_without_notice
         expect(ChampData.where(dossier_id: dossier.id)).to be_empty
       end
+
+      it 'does not read the associations of each champ one by one' do
+        champs_count = dossier.champ_data.count
+        selects = count_queries(matching: /\ASELECT .*FROM "(active_storage_attachments|geo_areas|dossiers)"/) { dossier.purge_without_notice }
+        expect(selects).to be < champs_count
+      end
     end
 
     # Rows written before a champ type was deleted from the codebase are still in the
