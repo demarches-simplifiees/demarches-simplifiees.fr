@@ -2,6 +2,8 @@
 
 module Manager
   class ConfirmationUrlsController < Manager::ApplicationController
+    include AdministrateurAlreadyAddedConcern
+
     before_action :ensure_administrateur_exists
     before_action :ensure_not_already_added
 
@@ -18,17 +20,9 @@ module Manager
       redirect("Cet administrateur n’existe pas. Veuillez réessayer.") unless administrateur
     end
 
-    def ensure_not_already_added
-      redirect("Cet administrateur a déjà été ajouté à cette démarche.") if already_added?
-    end
-
     def redirect(alert)
       flash[:alert] = alert
       redirect_to manager_procedure_path(procedure)
-    end
-
-    def already_added?
-      AdministrateursProcedure.exists?(procedure: procedure, administrateur: administrateur)
     end
 
     def administrateur

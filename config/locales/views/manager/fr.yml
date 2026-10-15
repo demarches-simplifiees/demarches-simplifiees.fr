@@ -20,6 +20,7 @@ fr:
         account: "Son compte de connexion n’est pas supprimé : seul le rôle instructeur l’est. Les messages qu’il a écrits dans les messageries restent visibles."
         submit: "Supprimer l’instructeur"
     procedures:
+      administrateur_already_added: "Cet administrateur a déjà été ajouté à cette démarche."
       add_administrateur_and_instructeur_edit:
         title: "Devenir administrateur et instructeur de la démarche n° %{id}"
         warning_html: "Vous allez vous attribuer l’accès administrateur et instructeur à <strong>%{libelle}</strong>. Cet accès ouvre tous les dossiers de la démarche, leurs pièces jointes, la messagerie et les annotations privées."

@@ -13,6 +13,19 @@ RSpec.describe Manager::AdministrateurConfirmationsController, type: :controller
 
   let(:procedure) { create(:procedure, administrateurs: [inviter_administrateur]) }
 
+  shared_examples "administrateur already added" do
+    before do
+      procedure.administrateurs << invited_administrateur
+      sign_in confirmer_super_admin
+    end
+
+    it "redirects to the procedure with a notice" do
+      expect { subject }.not_to change { procedure.administrateurs.count }
+      expect(flash[:notice]).to eq("Cet administrateur a déjà été ajouté à cette démarche.")
+      expect(response).to redirect_to(manager_procedure_path(procedure))
+    end
+  end
+
   describe "GET #new" do
     subject(:new_request) do
       get :new, params: {
@@ -53,6 +66,8 @@ RSpec.describe Manager::AdministrateurConfirmationsController, type: :controller
 
       it_behaves_like "current admin is allowed to confirm adding another one"
     end
+
+    it_behaves_like "administrateur already added"
 
     describe 'edge cases' do
       context 'when the environment is development' do
@@ -132,6 +147,8 @@ RSpec.describe Manager::AdministrateurConfirmationsController, type: :controller
       it_behaves_like "current admin is allowed to confirm adding another one"
     end
 
+    it_behaves_like "administrateur already added"
+
     describe 'edge cases' do
       context 'when the environment is development' do
         before { allow(Rails.env).to receive(:development?).and_return(true) }
@@ -154,6 +171,19 @@ RSpec.describe Manager::AdministrateurConfirmationsController, type: :controller
         before { post :create, params: { procedure_id: procedure.id, q: "something that is invalid" } }
 
         it { expect(flash[:error]).to match(/Le lien que vous avez utilisé est invalide/) }
+      end
+
+      context 'when a concurrent confirmation adds the administrateur after the check' do
+        before do
+          sign_in confirmer_super_admin
+          allow(controller).to receive(:ensure_not_already_added)
+          procedure.administrateurs << invited_administrateur
+        end
+
+        it "does not fail on the unique index" do
+          expect { create_request }.not_to change { procedure.administrateurs.count }
+          expect(response).to redirect_to(manager_procedure_path(procedure))
+        end
       end
 
       context 'when the procedure_id is tampered in the URL' do
