@@ -113,6 +113,35 @@ RSpec.describe APIEntreprise::Job, type: :job do
       end
     end
 
+    context 'when the provider cannot serve this etablissement for now' do
+      let(:result) { Dry::Monads::Failure(type: :unavailable_for_entity, code: 502, retryable: true, raw_response: nil) }
+
+      def park_daily(times)
+        times.times { ParkedAPIEntrepriseFetch.park!(etablissement_id: etablissement.id, job: 'ExercicesJob', procedure_id: procedure.id, arguments: [etablissement.id, procedure.id], code: 502, retried_daily: true) }
+      end
+
+      it 'waits in the table to be retried once a day' do
+        expect { perform }.not_to raise_error
+        expect(fetch).to have_attributes(code: 502, daily_failures: 1)
+      end
+
+      it 'retries it a third day' do
+        park_daily(2)
+
+        perform
+
+        expect(fetch.daily_failures).to eq(3)
+      end
+
+      it 'gives up once the three daily retries failed' do
+        park_daily(3)
+
+        perform
+
+        expect(fetch).to be_nil
+      end
+    end
+
     context 'when API Entreprise refuses the token or the scope' do
       let(:result) { Dry::Monads::Failure(type: :forbidden, code: 403, retryable: false, raw_response: nil) }
 

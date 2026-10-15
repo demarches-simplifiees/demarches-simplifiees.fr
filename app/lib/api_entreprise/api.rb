@@ -155,7 +155,9 @@ class APIEntreprise::API
     when 451
       Failure(type: :unavailable_for_legal_reasons, code:, retryable: false, raw_response:)
     when 500, 502, 503, 504
-      if raw_response && service_unavailable?(raw_response)
+      if raw_response && unavailable_for_entity?(raw_response)
+        Failure(type: :unavailable_for_entity, code:, retryable: true, raw_response:)
+      elsif raw_response && service_unavailable?(raw_response)
         Failure(type: :service_unavailable, code:, retryable: true, raw_response:)
       else
         Failure(type: :server_error, code:, retryable: true, raw_response:)
@@ -171,6 +173,12 @@ class APIEntreprise::API
   def service_unavailable?(raw_response)
     raw_response.code.in?(SERVICE_UNAVAILABLE_CODES) &&
       parse_response_errors(raw_response).any? { _1.is_a?(Hash) && _1[:code]&.in?(SERVICE_UNAVAILABLE_ERRORS) }
+  end
+
+  UNAVAILABLE_FOR_ENTITY_ERRORS = ["03001"]
+  def unavailable_for_entity?(raw_response)
+    raw_response.code == 502 &&
+      parse_response_errors(raw_response).any? { _1.is_a?(Hash) && _1[:code]&.in?(UNAVAILABLE_FOR_ENTITY_ERRORS) }
   end
 
   def parse_response_errors(raw_response)

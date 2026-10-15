@@ -66,6 +66,8 @@ class APIEntreprise::Job < ApplicationJob
       yield params
     in Success
       release_parked_fetch
+    in Failure(type: :unavailable_for_entity, code:, **)
+      retry_daily(code)
     in Failure(retryable: true, code:, **)
       park_fetch(code)
     in Failure(retryable: false, type:, code:, **)
@@ -107,8 +109,17 @@ class APIEntreprise::Job < ApplicationJob
     false
   end
 
-  def park_fetch(code)
-    ParkedAPIEntrepriseFetch.park!(etablissement_id:, job: self.class.name.demodulize, procedure_id: arguments.second, arguments:, code:)
+  def park_fetch(code, retried_daily: false)
+    ParkedAPIEntrepriseFetch.park!(etablissement_id:, job: self.class.name.demodulize, procedure_id: arguments.second, arguments:, code:, retried_daily:)
+  end
+
+  def retry_daily(code)
+    if ParkedAPIEntrepriseFetch.exists?(etablissement_id:, job: self.class.name.demodulize, daily_failures: ParkedAPIEntrepriseFetch::DAILY_RETRIES..)
+      Rails.logger.info("APIEntreprise daily retries exhausted: job=#{self.class.name.demodulize} etablissement=#{etablissement_id} code=#{code}")
+      release_parked_fetch
+    else
+      park_fetch(code, retried_daily: true)
+    end
   end
 
   def mark_parked_fetch_out_of_queue

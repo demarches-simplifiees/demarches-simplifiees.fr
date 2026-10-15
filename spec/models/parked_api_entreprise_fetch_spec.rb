@@ -5,8 +5,8 @@ RSpec.describe ParkedAPIEntrepriseFetch do
   let(:procedure) { procedures.entreprise }
   let(:fetch) { described_class.find_by(etablissement:, job: 'ExercicesJob') }
 
-  def park(code, job: 'ExercicesJob', arguments: [etablissement.id, procedure.id])
-    described_class.park!(etablissement_id: etablissement.id, job:, procedure_id: procedure.id, arguments:, code:)
+  def park(code, job: 'ExercicesJob', arguments: [etablissement.id, procedure.id], retried_daily: false)
+    described_class.park!(etablissement_id: etablissement.id, job:, procedure_id: procedure.id, arguments:, code:, retried_daily:)
   end
 
   describe '.park!' do
@@ -40,6 +40,24 @@ RSpec.describe ParkedAPIEntrepriseFetch do
       park(503)
 
       expect(fetch.reload.enqueued_at).to be_nil
+    end
+
+    it 'counts the daily failures apart from the other failures' do
+      park(503)
+      park(503)
+
+      park(502, retried_daily: true)
+      park(502, retried_daily: true)
+
+      expect(fetch.reload).to have_attributes(attempts: 4, daily_failures: 2)
+    end
+
+    it 'goes back to the replay every two hours once the daily retries stop' do
+      park(502, retried_daily: true)
+
+      park(503)
+
+      expect(fetch.reload).to have_attributes(attempts: 2, daily_failures: nil)
     end
 
     it 'keeps one line per job' do

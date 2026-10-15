@@ -101,6 +101,20 @@ RSpec.describe Cron::RetryParkedAPIEntrepriseFetchesJob, type: :job do
     it { expect { described_class.perform_now }.not_to have_enqueued_job }
   end
 
+  context 'with a line retried once a day' do
+    before { fetch.update_column(:daily_failures, 1) }
+
+    it { expect { described_class.perform_now }.not_to have_enqueued_job }
+
+    context 'when it failed more than a day ago' do
+      let(:updated_at) { 25.hours.ago }
+
+      it 'replays it' do
+        expect { described_class.perform_now }.to have_enqueued_job(APIEntreprise::ExercicesJob).with(etablissement.id, procedure.id)
+      end
+    end
+  end
+
   context 'when the replayed job is still waiting in a late queue' do
     before { fetch.update_column(:enqueued_at, 3.hours.ago) }
 
