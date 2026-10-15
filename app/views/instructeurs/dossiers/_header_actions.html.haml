@@ -7,7 +7,7 @@
                 state: dossier.state,
                 archived: dossier.archived,
                 dossier_is_followed: current_instructeur&.follow?(dossier),
-                close_to_expiration: dossier.instructeur_can_extend_conservation?,
+                close_to_expiration: dossier.close_to_expiration?,
                 hidden_by_administration: dossier.hidden_by_administration?,
                 hidden_by_expired: dossier.hidden_by_expired?,
                 has_pending_correction: dossier.pending_correction?,
