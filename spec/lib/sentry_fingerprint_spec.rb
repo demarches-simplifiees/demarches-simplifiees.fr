@@ -68,9 +68,6 @@ describe SentryFingerprint do
       degraded = RetryableFetchError.new(StandardError.new('API Entreprise: degraded mode'), provider: 'Champs::SiretChamp')
       expect(fingerprint_for(exception: timeout)).to eq(['provider-outage', 'Champs::SiretChamp'])
       expect(fingerprint_for(exception: degraded)).to eq(['provider-outage', 'Champs::SiretChamp'])
-
-      upstream = APIEntreprise::Job::UpstreamError.new('API Entreprise error: type=server_error code=502', provider: 'APIEntreprise::ExercicesJob')
-      expect(fingerprint_for(exception: upstream)).to eq(['provider-outage', 'APIEntreprise::ExercicesJob'])
     end
 
     it 'groups Brevo API errors by kind and Brevo code, outages by provider' do

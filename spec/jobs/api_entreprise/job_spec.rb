@@ -8,89 +8,141 @@ RSpec.describe APIEntreprise::Job, type: :job do
     end
   end
 
-  describe '#perform' do
-    let(:dossier) { create(:dossier, :with_entreprise) }
+  let(:procedure) { procedures.entreprise }
+  let(:etablissement) { create(:etablissement) }
+  let(:fetch) { ParkedAPIEntrepriseFetch.find_by(etablissement:, job: 'ExercicesJob') }
+  let(:result) { Dry::Monads::Success({ entreprise_capital_social: 1 }) }
 
-    context 'when error with an etablissement on a champ' do
-      let(:procedure) { create(:procedure, public_type_de_champs:) }
-      let(:public_type_de_champs) { [{ type: :siret }] }
-      let(:dossier) { create(:dossier, procedure:) }
+  before do
+    procedure.update!(api_entreprise_token: JWT.encode({ exp: 2.months.from_now.to_i }, nil, 'none'))
+    allow(APIEntreprise::HealthChecker).to receive(:provider_up?).and_return(true)
+    allow(APIEntreprise::RateLimiter).to receive(:throttled?).and_return(false)
+    allow_any_instance_of(APIEntreprise::ExercicesAdapter).to receive(:to_params).and_return(result)
+  end
 
-      it "re-raises so sidekiq can retry" do
-        champ = dossier.champ_data.first
-        champ.update!(value: '12345678901234')
+  def perform = APIEntreprise::ExercicesJob.perform_now(etablissement.id, procedure.id)
 
-        etablissement = create(:etablissement, champ_data: champ)
+  describe 'before calling the API' do
+    context 'while the provider is down' do
+      before { allow(APIEntreprise::HealthChecker).to receive(:provider_up?).with('dgfip/chiffre_affaires').and_return(false) }
 
-        expect { ErrorJob.perform_now(etablissement) }
-          .to raise_error(StandardError, /API Entreprise error/)
+      it 'waits in the table instead of in Sidekiq' do
+        expect_any_instance_of(APIEntreprise::ExercicesAdapter).not_to receive(:to_params)
 
-        expect(champ.reload.value).not_to be_nil
+        expect { perform }.not_to raise_error
+        expect(fetch).to have_attributes(code: 503, procedure_id: procedure.id, job_arguments: [etablissement.id, procedure.id])
+      end
+
+      it 'does not log the wait as an error' do
+        expect(ActiveJob::Base.logger).not_to receive(:error)
+
+        perform
+      end
+    end
+
+    context 'while the pool is throttled' do
+      before { allow(APIEntreprise::RateLimiter).to receive(:throttled?).with(250).and_return(true) }
+
+      it 'waits in the table' do
+        expect { perform }.not_to raise_error
+        expect(fetch.code).to eq(429)
+      end
+    end
+
+    context 'when the token of the procedure cannot work' do
+      before { procedure.update!(api_entreprise_token: JWT.encode({ exp: 1.day.ago.to_i }, nil, 'none')) }
+
+      it 'gives up without calling the API' do
+        expect_any_instance_of(APIEntreprise::ExercicesAdapter).not_to receive(:to_params)
+
+        perform
+
+        expect(fetch).to be_nil
+      end
+
+      it 'lets the cron replay a previous wait once the token works again' do
+        ParkedAPIEntrepriseFetch.park!(etablissement_id: etablissement.id, job: 'ExercicesJob', procedure_id: procedure.id, arguments: [etablissement.id, procedure.id], code: 503)
+        fetch.update_column(:enqueued_at, 1.hour.ago)
+
+        perform
+
+        expect(fetch.reload.enqueued_at).to be_nil
       end
     end
   end
 
-  describe 'before_perform checks' do
-    let(:pool) { APIEntreprise::API::DEFAULT_POOL }
+  describe 'after calling the API' do
+    context 'when it answers' do
+      it 'forgets a previous wait' do
+        ParkedAPIEntrepriseFetch.park!(etablissement_id: etablissement.id, job: 'ExercicesJob', procedure_id: procedure.id, arguments: [etablissement.id, procedure.id], code: 503)
 
-    before do
-      allow(APIEntreprise::HealthChecker).to receive(:provider_up?).and_return(true)
-    end
+        perform
 
-    context 'when provider is up and not throttled' do
-      before { allow(APIEntreprise::RateLimiter).to receive(:throttled?).with(pool).and_return(false) }
-
-      it 'runs the job normally' do
-        dossier = create(:dossier, :with_entreprise)
-        etablissement = dossier.etablissement
-
-        expect { ErrorJob.perform_now(etablissement) }.to raise_error(StandardError, /API Entreprise error/)
+        expect(fetch).to be_nil
       end
     end
 
-    context 'when provider is down' do
-      let(:ping_key) { 'insee/sirene' }
+    context 'when reading the answer fails' do
+      before { allow_any_instance_of(APIEntreprise::ExercicesAdapter).to receive(:to_params).and_raise(TypeError, 'boom') }
 
-      before do
-        allow_any_instance_of(ErrorJob).to receive(:ping_key_for_job).and_return(ping_key)
-        allow(APIEntreprise::HealthChecker).to receive(:provider_up?).with(ping_key).and_return(false)
-      end
+      it 'leaves the retries to Sidekiq alone' do
+        ParkedAPIEntrepriseFetch.park!(etablissement_id: etablissement.id, job: 'ExercicesJob', procedure_id: procedure.id, arguments: [etablissement.id, procedure.id], code: 503)
 
-      it 'raises ProviderDownError without checking rate limit' do
-        dossier = create(:dossier, :with_entreprise)
-        etablissement = dossier.etablissement
-
-        expect(APIEntreprise::RateLimiter).not_to receive(:throttled?)
-        expect { ErrorJob.perform_now(etablissement) }
-          .to raise_error(APIEntreprise::Job::ProviderDownError, /provider #{ping_key} is down/)
+        expect { perform }.to raise_error(TypeError, 'boom')
+        expect(fetch).to be_nil
       end
     end
 
-    context 'when provider is up but throttled' do
-      before do
-        allow(APIEntreprise::RateLimiter).to receive(:throttled?).with(pool).and_return(true)
-      end
+    context 'when saving the answer fails' do
+      before { allow_any_instance_of(Etablissement).to receive(:update!).and_raise(StandardError, 'boom') }
 
-      it 'raises RetryableError for rate limit' do
-        dossier = create(:dossier, :with_entreprise)
-        etablissement = dossier.etablissement
+      it 'leaves the retries to Sidekiq alone' do
+        ParkedAPIEntrepriseFetch.park!(etablissement_id: etablissement.id, job: 'ExercicesJob', procedure_id: procedure.id, arguments: [etablissement.id, procedure.id], code: 503)
 
-        expect { ErrorJob.perform_now(etablissement) }
-          .to raise_error(APIEntreprise::Job::RetryableError, /rate limited \(pool #{pool}\)/)
+        expect { perform }.to raise_error(StandardError, 'boom')
+        expect(fetch).to be_nil
       end
     end
 
-    context 'when job is not in PING_KEY_BY_JOB (fail-open)' do
-      it 'skips health check and proceeds' do
-        # ErrorJob is not in PING_KEY_BY_JOB, so ping_key_for_job returns nil
-        allow(APIEntreprise::RateLimiter).to receive(:throttled?).and_return(false)
+    context 'when the provider fails' do
+      let(:result) { Dry::Monads::Failure(type: :service_unavailable, code: 503, retryable: true, raw_response: nil) }
 
-        dossier = create(:dossier, :with_entreprise)
-        etablissement = dossier.etablissement
-
-        # Job runs (raises from adapter, not from before_perform)
-        expect { ErrorJob.perform_now(etablissement) }.to raise_error(StandardError, /API Entreprise error/)
+      it 'waits in the table instead of raising' do
+        expect { perform }.not_to raise_error
+        expect(fetch.code).to eq(503)
       end
+    end
+
+    context 'when API Entreprise refuses the token or the scope' do
+      let(:result) { Dry::Monads::Failure(type: :forbidden, code: 403, retryable: false, raw_response: nil) }
+
+      it 'gives up without blaming the token of the procedure' do
+        ParkedAPIEntrepriseFetch.park!(etablissement_id: etablissement.id, job: 'ExercicesJob', procedure_id: procedure.id, arguments: [etablissement.id, procedure.id], code: 503)
+
+        perform
+
+        expect(fetch).to be_nil
+        expect(procedure.reload.api_entreprise_token_rejected_at).to be_nil
+      end
+    end
+
+    context 'when the data does not exist' do
+      let(:result) { Dry::Monads::Failure(type: :not_found, code: 404, retryable: false, raw_response: nil) }
+
+      it 'gives up for good' do
+        ParkedAPIEntrepriseFetch.park!(etablissement_id: etablissement.id, job: 'ExercicesJob', procedure_id: procedure.id, arguments: [etablissement.id, procedure.id], code: 503)
+
+        perform
+
+        expect(fetch).to be_nil
+      end
+    end
+  end
+
+  context 'when the etablissement is gone' do
+    it 'drops the job' do
+      expect { APIEntreprise::ExercicesJob.perform_now(0, procedure.id) }.not_to raise_error
+      expect(ParkedAPIEntrepriseFetch.where(etablissement_id: 0)).to be_empty
     end
   end
 
@@ -106,10 +158,6 @@ RSpec.describe APIEntreprise::Job, type: :job do
       expect(APIEntreprise::AttestationSocialeJob.new.api_pool).to eq(100)
       expect(APIEntreprise::AttestationFiscaleJob.new.api_pool).to eq(5)
     end
-
-    it 'defaults to 250 for unknown job classes' do
-      expect(ErrorJob.new.api_pool).to eq(250)
-    end
   end
 
   describe '#ping_key_for_job' do
@@ -124,10 +172,6 @@ RSpec.describe APIEntreprise::Job, type: :job do
       expect(APIEntreprise::AttestationFiscaleJob.new.ping_key_for_job).to eq('dgfip/attestation_fiscale')
       expect(APIEntreprise::BilansBdfJob.new.ping_key_for_job).to eq('banque_de_france/bilans')
     end
-
-    it 'returns nil for unknown job classes (fail-open)' do
-      expect(ErrorJob.new.ping_key_for_job).to be_nil
-    end
   end
 
   describe 'PING_KEY_BY_JOB completeness' do
@@ -141,106 +185,12 @@ RSpec.describe APIEntreprise::Job, type: :job do
     end
   end
 
-  describe '#with_adapter' do
-    let(:job) { described_class.new }
-    let(:adapter) { instance_double(APIEntreprise::Adapter) }
-
-    context 'when adapter returns Success with data' do
-      before { allow(adapter).to receive(:to_params).and_return(Dry::Monads::Success({ siret: '123' })) }
-
-      it 'yields the params' do
-        result = nil
-        job.send(:with_adapter, adapter) { |params| result = params }
-        expect(result).to eq({ siret: '123' })
-      end
-    end
-
-    context 'when adapter returns Failure with forbidden (privilege not available)' do
-      before { allow(adapter).to receive(:to_params).and_return(Dry::Monads::Failure(type: :forbidden, code: 403, retryable: false, raw_response: nil)) }
-
-      it 'does not yield and logs' do
-        yielded = false
-        job.send(:with_adapter, adapter) { |_| yielded = true }
-        expect(yielded).to be false
-      end
-    end
-
-    context 'when adapter returns Failure with retryable error' do
-      let(:response) do
-        Typhoeus::Response.new(
-          effective_url: 'http://host.com/path', code: '503', body: 'error',
-          return_message: 'timeout', total_time: 10, connect_time: 20, headers: ''
-        )
-      end
-
-      before do
-        allow(adapter).to receive(:to_params)
-          .and_return(Dry::Monads::Failure(type: :service_unavailable, code: 503, retryable: true, raw_response: response))
-      end
-
-      it 're-raises to trigger job retry' do
-        expect { job.send(:with_adapter, adapter) { |_| } }.to raise_error(StandardError, /API Entreprise error:/)
-      end
-    end
-
-    context 'when adapter returns Failure with retryable error but nil response' do
-      before do
-        allow(adapter).to receive(:to_params)
-          .and_return(Dry::Monads::Failure(type: :token, code: 401, retryable: true, raw_response: nil))
-      end
-
-      it 'raises a StandardError with diagnostic message' do
-        expect { job.send(:with_adapter, adapter) { |_| } }
-          .to raise_error(StandardError, /API Entreprise error: type=token code=401/)
-      end
-    end
-
-    context 'when adapter returns Failure with rate_limited' do
-      before do
-        allow(adapter).to receive(:to_params)
-          .and_return(Dry::Monads::Failure(type: :rate_limited, code: 429, retryable: true, raw_response: nil))
-      end
-
-      it 'raises RetryableError for Sidekiq exponential backoff' do
-        expect { job.send(:with_adapter, adapter) { |_| } }
-          .to raise_error(APIEntreprise::Job::RetryableError, /rate limited by API/)
-      end
-    end
-
-    context 'when adapter returns Failure with non-retryable error' do
-      before do
-        allow(adapter).to receive(:to_params)
-          .and_return(Dry::Monads::Failure(type: :unavailable_for_legal_reasons, code: 451, retryable: false, raw_response: nil))
-      end
-
-      it 'does not raise and returns nil' do
-        result = job.send(:with_adapter, adapter) { |_| 'should not reach' }
-        expect(result).to be_nil
-      end
-
-      it 'logs the non-retryable failure' do
-        expect(Rails.logger).to receive(:info).with(/non-retryable.*type=unavailable_for_legal_reasons.*code=451/)
-        job.send(:with_adapter, adapter) { |_| }
-      end
-    end
-  end
-
   describe 'sidekiq retry configuration' do
     subject(:options) { described_class.get_sidekiq_options }
 
     it 'defers Sentry reporting until the 8th attempt while keeping native retry' do
       expect(options["attempt_threshold"]).to eq(8)
       expect(options["retry"]).to eq(ActiveJob::RetryOnStandardError::MAX_ATTEMPTS_JOBS)
-    end
-  end
-
-  class ErrorJob < APIEntreprise::Job
-    include Dry::Monads[:result]
-
-    def perform(etablissement)
-      @etablissement = etablissement
-      adapter = Struct.new(:to_params).new(Failure(type: :service_unavailable, code: 503, retryable: true, raw_response: nil))
-      with_adapter(adapter) { |_| }
     end
   end
 end
