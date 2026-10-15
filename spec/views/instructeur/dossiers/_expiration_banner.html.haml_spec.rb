@@ -37,6 +37,7 @@ describe 'instructeur/dossiers/expiration_banner', type: :view do
 
     it 'renders the postpone button' do
       expect(subject).to have_selector('.fr-callout', text: I18n.t('instructeurs.dossiers.header.banner.title'))
+      expect(subject).to have_selector('.fr-callout', text: I18n.t('instructeurs.dossiers.header.banner.states.termine'))
       expect(subject).to have_button(id: 'test-instructeur-repousser-expiration')
     end
   end
