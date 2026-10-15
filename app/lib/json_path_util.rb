@@ -2,6 +2,9 @@
 
 class JSONPathUtil
   def self.on_safe(json, jsonpath)
+    # JsonPath parses a String as JSON: a scalar has no path under it.
+    return [] if !json.is_a?(Hash) && !json.is_a?(Array)
+
     normalized_json = normalize_keys(json.is_a?(Hash) ? json.with_indifferent_access : json)
     sanitized_jsonpath = jsonpath.split('.').map { sanitize_segment(it) }.join('.')
 
