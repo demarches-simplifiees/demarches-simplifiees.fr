@@ -26,8 +26,6 @@ Sentry.init do |config|
     end
   end
 
-  config.excluded_exceptions += ['APIEntreprise::Job::ProviderDownError']
-
   # Lambdas so the app constants are resolved at send time, not at boot.
   config.before_send = -> (event, hint) { SentryJobArguments.scrub(SentryFingerprint.call(event, hint)) }
   # A sampled job transaction carries the contexts of its scope, the Sidekiq

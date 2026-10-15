@@ -5,7 +5,7 @@ RSpec.describe APIEntreprise::EffectifsAnnuelsJob, type: :job do
   let(:siret) { '41816609600069' }
   let(:siren) { '418166096' }
   let(:now) { Date.parse("2021/02/13") }
-  let(:procedure) { create(:procedure) }
+  let(:procedure) { create(:procedure, api_entreprise_token: JWT.encode({ exp: 2.months.from_now.to_i }, nil, 'none')) }
   let(:procedure_id) { procedure.id }
   let(:body) { File.read('spec/fixtures/files/api_entreprise/effectifs_annuels.json') }
   let(:status) { 200 }
@@ -16,11 +16,21 @@ RSpec.describe APIEntreprise::EffectifsAnnuelsJob, type: :job do
       .to_return(body: body, status: status)
   end
 
-  subject { APIEntreprise::EffectifsAnnuelsJob.new.perform(etablissement.id, procedure_id) }
+  subject { described_class.perform_now(etablissement.id, procedure_id) }
 
   it 'updates etablissement' do
     subject
     expect(Etablissement.find(etablissement.id).entreprise_effectif_annuel).to eq(100.5)
     expect(Etablissement.find(etablissement.id).entreprise_effectif_annuel_annee).to eq("2017")
+  end
+
+  context 'when the provider fails' do
+    let(:status) { 503 }
+
+    it 'waits in the table for the cron' do
+      expect { subject }.not_to raise_error
+      expect(ParkedAPIEntrepriseFetch.find_by(etablissement:, job: 'EffectifsAnnuelsJob'))
+        .to have_attributes(procedure_id: procedure.id, code: 503)
+    end
   end
 end
