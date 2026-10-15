@@ -5,9 +5,10 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
   BROUILLON_WITHOUT_NOTICE_DELETION_LIMIT_PER_DAY = ENV.fetch("BROUILLON_WITHOUT_NOTICE_DELETION_LIMIT_PER_DAY", 20_000).to_i
   TERMINE_NOTICES_LIMIT_PER_DAY = ENV.fetch("TERMINE_NOTICES_LIMIT_PER_DAY", 50_000).to_i
   TERMINE_DELETION_LIMIT_PER_DAY = ENV.fetch("TERMINE_DELETION_LIMIT_PER_DAY", 50_000).to_i
-  # Termine dossiers are flagged or hidden, then mailed, batch by batch: what a
-  # failure mid-run can lose is bounded to one batch (a retry starts over from
-  # the scopes, which no longer match the dossiers already flagged or hidden).
+  # Termine dossiers are flagged or hidden, expired brouillons deleted, then
+  # mailed, batch by batch: what a failure mid-run can lose is bounded to one
+  # batch (a retry starts over from the scopes, which no longer match the
+  # dossiers already processed).
   # A batch grows past this size rather than splitting a user's dossiers.
   BATCH_SIZE = 1000
 
@@ -66,17 +67,24 @@ class Expired::DossiersDeletionService < Expired::MailRateLimiter
   end
 
   def delete_expired_brouillons_and_notify
-    user_notifications = group_by_user_email(Dossier.brouillon_expired_after_notice_grace)
-      .map { |(email, dossiers)| [email, dossiers.map(&:hash_for_deletion_mail)] }
+    ids_and_user_ids = Dossier.brouillon_expired_after_notice_grace.pluck(:id, :user_id)
 
-    Dossier.brouillon_expired_after_notice_grace.in_batches.destroy_all
+    each_batch_by_user(ids_and_user_ids, Dossier.brouillon_expired_after_notice_grace) do |dossiers|
+      user_notifications = group_by_user_email(dossiers)
 
-    user_notifications.each do |(email, dossiers_hash)|
-      mail = DossierMailer.notify_brouillon_deletion(
-        dossiers_hash,
-        email
-      )
-      send_with_delay(mail)
+      dossiers.each(&:purge_draft)
+      deleted_dossier_ids = dossiers.filter(&:destroyed?).map(&:id)
+
+      user_notifications.each do |(email, user_dossiers)|
+        deleted_dossiers = user_dossiers.filter { deleted_dossier_ids.include?(it.id) }
+        if deleted_dossiers.any?
+          mail = DossierMailer.notify_brouillon_deletion(
+            deleted_dossiers.map(&:hash_for_deletion_mail),
+            email
+          )
+          send_with_delay(mail)
+        end
+      end
     end
   end
 

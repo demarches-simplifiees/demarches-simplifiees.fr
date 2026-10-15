@@ -189,6 +189,42 @@ describe Expired::DossiersDeletionService do
         expect(DossierMailer).to have_received(:notify_brouillon_deletion).with(match_array([dossier_1.hash_for_deletion_mail, dossier_2.hash_for_deletion_mail]), user.email)
       end
     end
+
+    context 'when the purge of a dossier fails' do
+      let!(:dossier_1) { create(:dossier, procedure:, user:, brouillon_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
+      let!(:dossier_2) { create(:dossier, procedure:, brouillon_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
+
+      before do
+        allow_any_instance_of(Dossier).to receive(:destroy).and_wrap_original do |destroy|
+          raise StandardError, "boom" if destroy.receiver.id == dossier_2.id
+          destroy.call
+        end
+        service.delete_expired_brouillons_and_notify
+      end
+
+      it 'keeps it and mails only the others' do
+        expect(Dossier.where(id: [dossier_1, dossier_2])).to eq([dossier_2])
+        expect(DossierMailer).to have_received(:notify_brouillon_deletion).once
+        expect(DossierMailer).to have_received(:notify_brouillon_deletion).with([dossier_1.hash_for_deletion_mail], user.email)
+      end
+    end
+
+    context 'when a dossier was submitted after the selection' do
+      let!(:dossier) { create(:dossier, procedure:, brouillon_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
+
+      before do
+        allow(service).to receive(:each_batch_by_user).and_wrap_original do |each_batch_by_user, ids_and_user_ids, scope, &block|
+          dossier.update_columns(state: Dossier.states.fetch(:en_construction))
+          each_batch_by_user.call(ids_and_user_ids, scope, &block)
+        end
+        service.delete_expired_brouillons_and_notify
+      end
+
+      it 'neither deletes nor mentions it' do
+        expect(Dossier.exists?(dossier.id)).to be(true)
+        expect(DossierMailer).not_to have_received(:notify_brouillon_deletion)
+      end
+    end
   end
 
   describe '#delete_expired_brouillons_without_notice' do
