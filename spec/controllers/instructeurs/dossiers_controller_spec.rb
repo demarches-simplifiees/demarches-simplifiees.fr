@@ -2077,8 +2077,21 @@ describe Instructeurs::DossiersController, type: :controller do
   describe '#extend_conservation and restore' do
     subject { post :extend_conservation_and_restore, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: 'a-suivre' } }
 
+    let(:hidden_by_expired) { true }
+
     before do
-      dossier.update(hidden_by_expired_at: 1.hour.ago, hidden_by_reason: 'expired')
+      dossier.update(hidden_by_expired_at: 1.hour.ago, hidden_by_reason: 'expired') if hidden_by_expired
+    end
+
+    context 'when the dossier is en instruction and not hidden by expiration' do
+      let(:dossier) { dossiers.en_instruction }
+      let(:hidden_by_expired) { false }
+
+      it 'leaves the conservation untouched and alerts' do
+        expect { subject }.not_to change { dossier.reload.attributes.values_at('conservation_extension', 'expired_at') }
+        expect(response).to redirect_to(instructeur_dossier_path(procedure, dossier))
+        expect(flash[:alert]).to eq(I18n.t('instructeurs.dossiers.conservation_cannot_be_extended'))
+      end
     end
 
     context 'when dossier has expired but was not hidden by anyone' do
