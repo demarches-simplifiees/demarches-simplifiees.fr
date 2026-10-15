@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_08_180000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_14_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_catalog.plpgsql"
@@ -1033,6 +1033,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_180000) do
     t.index ["procedure_id"], name: "index_module_api_cartos_on_procedure_id", unique: true
   end
 
+  create_table "parked_api_entreprise_fetches", force: :cascade do |t|
+    t.jsonb "arguments", null: false
+    t.integer "attempts", default: 1, null: false
+    t.integer "code"
+    t.datetime "created_at", null: false
+    t.datetime "enqueued_at"
+    t.bigint "etablissement_id", null: false
+    t.string "job", null: false
+    t.bigint "procedure_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["etablissement_id", "job"], name: "idx_on_etablissement_id_job_516126fd03", unique: true
+    t.index ["job", "created_at"], name: "index_parked_api_entreprise_fetches_on_job_and_created_at"
+  end
+
   create_table "procedure_paths", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "path"
@@ -1585,6 +1599,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_180000) do
   add_foreign_key "llm_rule_suggestion_items", "llm_rule_suggestions"
   add_foreign_key "llm_rule_suggestions", "procedure_revisions"
   add_foreign_key "merge_logs", "users"
+  add_foreign_key "parked_api_entreprise_fetches", "etablissements", on_delete: :cascade
   add_foreign_key "procedure_paths", "procedures"
   add_foreign_key "procedure_presentations", "assign_tos"
   add_foreign_key "procedure_revision_types_de_champ", "procedure_revision_types_de_champ", column: "parent_id"
