@@ -1038,7 +1038,7 @@ describe Users::DossiersController, type: :controller do
     let(:dossier) { create(:dossier, user:, procedure:) }
     let(:champ) { dossier.root_champs_public.first }
 
-    subject { patch :revert_prefill, params: { id: dossier.id, stable_id: champ.stable_id }, format: :turbo_stream }
+    subject { patch :revert_prefill, params: { id: dossier.id, public_id: champ.public_id }, format: :turbo_stream }
 
     context 'when champ has prefilled_original_value' do
       before do
@@ -1060,6 +1060,23 @@ describe Users::DossiersController, type: :controller do
         subject
         expect(champ.reload.value).to eq('some_value')
         expect(response).to have_http_status(:success)
+      end
+    end
+
+    context 'when the champ is a child of a repetition' do
+      let(:procedure) { create(:procedure, :published, public_type_de_champs: [{ type: :repetition, children: [{}] }]) }
+      let(:repetition) { dossier.root_champs_public.first.type_de_champ }
+      let(:champ) do
+        child = dossier.revision.children_of(repetition).first
+        dossier.champ_for_update(child, row_id: dossier.repetition_row_ids(repetition).first, updated_by: user.email)
+      end
+
+      before { champ.update!(prefilled: true, value: 'modified', prefilled_original_value: { 'value' => 'original' }) }
+
+      it 'restores the original value of the child' do
+        subject
+
+        expect(champ.reload.value).to eq('original')
       end
     end
 
