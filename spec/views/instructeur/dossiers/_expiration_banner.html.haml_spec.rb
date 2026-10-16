@@ -2,24 +2,16 @@
 
 describe 'instructeur/dossiers/expiration_banner', type: :view do
   include DossierHelper
-  let(:duree_conservation_dossiers_dans_ds) { 3 }
-  let(:dossier) do
-    create(:dossier, state, attributes.merge(
-                              state: state,
-                              procedure: create(:procedure, duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds)
-                            ))
-  end
-  let(:i18n_key_state) { state }
+
   subject do
-    dossier.update_expired_at unless dossier.en_instruction?
+    dossier.update_expired_at
     render('instructeurs/dossiers/expiration_banner',
            dossier: dossier,
            current_user: build(:user))
   end
 
   context 'with dossier.en_construction?' do
-    let(:attributes) { { en_construction_at: 6.months.ago } }
-    let(:state) { :en_construction }
+    let(:dossier) { dossiers.en_construction }
 
     it 'does not render any expiration message (#13178)' do
       expect(subject).not_to have_selector('.expires_at')
@@ -28,15 +20,36 @@ describe 'instructeur/dossiers/expiration_banner', type: :view do
   end
 
   context 'with dossier.en_processed_at?' do
-    let(:state) { :accepte }
-    let(:attributes) { {} }
+    let(:dossier) { dossiers.accepte }
 
     it 'render estimated expiration date' do
-      allow(dossier).to receive(:processed_at).and_return(6.months.ago)
       expect(subject).to have_selector('.expires_at',
-                                       text: I18n.t("shared.dossiers.header.expires_at.#{i18n_key_state}",
+                                       text: I18n.t("shared.dossiers.header.expires_at.accepte",
                                                     date: safe_expiration_date(dossier),
-                                                    duree_conservation_totale: duree_conservation_dossiers_dans_ds))
+                                                    duree_conservation_totale: dossier.procedure.duree_conservation_dossiers_dans_ds))
+    end
+  end
+
+  context 'with a termine dossier close to expiration' do
+    let(:dossier) { dossiers.accepte }
+
+    before { dossier.update_column(:termine_close_to_expiration_notice_sent_at, 1.week.ago) }
+
+    it 'renders the postpone button' do
+      expect(subject).to have_selector('.fr-callout', text: I18n.t('instructeurs.dossiers.header.banner.title'))
+      expect(subject).to have_selector('.fr-callout', text: I18n.t('instructeurs.dossiers.header.banner.states.termine'))
+      expect(subject).to have_button(id: 'test-instructeur-repousser-expiration')
+    end
+  end
+
+  context 'with a termine dossier that has expired' do
+    let(:dossier) { dossiers.accepte }
+
+    before { dossier.update_column(:termine_close_to_expiration_notice_sent_at, 3.weeks.ago) }
+
+    it 'does not render the postpone button' do
+      expect(subject).to have_selector('.fr-callout', text: I18n.t('instructeurs.dossiers.header.banner.title_expired'))
+      expect(subject).not_to have_button(id: 'test-instructeur-repousser-expiration')
     end
   end
 end
