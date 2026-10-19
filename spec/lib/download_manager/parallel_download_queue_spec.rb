@@ -292,5 +292,25 @@ describe DownloadManager::ParallelDownloadQueue do
       expect(File.exist?(File.join(download_to_dir, 'dossier-1/legit.txt'))).to be_truthy
       expect(files_written_in(outside_dir)).to be_empty
     end
+
+    context 'when the hydra is interrupted before a chunked download completes' do
+      let(:downloadable_manager) { DownloadManager::ParallelDownloadQueue.new([[attachment, 'large.bin']], download_to_dir) }
+      let(:attachment) { double('ActiveStorage::Attachment', blob: instance_double('ActiveStorage::Blob', byte_size: 20.megabytes), url: 'http://example.com/large') }
+
+      before { stub_request(:get, attachment.url).to_return(body: 'partial content') }
+
+      it 'closes the file opened for the download' do
+        opened_files = []
+        allow(File).to receive(:open).and_wrap_original do |original, *args, **kwargs|
+          original.call(*args, **kwargs).tap do |file|
+            allow(file).to receive(:write).and_raise(Interrupt)
+            opened_files << file
+          end
+        end
+
+        expect { subject }.to raise_error(Interrupt)
+        expect(opened_files).to contain_exactly(be_closed)
+      end
+    end
   end
 end

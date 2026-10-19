@@ -4,7 +4,7 @@ describe APIDatagouv::API do
   describe '#upload' do
     let(:dataset) { '62a0afdacffa4c3ea5cbd1b4' }
     let(:resource) { '666211e9-6226-4fad-8d2f-5a4135f40e47' }
-    let(:subject) { APIDatagouv::API.upload(Tempfile.new, dataset, resource) }
+    let(:subject) { Tempfile.create { APIDatagouv::API.upload(it, dataset, resource) } }
 
     before do
       stub_request(:post, /https:\/\/www.data.gouv.fr\/api\/1\/datasets\/#{dataset}\/resources\/#{resource}\/upload\//)
