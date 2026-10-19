@@ -250,8 +250,6 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'personnalisation link' do
-      before { Flipper.enable(:dossiers_list_personnalisation, user) }
-
       it 'shows the link for a user above the threshold through invitations only' do
         create_list(:dossier, 6, :en_construction).each do |dossier|
           create(:invite, dossier:, user:)
