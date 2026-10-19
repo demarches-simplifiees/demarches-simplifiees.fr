@@ -291,6 +291,20 @@ describe Dossier, type: :model do
     end
   end
 
+  describe '.brouillon_notice_due' do
+    let(:due) { create(:dossier, :brouillon).tap { it.update_columns(removal_due_at: 1.minute.ago) } }
+    let(:not_yet_due) { create(:dossier, :brouillon).tap { it.update_columns(removal_due_at: 1.minute.from_now) } }
+    let(:warned) { create(:dossier, :brouillon).tap { it.update!(brouillon_close_to_expiration_notice_sent_at: 3.weeks.ago) } }
+    # A stage lagging behind its row: still retained, but trashed.
+    let(:trashed) { create(:dossier, :brouillon).tap { it.update_columns(removal_due_at: 1.minute.ago, hidden_by_user_at: 1.day.ago) } }
+
+    it 'selects the retained brouillons whose notice is due, out of the trash' do
+      dossiers = [due, not_yet_due, warned, trashed]
+
+      expect(Dossier.where(id: dossiers).brouillon_notice_due).to contain_exactly(due)
+    end
+  end
+
   describe '#nb_days_before_expiration' do
     let(:dossier) { dossiers.brouillon }
 
