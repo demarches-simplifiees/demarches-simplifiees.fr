@@ -22,7 +22,6 @@ features = [
   :administrateur_pro_connect_exempted,
   :administrateur_web_hook,
   :annotation_condition_champs_public,
-  :annotation_prefill_champs_public,
   :blocking_pending_correction,
   :dossier_pdf_vide,
   :dossiers_list_personnalisation,
