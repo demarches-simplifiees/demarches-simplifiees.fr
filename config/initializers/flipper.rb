@@ -31,7 +31,6 @@ features = [
   :groupe_instructeur_api_hack,
   :pro_connect_restricted,
   :pro_connect_required_for_all_administrateurs,
-  :pre_rempli_type_de_champ,
   :prefill_iban,
   :rdv,
   :sva,
