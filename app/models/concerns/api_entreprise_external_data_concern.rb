@@ -6,6 +6,7 @@ module APIEntrepriseExternalDataConcern
   include Dry::Monads[:result]
 
   GLOBAL_TOKEN_ALERT_EVERY = 1.hour
+  NON_DIFFUSIBLE_ETABLISSEMENT_HTTP_CODE = 451
 
   private
 
@@ -41,8 +42,7 @@ module APIEntrepriseExternalDataConcern
       record_credentials_failure(type, code)
       degraded_failure(type, code)
     in Failure(retryable: false, type:, code:, **)
-      # a non-diffusible SIRET (451) is an expected answer, not a bug
-      Failure(retryable: false, error: StandardError.new("API Entreprise: #{type}"), code:, report: code != 451)
+      Failure(retryable: false, error: StandardError.new("API Entreprise: #{type}"), code:, report: code != NON_DIFFUSIBLE_ETABLISSEMENT_HTTP_CODE)
     end
   end
 
