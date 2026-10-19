@@ -359,6 +359,12 @@ class Dossier < ApplicationRecord
 
   scope :never_touched_brouillon_expired, -> { visible_by_user.brouillon.where.missing(:etablissement, :individual).where(last_champ_updated_at: nil, identity_updated_at: nil, parent_dossier: nil, last_commentaire_updated_at: nil).where(created_at: ..Expired::WEEKS_BEFORE_NEVER_TOUCHED_BROUILLON_EXPIRATION.weeks.ago) }
   scope :unclaimed_prefilled_brouillon_expired, -> { orphan.state_brouillon.where(updated_at: ..Expired::WEEKS_BEFORE_NEVER_TOUCHED_BROUILLON_EXPIRATION.weeks.ago) }
+  scope :brouillon_notice_due, -> do
+    state_brouillon
+      .visible_by_user
+      .removal_retained
+      .where(removal_due_at: ..Time.zone.now)
+  end
   scope :brouillon_expired_after_notice_grace, -> do
     state_brouillon
       .visible_by_user
@@ -380,7 +386,6 @@ class Dossier < ApplicationRecord
       .where(termine_close_to_expiration_notice_sent_at: ...(Time.zone.now - Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
   end
 
-  scope :without_brouillon_expiration_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
   scope :without_termine_expiration_notice_sent, -> { where(termine_close_to_expiration_notice_sent_at: nil) }
   scope :deleted_by_user_expired, -> { where(dossiers: { hidden_by_user_at: ...REMAINING_WEEKS_BEFORE_DELETION.weeks.ago }) }
   scope :deleted_by_administration_expired, -> { where(dossiers: { hidden_by_administration_at: ...REMAINING_WEEKS_BEFORE_DELETION.weeks.ago }) }
