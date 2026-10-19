@@ -69,6 +69,20 @@ describe ProcedureArchiveService do
     end
   end
 
+  describe '.blob' do
+    it 'closes the file once uploaded' do
+      io = nil
+      allow(ActiveStorage::Blob).to receive(:create_and_upload!).and_wrap_original do |original, **params|
+        io = params[:io]
+        original.call(**params)
+      end
+
+      expect(uploader.blob).to be_persisted
+
+      expect(io).to be_closed
+    end
+  end
+
   describe '.upload_with_chunking_wrapper' do
     let(:fake_blob_checksum) { Digest::SHA256.file(file.path) }
     let(:fake_blob_bytesize) { 100.gigabytes }
