@@ -143,9 +143,9 @@ module ExternalDataConcern
       save_external_error(error, code)
       retry!
       raise RetryableFetchError.new(error, provider: self.class.name)
-    in Failure(retryable: false, error:, code:)
+    in Failure(retryable: false, error:, code:, **rest)
       save_external_error(error, code)
-      Sentry.capture_exception(error) if code != 404
+      Sentry.capture_exception(error) if code != 404 && rest.fetch(:report, true)
       external_data_error!
     end
   end

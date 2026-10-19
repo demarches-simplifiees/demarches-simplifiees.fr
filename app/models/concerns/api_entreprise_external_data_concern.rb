@@ -41,7 +41,8 @@ module APIEntrepriseExternalDataConcern
       record_credentials_failure(type, code)
       degraded_failure(type, code)
     in Failure(retryable: false, type:, code:, **)
-      Failure(retryable: false, error: StandardError.new("API Entreprise: #{type}"), code:)
+      # a non-diffusible SIRET (451) is an expected answer, not a bug
+      Failure(retryable: false, error: StandardError.new("API Entreprise: #{type}"), code:, report: code != 451)
     end
   end
 
