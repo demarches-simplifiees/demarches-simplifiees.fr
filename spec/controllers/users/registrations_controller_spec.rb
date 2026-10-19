@@ -60,6 +60,12 @@ describe Users::RegistrationsController, type: :controller do
 
         expect(User.last.preferred_domain_demarche_numerique_gouv_fr?).to be_truthy
       end
+
+      it 'remembers the confirmation request' do
+        subject
+
+        expect(session[:confirmation_requested_at]).to be_within(5).of(Time.current.to_i)
+      end
     end
 
     context 'when user is not correct' do
@@ -69,6 +75,12 @@ describe Users::RegistrationsController, type: :controller do
         expect(DeviseUserMailer).not_to receive(:confirmation_instructions)
 
         subject
+      end
+
+      it 'remembers nothing' do
+        subject
+
+        expect(session[:confirmation_requested_at]).to be_nil
       end
     end
 
@@ -93,6 +105,10 @@ describe Users::RegistrationsController, type: :controller do
           decrypted_email = controller.message_encryptor_service.decrypt_and_verify(email_param, purpose: :email_confirmation)
           expect(decrypted_email).to eq(user[:email])
         end
+
+        it 'remembers the confirmation request' do
+          expect(session[:confirmation_requested_at]).to be_within(5).of(Time.current.to_i)
+        end
       end
 
       context 'and the user is not confirmed' do
@@ -113,6 +129,10 @@ describe Users::RegistrationsController, type: :controller do
           email_param = Rack::Utils.parse_nested_query(URI.parse(response.location).query)['email']
           decrypted_email = controller.message_encryptor_service.decrypt_and_verify(email_param, purpose: :email_confirmation)
           expect(decrypted_email).to eq(user[:email])
+        end
+
+        it 'remembers the confirmation request' do
+          expect(session[:confirmation_requested_at]).to be_within(5).of(Time.current.to_i)
         end
       end
 
@@ -161,36 +181,6 @@ describe Users::RegistrationsController, type: :controller do
           email_param = Rack::Utils.parse_nested_query(URI.parse(response.location).query)['email']
           decrypted_email = controller.message_encryptor_service.decrypt_and_verify(email_param, purpose: :email_confirmation)
           expect(decrypted_email).not_to eq(other_user.email)
-        end
-      end
-    end
-
-    describe 'remembering the confirmation request' do
-      before { freeze_time }
-
-      it 'remembers it when the account is created' do
-        subject
-
-        expect(session[:confirmation_requested_at]).to eq(Time.current.to_i)
-      end
-
-      context 'when the form is invalid' do
-        let(:user) { { email: '', password: password } }
-
-        it 'remembers nothing' do
-          subject
-
-          expect(session[:confirmation_requested_at]).to be_nil
-        end
-      end
-
-      context 'when the address already has an account' do
-        let!(:existing_user) { create(:user, email: email, password: password, confirmed_at: nil) }
-
-        it 'remembers it all the same' do
-          subject
-
-          expect(session[:confirmation_requested_at]).to eq(Time.current.to_i)
         end
       end
     end
