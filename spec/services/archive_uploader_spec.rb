@@ -69,7 +69,7 @@ describe ProcedureArchiveService do
     end
   end
 
-  describe '.upload_with_active_storage' do
+  describe '.blob' do
     it 'closes the file once uploaded' do
       io = nil
       allow(ActiveStorage::Blob).to receive(:create_and_upload!).and_wrap_original do |original, **params|
@@ -77,7 +77,7 @@ describe ProcedureArchiveService do
         original.call(**params)
       end
 
-      uploader.send(:upload_with_active_storage)
+      expect(uploader.blob).to be_persisted
 
       expect(io).to be_closed
     end

@@ -40,7 +40,7 @@ class ArchiveUploader
   end
 
   def upload_with_active_storage
-    File.open(filepath) do |io|
+    File.open(filepath, 'rb') do |io|
       ActiveStorage::Blob.create_and_upload!(**blob_default_params(filepath), io:)
     end
   end
