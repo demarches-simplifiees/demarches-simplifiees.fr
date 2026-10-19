@@ -11,7 +11,6 @@ describe 'Usager personnalise la liste des dossiers', js: true do
   end
 
   before do
-    Flipper.enable(:dossiers_list_personnalisation, user)
     create_list(:dossier, 6, :en_construction, user:, procedure:)
     login_as user, scope: :user
   end

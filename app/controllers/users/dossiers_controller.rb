@@ -753,10 +753,7 @@ module Users
     end
 
     def load_personnalisation_data(dossiers)
-      @personnalisations_by_procedure_id = {}
       @champs_by_dossier_id = {}
-      return if !feature_enabled?(:dossiers_list_personnalisation)
-
       @personnalisations_by_procedure_id = current_user.dossiers_list_personnalisations
         .where(procedure_id: dossiers.map { _1.procedure.id }.uniq)
         .index_by(&:procedure_id)
@@ -790,8 +787,7 @@ module Users
     end
 
     def personnalisation_available?
-      feature_enabled?(:dossiers_list_personnalisation) &&
-        dossier_filter.user_dossiers.count > SIMPLE_LIST_THRESHOLD
+      dossier_filter.user_dossiers.count > SIMPLE_LIST_THRESHOLD
     end
 
     def dossier_filter
