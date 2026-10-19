@@ -18,7 +18,7 @@ module Maintenance
 
     describe '#collection' do
       it 'selects the brouillons whose stage disagrees with their hiding dates only' do
-        trashed = written_before_deploy(dossiers.brouillon, hidden_by_user_at: hidden_at)
+        trashed = written_before_deploy(dossiers.brouillon, hidden_by_user_at: hidden_at, removal_stage: nil, removal_due_at: nil)
         restored = create(:dossier, :brouillon).tap { it.hide_and_keep_track!(it.user, :user_request) }
         written_before_deploy(restored, hidden_by_user_at: nil)
         trashed_en_construction = written_before_deploy(dossiers.en_construction, hidden_by_user_at: hidden_at)

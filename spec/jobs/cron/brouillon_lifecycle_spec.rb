@@ -70,6 +70,7 @@ describe "Brouillon lifecycle" do
   it "warns the usager at J-14, then destroys the brouillon at J with a mail" do
     dossier
     expect(dossier.reload.expired_at).to eq(expires_at)
+    expect(dossier).to have_attributes(removal_stage: 'retained', removal_due_at: notice_at)
 
     expect { run_crons(just_before(notice_at)) }.not_to have_enqueued_mail
     expect { run_crons(just_after(notice_at)) }.to notice_mail.with([dossier], user.email)
@@ -99,6 +100,7 @@ describe "Brouillon lifecycle" do
 
     # Counted from the last edit.
     expect(dossier.reload.expired_at).to eq(created_at + brouillon_lifetime + extension)
+    expect(dossier).to have_attributes(removal_stage: 'retained', removal_due_at: dossier.expired_at - notice_period)
 
     expect { run_crons(just_after(old_deletion_at)) }.not_to have_enqueued_mail
     expect(gone?(dossier)).to be(false)
@@ -117,6 +119,7 @@ describe "Brouillon lifecycle" do
     autosave(dossier)
 
     expect(dossier.reload.expired_at).to eq(edited_at + brouillon_lifetime)
+    expect(dossier).to have_attributes(removal_stage: 'retained', removal_due_at: edited_at + brouillon_lifetime - notice_period)
 
     expect { run_crons(just_after(old_deletion_at)) }.not_to have_enqueued_mail
     expect(gone?(dossier)).to be(false)
@@ -189,5 +192,6 @@ describe "Brouillon lifecycle" do
 
     run_crons(just_after(trashed_at + trash_period))
     expect(gone?(dossier)).to be(false)
+    expect(dossier.reload).to have_attributes(removal_stage: 'retained', removal_due_at: dossier.expired_at - notice_period)
   end
 end
