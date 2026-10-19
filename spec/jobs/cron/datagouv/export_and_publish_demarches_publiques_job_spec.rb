@@ -26,6 +26,15 @@ RSpec.describe Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob, type: :job
       expect { subject }.to raise_error(DemarchesPubliquesExportService::Error)
       expect(Dir.glob("*demarches.json.gz", base: 'tmp').empty?).to be_truthy
     end
+
+    it 'closes the gzip file when the upload fails' do
+      stub.to_return(status: 500)
+      uploaded_io = nil
+      allow(APIDatagouv::API).to receive(:upload).and_wrap_original { |original, io, *args| original.call(uploaded_io = io, *args) }
+
+      expect { subject }.to raise_error(APIDatagouv::API::RequestFailed)
+      expect(uploaded_io).to be_closed
+    end
   end
 
   describe '#schedulable?' do

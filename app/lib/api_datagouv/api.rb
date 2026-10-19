@@ -41,7 +41,6 @@ class APIDatagouv::API
         },
         headers: { "X-Api-Key" => datagouv_api_key }
       )
-      io.close
 
       if response.success?
         response.body

@@ -17,6 +17,7 @@ module DownloadManager
       # expanded once, so the confinement check below compares two paths built the
       # same way, and a relative destination cannot re-resolve if cwd moves
       @destination = Pathname.new(destination).expand_path
+      @open_files = Set.new
     end
 
     def download_all
@@ -31,6 +32,14 @@ module DownloadManager
       end
 
       hydra.run
+    ensure
+      # left open when the hydra is interrupted before their on_complete
+      @open_files.each do |file|
+        file.close
+      rescue IOError, SystemCallError
+        # keep closing the others and let the original exception propagate
+      end
+      @open_files.clear
     end
 
     # can't be used with typhoeus, otherwise block is closed before the request is run by hydra
@@ -156,6 +165,7 @@ module DownloadManager
 
     def request_in_chunks(request, attachment:, attachment_path:, path_in_download_dir:)
       downloaded_file = attachment_path.open(mode: 'wb')
+      @open_files << downloaded_file
 
       request.on_body do |chunk|
         downloaded_file.write(chunk)
@@ -163,6 +173,7 @@ module DownloadManager
 
       request.on_complete do |response|
         downloaded_file.close
+        @open_files.delete(downloaded_file)
 
         if !response.success?
           handle_response_error(response, attachment:, attachment_path:, path_in_download_dir:)

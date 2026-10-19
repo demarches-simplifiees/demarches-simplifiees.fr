@@ -16,8 +16,7 @@ class Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob < Cron::CronJob
 
     begin
       DemarchesPubliquesExportService.new(gzip_filepath).call
-      io = File.new(gzip_filepath, 'r')
-      APIDatagouv::API.upload(io, DATASET, RESOURCE)
+      File.open(gzip_filepath, 'rb') { APIDatagouv::API.upload(it, DATASET, RESOURCE) }
     ensure
       FileUtils.rm(gzip_filepath)
     end

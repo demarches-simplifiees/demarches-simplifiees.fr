@@ -32,7 +32,7 @@ class Procedure::ImportComponent < ApplicationComponent
   private
 
   def template_detail_for(path)
-    file = Rails.public_path.join(path.delete_prefix('/')).open
-    "#{File.extname(file.to_path).upcase.delete_prefix('.')} – #{number_to_human_size(file.size)}"
+    file = Rails.public_path.join(path.delete_prefix('/'))
+    "#{file.extname.upcase.delete_prefix('.')} – #{number_to_human_size(file.size)}"
   end
 end

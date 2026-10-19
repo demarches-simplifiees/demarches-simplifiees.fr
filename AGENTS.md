@@ -63,6 +63,7 @@ Production row counts, from the cleaned production dump of **2026-09-07** (updat
 - Authorization lives in the controllers, except champ-level access, which goes through Pundit policies (`app/policies/champs/`).
 - Feature flags go through Flipper. Soft deletes go through Discard — check whether a model is discardable before destroying or counting rows.
 - Migrations are linted by Strong Migrations, so a naive one gets rejected.
+- Open files with a block (`File.open(path, 'rb') { |io| … }`), never bare `File.open` / `File.new` / `Pathname#open`: an unclosed file holds its descriptor until GC, and long-lived Puma and Sidekiq processes run out. The code that opens a file closes it — `attach(io:)` and `create_and_upload!(io:)` don't, and `attach` reads the io after commit, so keep it open past the transaction; a file that outlives the method (streamed download) is closed in an `ensure`. For a size or a name, use `Pathname#size` / `#extname` without opening anything.
 - User-facing strings are translated in **fr and en** (French is the default locale, Paris the time zone). A public GraphQL API (`app/graphql/`) exposes part of the domain: changing what it returns is a breaking change for integrators.
 - Remove dead and commented-out code. Keep refactoring commits separate from feature commits.
 
