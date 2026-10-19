@@ -22,7 +22,7 @@ module Maintenance
 
     describe '#collection' do
       it 'selects the brouillons out of the trash whose stage disagrees with their notice only' do
-        noticed = written_before_deploy(dossiers.brouillon, brouillon_close_to_expiration_notice_sent_at: noticed_at)
+        noticed = written_before_deploy(dossiers.brouillon, brouillon_close_to_expiration_notice_sent_at: noticed_at, removal_stage: nil, removal_due_at: nil)
         edited = written_before_deploy(warned(create(:dossier, :brouillon)), brouillon_close_to_expiration_notice_sent_at: nil)
         already_warned = warned(create(:dossier, :brouillon))
         trashed = create(:dossier, :brouillon).tap { it.hide_and_keep_track!(it.user, :user_request) }
