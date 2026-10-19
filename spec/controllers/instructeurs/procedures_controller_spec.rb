@@ -1315,6 +1315,10 @@ describe Instructeurs::ProceduresController, type: :controller do
 
       expect(response).to have_http_status(:success)
       expect(response.body).to include("My Template")
+
+      actions = Capybara.string(response.body).find('td .flex.align-center')
+      expect(actions).to have_link('Modifier')
+      expect(actions).to have_button('Supprimer')
     end
   end
 

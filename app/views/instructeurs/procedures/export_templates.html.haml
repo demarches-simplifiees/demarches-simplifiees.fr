@@ -48,8 +48,9 @@
                         %span.fr-badge.fr-badge--sm
                           non partagé
                   %td
-                    = link_to t('.modify_template'), [:edit, :instructeur, @procedure, export_template], class: "fr-btn fr-btn--icon-left fr-icon-edit-line fr-mr-1w"
-                    = button_to t('.delete_template'), [:instructeur, @procedure, export_template], method: :delete, data: { turbo_confirm: t('.delete_template_alert') }, form: { class: 'inline', data: { turbo: true } }, class: "fr-btn fr-btn--secondary fr-icon-delete-line danger"
+                    .flex.align-center.flex-gap-1
+                      = link_to t('.modify_template'), [:edit, :instructeur, @procedure, export_template], class: "fr-btn fr-btn--icon-left fr-icon-edit-line"
+                      = button_to t('.delete_template'), [:instructeur, @procedure, export_template], method: :delete, data: { turbo_confirm: t('.delete_template_alert') }, form: { data: { turbo: true } }, class: "fr-btn fr-btn--secondary fr-icon-delete-line danger"
   - else
     .fr-alert.fr-alert--info.fr-mt-4w
       .fr-alert__body
