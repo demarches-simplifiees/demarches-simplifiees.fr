@@ -40,9 +40,9 @@ class ArchiveUploader
   end
 
   def upload_with_active_storage
-    params = blob_default_params(filepath).merge(io: File.open(filepath))
-    blob = ActiveStorage::Blob.create_and_upload!(**params)
-    return blob
+    File.open(filepath) do |io|
+      ActiveStorage::Blob.create_and_upload!(**blob_default_params(filepath), io:)
+    end
   end
 
   def upload_with_chunking_wrapper
