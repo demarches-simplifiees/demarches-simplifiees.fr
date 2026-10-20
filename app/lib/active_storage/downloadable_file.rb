@@ -38,6 +38,18 @@ class ActiveStorage::DownloadableFile
     end
   end
 
+  def self.write_to_zip(zip, files)
+    files.each do |file, path|
+      zip.write_file(path) do |sink|
+        if file.is_a?(ActiveStorage::FakeAttachment)
+          IO.copy_stream(file.file, sink)
+        else
+          file.blob.download { sink << it }
+        end
+      end
+    end
+  end
+
   private
 
   def self.client
