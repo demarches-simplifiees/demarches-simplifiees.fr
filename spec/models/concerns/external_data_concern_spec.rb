@@ -213,11 +213,12 @@ RSpec.describe ExternalDataConcern do
     end
 
     describe 'fetch a non retryable failure, now is external_error state' do
+      let(:failure) { Failure(retryable: false, error: Exception.new('nop'), code:) }
+
       before do
         allow(champ).to receive(:ready_for_external_call?).and_return(true)
         champ.fetch_later!
 
-        failure = Failure(retryable: false, error: Exception.new('nop'), code:)
         allow(champ).to receive(:fetch_external_data).and_return(failure)
         allow(Sentry).to receive(:capture_exception)
         champ.fetch!
@@ -236,6 +237,16 @@ RSpec.describe ExternalDataConcern do
         let(:code) { 500 }
 
         it { expect(Sentry).to have_received(:capture_exception) }
+      end
+
+      context 'when the provider asks not to report it' do
+        let(:code) { 500 }
+        let(:failure) { Failure(retryable: false, error: Exception.new('nop'), code:, report: false) }
+
+        it do
+          expect(champ).to be_external_error
+          expect(Sentry).not_to have_received(:capture_exception)
+        end
       end
 
       context 'when code is nil' do

@@ -6,6 +6,7 @@ module APIEntrepriseExternalDataConcern
   include Dry::Monads[:result]
 
   GLOBAL_TOKEN_ALERT_EVERY = 1.hour
+  NON_DIFFUSIBLE_ETABLISSEMENT_HTTP_CODE = 451
 
   private
 
@@ -41,7 +42,7 @@ module APIEntrepriseExternalDataConcern
       record_credentials_failure(type, code)
       degraded_failure(type, code)
     in Failure(retryable: false, type:, code:, **)
-      Failure(retryable: false, error: StandardError.new("API Entreprise: #{type}"), code:)
+      Failure(retryable: false, error: StandardError.new("API Entreprise: #{type}"), code:, report: code != NON_DIFFUSIBLE_ETABLISSEMENT_HTTP_CODE)
     end
   end
 

@@ -397,6 +397,17 @@ describe Champs::SiretChamp do
       it { is_expected.to be_external_error }
     end
 
+    context 'when the SIRET is not diffusible' do
+      let(:api_etablissement_status) { 451 }
+
+      before { allow(Sentry).to receive(:capture_exception) }
+
+      it 'is an external error, not reported to Sentry' do
+        expect(subject).to be_external_error
+        expect(Sentry).not_to have_received(:capture_exception)
+      end
+    end
+
     context 'when the API answers 409' do
       let(:api_etablissement_status) { 409 }
 
