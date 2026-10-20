@@ -163,20 +163,28 @@ module DownloadManager
       end
     end
 
+    # opened on the first chunk: download_all queues every request before the hydra runs
     def request_in_chunks(request, attachment:, attachment_path:, path_in_download_dir:)
-      downloaded_file = attachment_path.open(mode: 'wb')
-      @open_files << downloaded_file
+      downloaded_file = nil
 
       request.on_body do |chunk|
+        if downloaded_file.nil?
+          downloaded_file = attachment_path.open(mode: 'wb')
+          @open_files << downloaded_file
+        end
         downloaded_file.write(chunk)
       end
 
       request.on_complete do |response|
-        downloaded_file.close
-        @open_files.delete(downloaded_file)
+        if downloaded_file
+          downloaded_file.close
+          @open_files.delete(downloaded_file)
+        end
 
         if !response.success?
           handle_response_error(response, attachment:, attachment_path:, path_in_download_dir:)
+        elsif downloaded_file.nil?
+          attachment_path.write('', mode: 'wb') # empty body: no chunk was received
         end
       end
     end

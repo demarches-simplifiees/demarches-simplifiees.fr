@@ -31,6 +31,11 @@ describe DownloadManager::ParallelDownloadQueue do
     )
   end
 
+  # above the 10 MB threshold, so downloaded in chunks
+  def large_attachment(url)
+    double('ActiveStorage::Attachment', blob: instance_double('ActiveStorage::Blob', byte_size: 20.megabytes), url:)
+  end
+
   let(:downloadable_manager) { DownloadManager::ParallelDownloadQueue.new([attachment], download_to_dir) }
   let(:http_client) { instance_double(Typhoeus::Hydra) }
 
@@ -293,9 +298,56 @@ describe DownloadManager::ParallelDownloadQueue do
       expect(files_written_in(outside_dir)).to be_empty
     end
 
+    context 'with more chunked downloads than the hydra runs in parallel' do
+      let(:urls) { Array.new(3) { "http://example.com/large-#{it}" } }
+      let(:downloadable_manager) do
+        attachments = urls.map.with_index do |url, i|
+          [large_attachment(url), "large-#{i}.bin"]
+        end
+        DownloadManager::ParallelDownloadQueue.new(attachments, download_to_dir)
+      end
+
+      before do
+        stub_const('DownloadManager::ParallelDownloadQueue::DOWNLOAD_MAX_PARALLEL', 1)
+        urls.each { stub_request(:get, it).to_return(body: "content of #{it}") }
+      end
+
+      it 'opens each destination file only once its request has started' do
+        opened_files = []
+        peak_open_files = 0
+        allow(File).to receive(:open).and_wrap_original do |original, *args, **kwargs, &block|
+          original.call(*args, **kwargs, &block).tap do |file|
+            opened_files << file
+            peak_open_files = [peak_open_files, opened_files.count { !it.closed? }].max
+          end
+        end
+
+        subject
+
+        expect(peak_open_files).to eq(1)
+        expect(opened_files).to all(be_closed)
+        urls.each.with_index do |url, i|
+          expect(File.read(File.join(download_to_dir, "large-#{i}.bin"))).to eq("content of #{url}")
+        end
+      end
+    end
+
+    context 'when a chunked download succeeds with an empty body' do
+      let(:downloadable_manager) { DownloadManager::ParallelDownloadQueue.new([[attachment, 'empty.bin']], download_to_dir) }
+      let(:attachment) { large_attachment('http://example.com/empty') }
+
+      before { stub_request(:get, attachment.url).to_return(body: '') }
+
+      it 'still writes the (empty) file' do
+        subject
+
+        expect(File.size(File.join(download_to_dir, 'empty.bin'))).to eq(0)
+      end
+    end
+
     context 'when the hydra is interrupted before a chunked download completes' do
       let(:downloadable_manager) { DownloadManager::ParallelDownloadQueue.new([[attachment, 'large.bin']], download_to_dir) }
-      let(:attachment) { double('ActiveStorage::Attachment', blob: instance_double('ActiveStorage::Blob', byte_size: 20.megabytes), url: 'http://example.com/large') }
+      let(:attachment) { large_attachment('http://example.com/large') }
 
       before { stub_request(:get, attachment.url).to_return(body: 'partial content') }
 
