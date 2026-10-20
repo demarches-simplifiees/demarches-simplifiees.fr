@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-source 'https://rubygems.org'
+# For an urgent security fix: bundle update <gem> --conservative --cooldown 0
+source 'https://rubygems.org', cooldown: 3
 
 gem 'rails', '~> 8.1.3' # allows update to security fixes at any time
 
