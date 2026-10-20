@@ -12,39 +12,46 @@ module ExportedFilesSizeConcern
 
   private
 
-  def exported_files_size(dossier_ids)
-    attachments_size = exported_attachment_sources(dossier_ids).sum do |record_type, names, record_ids|
+  def exported_files_size(dossier_ids, export_template: nil)
+    attachments_size = exported_attachment_sources(dossier_ids, export_template).sum do |record_type, names, record_ids|
       exported_attachments_size(record_type, names, record_ids)
     end
 
-    dossier_ids.size * DOSSIER_PDF_WEIGHT + attachments_size
+    pdfs_size = export_template.nil? || export_template.export_pdf.enabled? ? dossier_ids.size * DOSSIER_PDF_WEIGHT : 0
+
+    pdfs_size + attachments_size
   end
 
-  # The attachments PiecesJustificativesService puts in a zip, by owner.
-  # Titres d'identité are skipped: they are another champ type, so the type
-  # filter leaves them out. The zip ships the current value of every champ:
-  # the history streams keep their own copies of the pièces jointes they
-  # replaced.
-  def exported_attachment_sources(dossier_ids)
-    [
-      ['Champ', 'piece_justificative_file', exported_pj_champs(dossier_ids).select(:id)],
-      ['Commentaire', 'piece_jointe', Commentaire.where(dossier_id: dossier_ids).select(:id)],
-      ['Dossier', 'justificatif_motivation', dossier_ids],
-      ['Attestation', 'pdf', Attestation.where(dossier_id: dossier_ids).select(:id)],
-      ['Avis', ['introduction_file', 'piece_justificative_file'], Avis.where(dossier_id: dossier_ids).select(:id)],
-      ['Etablissement', ['entreprise_attestation_sociale', 'entreprise_attestation_fiscale'], Etablissement.where(dossier_id: dossier_ids).select(:id)],
-    ]
+  # The attachments PiecesJustificativesService puts in a zip, by owner, and
+  # those an export template keeps. Titres d'identité are skipped: they are
+  # another champ type, so the type filter leaves them out. The zip ships the
+  # current value of every champ: the history streams keep their own copies of
+  # the pièces jointes they replaced.
+  def exported_attachment_sources(dossier_ids, export_template)
+    all = export_template.nil?
+    sources = [['Champ', 'piece_justificative_file', exported_pj_champs(dossier_ids, export_template).select(:id)]]
+
+    sources << ['Commentaire', 'piece_jointe', Commentaire.where(dossier_id: dossier_ids).select(:id)] if all || export_template.commentaires_attachments
+    sources << ['Dossier', 'justificatif_motivation', dossier_ids] if all || export_template.justificatif_motivation
+    sources << ['Attestation', 'pdf', Attestation.where(dossier_id: dossier_ids).select(:id)] if all || export_template.attestation.enabled?
+    sources << ['Avis', ['introduction_file', 'piece_justificative_file'], Avis.where(dossier_id: dossier_ids).select(:id)] if all || export_template.avis_attachments
+    # ExportTemplate#attachment_path has no path for them
+    sources << ['Etablissement', ['entreprise_attestation_sociale', 'entreprise_attestation_fiscale'], Etablissement.where(dossier_id: dossier_ids).select(:id)] if all
+
+    sources
   end
 
   # A rebase keeps the champs of a pièce justificative removed from the
   # revision, and a dossier keeps the champs of a removed repetition row until
   # its decision, while the zip only ships the champs the dossier shows.
-  def exported_pj_champs(dossier_ids)
+  def exported_pj_champs(dossier_ids, export_template)
+    enabled_stable_ids = export_template.pjs.filter(&:enabled?).map(&:stable_id) if export_template
     dossier_ids_by_revision = Dossier.where(id: dossier_ids).pluck(:revision_id, :id).group_by(&:first).transform_values { it.map(&:last) }
     revisions = ProcedureRevision.includes(revision_type_de_champs: :type_de_champ).where(id: dossier_ids_by_revision.keys).index_by(&:id)
 
     champs_by_revision = dossier_ids_by_revision.map do |revision_id, revision_dossier_ids|
       stable_ids = revisions.fetch(revision_id).type_de_champs.filter(&:piece_justificative?).map(&:stable_id)
+      stable_ids &= enabled_stable_ids if export_template
 
       ChampData.where(dossier_id: revision_dossier_ids, stable_id: stable_ids)
     end

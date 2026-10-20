@@ -33,6 +33,9 @@ module TransientModelsWithPurgeableJobConcern
       event :fail do
         transitions from: :pending, to: :failed
       end
+      event :mark_too_large do
+        transitions from: :pending, to: :too_large
+      end
     end
 
     scope :stale, lambda { |duration|
@@ -51,10 +54,10 @@ module TransientModelsWithPurgeableJobConcern
   end
 
   def compute_with_safe_stale_for_purge(&block)
-    return if generated? # idempotent on retry after success
+    return if generated? || too_large? # idempotent on retry after success
     restart! if failed? # restart for AASM
     yield
-    make_available!
+    make_available! if pending?
   rescue => e
     fail!         # fail for observability
     raise e       # re-raise for retryable behaviour
