@@ -64,7 +64,7 @@ describe Users::RegistrationsController, type: :controller do
       it 'remembers the signed up email, so the confirmation can be resent with the procedure context' do
         subject
 
-        expect(session[:signed_up_email]).to eq(user[:email])
+        expect(controller.message_encryptor_service.decrypt_and_verify(session[:signed_up_email], purpose: :signed_up_email)).to eq(user[:email])
       end
     end
 

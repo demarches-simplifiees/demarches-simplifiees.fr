@@ -12,11 +12,14 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
 
   # POST /resource/confirmation
   def create
-    # Only the person who just signed up in this session may get the procedure
-    # context back in the resent email: the resend form accepts any address.
-    if resending_to_signed_up_email? && has_stored_procedure_path?
+    if has_stored_procedure_path?
       CurrentConfirmation.procedure_after_confirmation = find_procedure_in_context
-      CurrentConfirmation.prefill_token = find_prefill_token_in_context
+
+      # The resend form accepts any address: only the person who just signed up
+      # in this session may get their prefill_token back in the email.
+      if CurrentConfirmation.procedure_after_confirmation && resending_to_signed_up_email?
+        CurrentConfirmation.prefill_token = find_prefill_token_in_context
+      end
     end
 
     super
@@ -89,7 +92,10 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
     params[:procedure_id] && Procedure.find_by(id: params[:procedure_id])
   end
 
+  private
+
   def resending_to_signed_up_email?
-    session[:signed_up_email] == User.normalize_value_for(:email, user_email_param.to_s)
+    signed_up_email = message_encryptor_service.decrypt_and_verify(session[:signed_up_email], purpose: :signed_up_email) rescue nil
+    signed_up_email.present? && signed_up_email == User.normalize_value_for(:email, user_email_param.to_s)
   end
 end
