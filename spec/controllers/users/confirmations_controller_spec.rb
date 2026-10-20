@@ -158,4 +158,53 @@ describe Users::ConfirmationsController, type: :controller do
       end
     end
   end
+
+  describe '#create' do
+    let(:procedure) { create(:procedure, :published) }
+    let(:submitted_email) { user.email }
+
+    subject { post :create, params: { user: { email: submitted_email } } }
+
+    before do
+      controller.store_location_for(:user, commencer_path(path: procedure.path, prefill_token: 'prefill-token'))
+      allow(DeviseUserMailer).to receive(:confirmation_instructions).and_return(double(deliver_later: true))
+    end
+
+    context 'when resending to the email that just signed up in this session' do
+      before { session[:signed_up_email] = user.email }
+
+      it 'keeps the procedure and the prefill_token in the confirmation link' do
+        subject
+
+        expect(DeviseUserMailer).to have_received(:confirmation_instructions)
+          .with(user, anything, hash_including(procedure_after_confirmation: procedure, prefill_token: 'prefill-token'))
+      end
+    end
+
+    context 'when the procedure stored in the session no longer exists' do
+      before do
+        session[:signed_up_email] = user.email
+        controller.store_location_for(:user, commencer_path(path: 'unknown-procedure'))
+      end
+
+      it 'still resends the confirmation email' do
+        subject
+
+        expect(DeviseUserMailer).to have_received(:confirmation_instructions)
+          .with(user, anything, hash_including(procedure_after_confirmation: nil))
+        expect(response).not_to redirect_to(root_path)
+      end
+    end
+
+    context 'when resending to another email' do
+      before { session[:signed_up_email] = 'someone-else@example.com' }
+
+      it 'does not inject the procedure nor the prefill_token' do
+        subject
+
+        expect(DeviseUserMailer).to have_received(:confirmation_instructions)
+          .with(user, anything, hash_including(procedure_after_confirmation: nil, prefill_token: nil))
+      end
+    end
+  end
 end

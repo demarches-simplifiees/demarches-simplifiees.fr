@@ -49,6 +49,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     super do
       resource.update_preferred_domain(Current.host) if resource.valid?
+      session[:signed_up_email] = resource.email if resource.persisted?
     end
   end
 

@@ -60,6 +60,12 @@ describe Users::RegistrationsController, type: :controller do
 
         expect(User.last.preferred_domain_demarche_numerique_gouv_fr?).to be_truthy
       end
+
+      it 'remembers the signed up email, so the confirmation can be resent with the procedure context' do
+        subject
+
+        expect(session[:signed_up_email]).to eq(user[:email])
+      end
     end
 
     context 'when user is not correct' do
@@ -105,6 +111,10 @@ describe Users::RegistrationsController, type: :controller do
 
         it 'does not send a warning email' do
           expect(UserMailer).not_to have_received(:new_account_warning)
+        end
+
+        it 'does not remember the email as signed up in this session' do
+          expect(session[:signed_up_email]).to be_nil
         end
 
         it 'redirects to confirmation page with signed email (not plain text)' do
