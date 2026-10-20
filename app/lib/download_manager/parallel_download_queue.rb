@@ -158,7 +158,7 @@ module DownloadManager
             fd.write(response.body)
           end
         else
-          handle_response_error(response, attachment:, attachment_path:, path_in_download_dir:)
+          handle_response_error(response.code, attachment:, attachment_path:, path_in_download_dir:)
         end
       end
     end
@@ -166,13 +166,15 @@ module DownloadManager
     # opened on the first chunk: download_all queues every request before the hydra runs
     def request_in_chunks(request, attachment:, attachment_path:, path_in_download_dir:)
       downloaded_file = nil
+      file_error = nil
 
+      # raising inside a curl callback would abort the whole hydra: report this attachment only
       request.on_body do |chunk|
-        if downloaded_file.nil?
-          downloaded_file = attachment_path.open(mode: 'wb')
-          @open_files << downloaded_file
-        end
+        downloaded_file ||= attachment_path.open(mode: 'wb').tap { @open_files << it }
         downloaded_file.write(chunk)
+      rescue SystemCallError, IOError => e
+        file_error = e
+        :abort
       end
 
       request.on_complete do |response|
@@ -181,17 +183,17 @@ module DownloadManager
           @open_files.delete(downloaded_file)
         end
 
-        if !response.success?
-          handle_response_error(response, attachment:, attachment_path:, path_in_download_dir:)
+        if file_error || !response.success?
+          handle_response_error(file_error || response.code, attachment:, attachment_path:, path_in_download_dir:)
         elsif downloaded_file.nil?
-          attachment_path.write('', mode: 'wb') # empty body: no chunk was received
+          attachment_path.write('', mode: 'wb') # libcurl yields no chunk for an empty body
         end
       end
     end
 
-    def handle_response_error(response, attachment:, attachment_path:, path_in_download_dir:)
+    def handle_response_error(error, attachment:, attachment_path:, path_in_download_dir:)
       attachment_path.delete if attachment_path.exist? # -> case of retries failed, must cleanup partialy downloaded file
-      on_error.call(attachment, path_in_download_dir, response.code)
+      on_error.call(attachment, path_in_download_dir, error)
     end
   end
 end
