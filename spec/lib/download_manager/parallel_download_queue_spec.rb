@@ -31,6 +31,11 @@ describe DownloadManager::ParallelDownloadQueue do
     )
   end
 
+  # above the 10 MB threshold, so downloaded in chunks
+  def large_attachment(url)
+    double('ActiveStorage::Attachment', blob: instance_double('ActiveStorage::Blob', byte_size: 20.megabytes), url:)
+  end
+
   let(:downloadable_manager) { DownloadManager::ParallelDownloadQueue.new([attachment], download_to_dir) }
   let(:http_client) { instance_double(Typhoeus::Hydra) }
 
@@ -293,9 +298,82 @@ describe DownloadManager::ParallelDownloadQueue do
       expect(files_written_in(outside_dir)).to be_empty
     end
 
+    context 'with several chunked downloads' do
+      let(:urls) { Array.new(3) { "http://example.com/large-#{it}" } }
+      let(:downloadable_manager) do
+        attachments = urls.map.with_index do |url, i|
+          [large_attachment(url), "large-#{i}.bin"]
+        end
+        DownloadManager::ParallelDownloadQueue.new(attachments, download_to_dir)
+      end
+      let(:reported_errors) { [] }
+
+      before do
+        downloadable_manager.on_error = proc { |_attachment, path, error| reported_errors << [path, error] }
+        urls.each { stub_request(:get, it).to_return(body: "content of #{it}") }
+      end
+
+      # WebMock completes each request as soon as the hydra starts it, so a file
+      # opened when its request is queued would show up as several open at once
+      it 'opens each destination file only once its request has started' do
+        opened_files = []
+        peak_open_files = 0
+        allow(File).to receive(:open).and_wrap_original do |original, *args, **kwargs, &block|
+          original.call(*args, **kwargs, &block).tap do |file|
+            next if block
+
+            opened_files << file
+            peak_open_files = [peak_open_files, opened_files.count { !it.closed? }].max
+          end
+        end
+
+        subject
+
+        expect(peak_open_files).to eq(1)
+        expect(opened_files).to all(be_closed)
+        urls.each.with_index do |url, i|
+          expect(File.read(File.join(download_to_dir, "large-#{i}.bin"))).to eq("content of #{url}")
+        end
+      end
+
+      it 'reports an attachment whose file cannot be opened and downloads the others' do
+        failing_path = File.join(download_to_dir, 'large-1.bin')
+        allow(File).to receive(:open).and_wrap_original do |original, *args, **kwargs, &block|
+          raise Errno::EMFILE if args.first.to_s == failing_path
+
+          original.call(*args, **kwargs, &block)
+        end
+
+        subject
+
+        expect(reported_errors).to contain_exactly(['large-1.bin', be_a(Errno::EMFILE)])
+        expect(File.exist?(failing_path)).to be_falsey
+        expect(File.read(File.join(download_to_dir, 'large-2.bin'))).to eq("content of #{urls[2]}")
+      end
+    end
+
+    context 'when a chunked download succeeds with an empty body' do
+      let(:downloadable_manager) { DownloadManager::ParallelDownloadQueue.new([[attachment, 'empty.bin']], download_to_dir) }
+      let(:attachment) { large_attachment('http://example.com/empty') }
+
+      before do
+        stub_request(:get, attachment.url).to_return(body: '')
+        # unlike WebMock, libcurl never yields a chunk for an empty body
+        allow(Typhoeus::Request).to receive(:new).and_wrap_original do |original, *args, **kwargs|
+          original.call(*args, **kwargs).tap { allow(it).to receive(:on_body).and_return([]) }
+        end
+      end
+
+      it 'still writes the (empty) file' do
+        subject
+
+        expect(File.size(File.join(download_to_dir, 'empty.bin'))).to eq(0)
+      end
+    end
+
     context 'when the hydra is interrupted before a chunked download completes' do
       let(:downloadable_manager) { DownloadManager::ParallelDownloadQueue.new([[attachment, 'large.bin']], download_to_dir) }
-      let(:attachment) { double('ActiveStorage::Attachment', blob: instance_double('ActiveStorage::Blob', byte_size: 20.megabytes), url: 'http://example.com/large') }
+      let(:attachment) { large_attachment('http://example.com/large') }
 
       before { stub_request(:get, attachment.url).to_return(body: 'partial content') }
 
