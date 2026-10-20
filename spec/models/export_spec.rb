@@ -37,8 +37,9 @@ RSpec.describe Export, type: :model do
     let!(:stale_export_generated) { create(:export, :generated, updated_at: stale_date) }
     let!(:stale_export_failed) { create(:export, :failed, updated_at: stale_date) }
     let!(:stale_export_pending) { create(:export, :pending, updated_at: stale_date) }
+    let!(:stale_export_too_large) { create(:export, :too_large, updated_at: stale_date) }
 
-    it { expect(Export.stale(Export::MAX_DUREE_CONSERVATION_EXPORT)).to match_array([stale_export_generated, stale_export_failed]) }
+    it { expect(Export.stale(Export::MAX_DUREE_CONSERVATION_EXPORT)).to match_array([stale_export_generated, stale_export_failed, stale_export_too_large]) }
   end
 
   describe '.stuck' do
@@ -115,6 +116,22 @@ RSpec.describe Export, type: :model do
 
       context 'old generated export' do
         before { find_or_create.update!(job_status: :generated, updated_at: 1.hour.ago) }
+
+        it 'returns a new export' do
+          expect { find_or_create }.to change { Export.count }.by(1)
+        end
+      end
+
+      context 'export refused as too large a moment ago' do
+        before { find_or_create.update!(job_status: :too_large, updated_at: 1.second.ago) }
+
+        it 'returns it' do
+          expect { find_or_create }.not_to change { Export.count }
+        end
+      end
+
+      context 'export refused as too large an hour ago' do
+        before { find_or_create.update!(job_status: :too_large, updated_at: 1.hour.ago) }
 
         it 'returns a new export' do
           expect { find_or_create }.to change { Export.count }.by(1)

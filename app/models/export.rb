@@ -6,6 +6,8 @@ class Export < ApplicationRecord
   MAX_DUREE_CONSERVATION_EXPORT = 32.hours
   MAX_DUREE_GENERATION = 16.hours
 
+  MAX_FILES_SIZE = 100.gigabytes
+
   enum :format, {
     csv: 'csv',
     ods: 'ods',
@@ -81,7 +83,7 @@ class Export < ApplicationRecord
     }
 
     recent_export = pending
-      .or(generated.where(updated_at: (5.minutes.ago)..))
+      .or(generated.or(too_large).where(updated_at: (5.minutes.ago)..))
       .for_groupe_instructeurs(groupe_instructeurs.map(&:id))
       .where(user_profile: user_profile)
       .includes(:procedure_presentation)

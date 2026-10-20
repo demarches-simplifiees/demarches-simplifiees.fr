@@ -15,12 +15,14 @@ module TransientModelsWithPurgeableJobConcern
       pending: 'pending',
       generated: 'generated',
       failed: 'failed',
+      too_large: 'too_large',
     }
 
     aasm whiny_persistence: true, column: :job_status, enum: true do
       state :pending, initial: true
       state :generated
       state :failed
+      state :too_large
 
       event :make_available do
         transitions from: :pending, to: :generated
@@ -34,7 +36,7 @@ module TransientModelsWithPurgeableJobConcern
     end
 
     scope :stale, lambda { |duration|
-      where(job_status: [job_statuses.fetch(:generated), job_statuses.fetch(:failed)])
+      where(job_status: job_statuses.values_at(:generated, :failed, :too_large))
         .where(updated_at: ...(Time.zone.now - duration))
     }
 
