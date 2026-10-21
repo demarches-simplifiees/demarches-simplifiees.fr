@@ -75,6 +75,25 @@ describe Champs::PieceJustificativeController, type: :controller do
     end
   end
 
+  describe 'a row whose repetition became a text in the draft revision' do
+    let(:procedure) { create(:procedure, public_type_de_champs: [{ type: :repetition, children: [{ type: :piece_justificative }] }]) }
+    let(:dossier) { create(:dossier, user:, procedure:) }
+    let!(:child) { dossier.root_champs_public.first.rows.first.flat_children.first }
+
+    before do
+      sign_in user
+      draft = procedure.draft_revision
+      repetition = draft.find_and_ensure_exclusive_use(draft.public_root_type_de_champs.first.stable_id)
+      draft.update_type_de_champ(repetition.becomes_type('text'), type_champ: 'text')
+    end
+
+    it 'still finds the champ' do
+      get :template, params: { dossier_id: dossier.id, stable_id: child.stable_id, row_id: child.row_id }
+
+      expect(response).to have_http_status(:found)
+    end
+  end
+
   describe '#update in a repetition with min items edited in the user buffer stream' do
     include Logic
     render_views
