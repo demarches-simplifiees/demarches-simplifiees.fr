@@ -9,12 +9,13 @@ module ChampHelper
     simple_format(auto_linked_text, {}, sanitize: false)
   end
 
-  def repetition_with_resolved_errors(champ)
-    type_de_champ = champ.child? ? champ.parent : champ.type_de_champ
-    return if !type_de_champ.repetition?
-
-    repetition = champ.dossier.project_champ(type_de_champ)
-    repetition if repetition.type_de_champ.limit_repetitions? && repetition.validate([:champ_value, :champ_completeness])
+  def repetitions_with_resolved_errors(champs)
+    champs
+      .map { it.child? ? it.parent : it.type_de_champ }
+      .uniq
+      .filter { it.repetition? && it.limit_repetitions? }
+      .map { champs.first.dossier.project_champ(it) }
+      .filter { it.validate([:champ_value, :champ_completeness]) }
   end
 
   def auto_attach_url(object, procedure_id: nil)

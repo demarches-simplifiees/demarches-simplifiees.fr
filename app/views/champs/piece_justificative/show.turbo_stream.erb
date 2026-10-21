@@ -1,4 +1,5 @@
 <%= render partial: 'shared/dossiers/update_champ', locals: { full: true, champ: @champ } %>
+<%= render partial: 'champs/repetition/clear_error', locals: { champs: [@champ] } %>
 
 <% if @champ.public? %>
   <%= render partial: 'shared/dossiers/update_footer', locals: { dossier: @dossier } %>

@@ -8,6 +8,7 @@
 <% to_update.each do |champ| %>
   <%= render partial: 'shared/dossiers/update_champ', locals: { full: champ.refresh_after_update?, champ:, polling: } %>
 <% end %>
+<%= render partial: 'champs/repetition/clear_error', locals: { champs: to_update } %>
 
 <%= turbo_stream.remove_all(".editable-champ + .spinner-removable") %>
 <%= turbo_stream.hide_all(".editable-champ + .spinner") %>

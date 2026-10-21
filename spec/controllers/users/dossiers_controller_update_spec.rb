@@ -633,6 +633,19 @@ describe Users::DossiersController, type: :controller do
         subject
         expect(response.body).to include('repetition:limits-respected')
       end
+
+      context 'when several champs of the block are rendered' do
+        let(:first_row_champ) { repetition.rows.first.flat_children.first }
+
+        subject { patch :update, params: { id: dossier.id, dossier: { champs_public_attributes: { first_row_champ.public_id => { value: 'premier' }, last_row_champ.public_id => { value: 'rempli' } } } }, format: :turbo_stream }
+
+        before { dossier.champ_for_update(last_row_champ.type_de_champ, row_id: last_row_champ.row_id, updated_by: user.email).update!(value: 'rempli') }
+
+        it 'dispatches the event once' do
+          subject
+          expect(response.body.scan('repetition:limits-respected').size).to eq(1)
+        end
+      end
     end
 
     context 'when the min is reached but the max is exceeded' do
