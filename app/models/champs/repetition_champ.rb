@@ -50,10 +50,6 @@ class Champs::RepetitionChamp < ChampData
     row_ids.count >= type_de_champ.max_repetitions.to_i
   end
 
-  def min_repetitions?
-    type_de_champ.limit_repetitions? && type_de_champ.min_repetitions.present?
-  end
-
   validate :validate_repetition_min, on: :champ_completeness, if: :visible?
   validate :validate_repetition_max, if: :should_validate_in_current_context?
 
@@ -74,7 +70,7 @@ class Champs::RepetitionChamp < ChampData
   end
 
   def validate_repetition_min
-    return if !min_repetitions?
+    return if !type_de_champ.min_repetitions?
 
     min = type_de_champ.min_repetitions.to_i
     errors.add(:value, :repetition_too_few, min:, libelle: type_de_champ.libelle) if counted_rows_count < min
