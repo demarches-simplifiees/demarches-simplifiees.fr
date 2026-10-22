@@ -125,19 +125,52 @@ describe Users::ConfirmationsController, type: :controller do
         expect(subject).to redirect_to(new_user_session_path)
       end
     end
+
+    context 'when the address requested by an email change was taken in the meantime' do
+      render_views
+
+      let!(:user) { create(:user) }
+
+      before do
+        freeze_time
+        user.update_columns(unconfirmed_email: users.usager.email, confirmation_token: 'email-change-token', confirmation_sent_at: Time.current)
+      end
+
+      context 'with a confirmation request in the session' do
+        before do
+          session[:confirmation_requested_at] = 30.seconds.ago.to_i
+
+          get :show, params: { confirmation_token: 'email-change-token' }
+        end
+
+        it 'shows the resend form with the remaining time' do
+          expect(response.body).to have_button('Renvoyer un email de confirmation (90 secondes)', disabled: true)
+        end
+
+        it 'keeps the page out of the browser cache' do
+          expect(response.headers['Cache-Control']).to include('no-store')
+        end
+      end
+
+      it 'lets them resend right away without any request in the session' do
+        get :show, params: { confirmation_token: 'email-change-token' }
+
+        expect(response.body).to have_button(exact_text: 'Renvoyer un email de confirmation', disabled: false)
+      end
+    end
   end
 
   describe '#new' do
     let(:email) { 'test@example.com' }
+    let(:signed_email) { controller.message_encryptor_service.encrypt_and_sign(email, purpose: :email_confirmation) }
     render_views
 
     it 'decodes the signed email and makes it available to the view' do
-      signed_email = controller.message_encryptor_service.encrypt_and_sign(email, purpose: :email_confirmation)
-
       get :new, params: { email: signed_email }
 
-      expect(response.body).to have_text("votre adresse électronique #{email}.")
       expect(response.body).to have_text("nous pouvons vous le renvoyer")
+      expect(response.body).to have_text("Pour activer votre compte, nous avons besoin de vérifier votre adresse électronique #{email}.")
+      expect(response.body).to have_text('Ouvrez votre boîte email et cliquez sur le lien d’activation dans le message que vous avez reçu.')
     end
 
     context 'when signed email is invalid' do
@@ -156,6 +189,84 @@ describe Users::ConfirmationsController, type: :controller do
         expect(response.body).to have_text("cliquez sur le lien d’activation")
         expect(response.body).not_to have_text("nous pouvons vous le renvoyer")
       end
+    end
+
+    context 'with a confirmation request in the session' do
+      before { freeze_time }
+
+      it 'counts down from the last request' do
+        session[:confirmation_requested_at] = 30.seconds.ago.to_i
+        get :new, params: { email: signed_email }
+
+        expect(response.body).to have_button('Renvoyer un email de confirmation (90 secondes)', disabled: true)
+      end
+
+      it 'lets them resend once two minutes have passed' do
+        session[:confirmation_requested_at] = 3.minutes.ago.to_i
+        get :new, params: { email: signed_email }
+
+        expect(response.body).to have_button(exact_text: 'Renvoyer un email de confirmation', disabled: false)
+      end
+
+      it 'never waits more than two minutes when server clocks drift' do
+        session[:confirmation_requested_at] = 10.seconds.from_now.to_i
+        get :new, params: { email: signed_email }
+
+        expect(response.body).to have_button('Renvoyer un email de confirmation (120 secondes)', disabled: true)
+      end
+    end
+
+    it 'lets them resend right away without any request in the session' do
+      get :new, params: { email: signed_email }
+
+      expect(response.body).to have_button(exact_text: 'Renvoyer un email de confirmation', disabled: false)
+    end
+
+    it 'shows no button once the page address has expired, even after a recent request' do
+      signed_email = controller.message_encryptor_service.encrypt_and_sign(email, purpose: :email_confirmation, expires_in: 1.hour)
+      travel 2.hours
+      session[:confirmation_requested_at] = 30.seconds.ago.to_i
+
+      get :new, params: { email: signed_email }
+
+      expect(response.body).not_to have_css('[data-controller="countdown-button"]')
+    end
+
+    it 'keeps the page out of the browser cache' do
+      get :new, params: { email: signed_email }
+
+      expect(response.headers['Cache-Control']).to include('no-store')
+    end
+  end
+
+  describe '#create' do
+    shared_examples 'the same answer for any address' do
+      before do
+        freeze_time
+
+        post :create, params: { user: { email: } }
+      end
+
+      it 'redirects to the sign in page with the generic notice' do
+        expect(response).to redirect_to(new_user_session_path)
+        expect(flash[:notice]).to eq('Si votre adresse électronique existe dans notre base de données, vous recevrez sous quelques minutes un email avec des instructions pour activer votre compte.')
+      end
+
+      it 'remembers the request' do
+        expect(session[:confirmation_requested_at]).to eq(Time.current.to_i)
+      end
+    end
+
+    context 'when the address exists' do
+      let(:email) { user.email }
+
+      it_behaves_like 'the same answer for any address'
+    end
+
+    context 'when the address is unknown' do
+      let(:email) { 'inconnue@example.com' }
+
+      it_behaves_like 'the same answer for any address'
     end
   end
 end
