@@ -11,7 +11,7 @@ module Instructeurs
     include DossierEditConcern
     include ActionController::Streaming
     include BilansBdfConcern
-    include Zipline
+    include DossierZipConcern
 
     before_action :redirect_on_dossier_not_found, only: [:show, :show_submitted_revision]
     before_action :redirect_on_dossier_in_batch_operation, only: [:archive, :unarchive, :follow, :unfollow, :passer_en_instruction, :repasser_en_construction, :proposition, :repasser_en_instruction, :terminer, :restore, :destroy, :extend_conservation]
@@ -452,10 +452,7 @@ module Instructeurs
     end
 
     def telecharger_pjs
-      files = ActiveStorage::DownloadableFile.create_list_from_dossiers(dossiers: Dossier.where(id: dossier.id), user_profile: current_instructeur)
-      cleaned_files = ActiveStorage::DownloadableFile.cleanup_list_from_dossier(files)
-
-      zipline(cleaned_files, "dossier-#{dossier.id}.zip")
+      stream_dossier_zip(dossier, current_instructeur)
     end
 
     def destroy

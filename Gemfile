@@ -107,7 +107,7 @@ gem 'webrick', require: false
 gem 'xlsxtream'
 gem 'yabeda-prometheus'
 gem 'yabeda-sidekiq'
-gem 'zipline'
+gem 'zip_kit'
 gem 'zxcvbn'
 
 group :test do

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'fog/openstack'
-
 class ActiveStorage::DownloadableFile
   def self.create_list_from_dossiers(dossiers:, user_profile:, export_template: nil)
     pj_service = PiecesJustificativesService.new(user_profile:, export_template:)
@@ -18,31 +16,21 @@ class ActiveStorage::DownloadableFile
     files
   end
 
-  def self.cleanup_list_from_dossier(files)
-    if Rails.application.config.active_storage.service != :openstack
-      return files
-    end
-
-    files.filter do |file, _filename|
-      if file.is_a?(ActiveStorage::FakeAttachment)
-        true
-      else
-        service = file.blob.service
-        begin
-          client.head_object(service.container, file.blob.key)
-          true
-        rescue Fog::OpenStack::Storage::NotFound
-          false
+  def self.write_to_zip(zip, files)
+    files.each do |file, path|
+      zip.write_file(path) do |sink|
+        if file.is_a?(ActiveStorage::FakeAttachment)
+          IO.copy_stream(file.file, sink)
+        else
+          file.blob.download { sink << it }
         end
       end
+    rescue ActiveStorage::FileNotFoundError
+      next
     end
   end
 
   private
-
-  def self.client
-    ActiveStorage::Blob.service.send(:client)
-  end
 
   def self.bill_and_path(bill)
     [

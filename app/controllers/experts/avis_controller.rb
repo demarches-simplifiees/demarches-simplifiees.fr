@@ -3,7 +3,7 @@
 module Experts
   class AvisController < ExpertController
     include BilansBdfConcern
-    include Zipline
+    include DossierZipConcern
     include AvisCreationConcern
 
     before_action :authenticate_expert!, except: [:sign_up, :update_expert]
@@ -227,10 +227,7 @@ module Experts
     end
 
     def telecharger_pjs
-      files = ActiveStorage::DownloadableFile.create_list_from_dossiers(user_profile: current_expert, dossiers: Dossier.where(id: @dossier.id))
-      cleaned_files = ActiveStorage::DownloadableFile.cleanup_list_from_dossier(files)
-
-      zipline(cleaned_files, "dossier-#{@dossier.id}.zip")
+      stream_dossier_zip(@dossier, current_expert)
     end
 
     private
