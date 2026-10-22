@@ -173,6 +173,31 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
       end
     end
 
+    context 'when the user resends the confirmation email and opens it in another browser' do
+      it_behaves_like "the user has got a prefilled dossier, owned by themselves" do
+        let(:user_email) { generate :user_email }
+        let(:user) { User.find_by(email: user_email) }
+
+        before do
+          click_on "Créer un compte #{APPLICATION_NAME}"
+
+          sign_up_with user_email, password
+          expect(page).to have_content "nous avons besoin de vérifier votre adresse électronique #{user_email}"
+
+          clear_emails
+          perform_enqueued_jobs do
+            click_on "Renvoyer un email de confirmation"
+            expect(page).to have_content("vous recevrez sous quelques minutes un message")
+          end
+
+          click_confirmation_link_for user_email, in_another_browser: true
+          expect(page).to have_content('Votre compte a bien été confirmé.')
+
+          click_on "Poursuivre mon dossier prérempli"
+        end
+      end
+    end
+
     context 'when the user signs up with FranceConnect' do
       include EtablissementHelper
 

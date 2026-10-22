@@ -158,4 +158,67 @@ describe Users::ConfirmationsController, type: :controller do
       end
     end
   end
+
+  describe '#create' do
+    let(:procedure) { procedures.individual }
+    let(:stored_path) { commencer_path(path: procedure.path, prefill_token: 'prefill-token') }
+    let(:submitted_email) { user.email }
+    let(:signed_up_email) { user.email }
+
+    subject { post :create, params: { user: { email: submitted_email } } }
+
+    before do
+      controller.store_location_for(:user, stored_path)
+      session[:signed_up_email] = controller.message_encryptor_service.encrypt_and_sign(signed_up_email, purpose: :signed_up_email, expires_in: 1.hour)
+      allow(DeviseUserMailer).to receive(:confirmation_instructions).and_return(double(deliver_later: true))
+    end
+
+    def expect_mailed_context(procedure_after_confirmation:, prefill_token:)
+      expect(DeviseUserMailer).to have_received(:confirmation_instructions)
+        .with(user, anything, hash_including(procedure_after_confirmation:, prefill_token:))
+    end
+
+    context 'when resending to the email that just signed up in this session' do
+      it 'keeps the procedure and the prefill_token in the confirmation link' do
+        subject
+        expect_mailed_context(procedure_after_confirmation: procedure, prefill_token: 'prefill-token')
+      end
+    end
+
+    context 'when the submitted email differs only by case and spacing' do
+      let(:submitted_email) { " #{user.email.upcase} " }
+
+      it 'keeps the prefill_token' do
+        subject
+        expect_mailed_context(procedure_after_confirmation: procedure, prefill_token: 'prefill-token')
+      end
+    end
+
+    context 'when resending to another email' do
+      let(:signed_up_email) { 'someone-else@example.com' }
+
+      it 'keeps the procedure but does not inject the prefill_token' do
+        subject
+        expect_mailed_context(procedure_after_confirmation: procedure, prefill_token: nil)
+      end
+    end
+
+    context 'when the sign up happened more than an hour ago' do
+      it 'does not inject the prefill_token' do
+        travel_to(2.hours.from_now) { subject }
+        expect_mailed_context(procedure_after_confirmation: procedure, prefill_token: nil)
+      end
+    end
+
+    context 'when the procedure stored in the session no longer exists' do
+      let(:stored_path) { commencer_path(path: 'unknown-procedure', prefill_token: 'prefill-token') }
+
+      it 'still resends the confirmation email, without any context' do
+        subject
+
+        expect_mailed_context(procedure_after_confirmation: nil, prefill_token: nil)
+        expect(response).not_to redirect_to(root_path)
+      end
+    end
+  end
 end

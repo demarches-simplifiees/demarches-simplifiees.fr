@@ -49,6 +49,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     super do
       resource.update_preferred_domain(Current.host) if resource.valid?
+      if resource.persisted?
+        session[:signed_up_email] = message_encryptor_service.encrypt_and_sign(resource.email, purpose: :signed_up_email, expires_in: 1.hour)
+      end
     end
   end
 

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Users::ConfirmationsController < Devise::ConfirmationsController
+  include ProcedureContextConcern
+
   # GET /resource/confirmation/new
   def new
     # Allow displaying the user email in the message
@@ -9,9 +11,19 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
   end
 
   # POST /resource/confirmation
-  # def create
-  #   super
-  # end
+  def create
+    if has_stored_procedure_path?
+      CurrentConfirmation.procedure_after_confirmation = find_procedure_in_context
+
+      # The resend form accepts any address: only the person who just signed up
+      # in this session may get their prefill_token back in the email.
+      if CurrentConfirmation.procedure_after_confirmation && resending_to_signed_up_email?
+        CurrentConfirmation.prefill_token = find_prefill_token_in_context
+      end
+    end
+
+    super
+  end
 
   # GET /resource/confirmation?confirmation_token=abcdef
   def show
@@ -78,5 +90,12 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
 
   def procedure_from_params
     params[:procedure_id] && Procedure.find_by(id: params[:procedure_id])
+  end
+
+  private
+
+  def resending_to_signed_up_email?
+    signed_up_email = message_encryptor_service.decrypt_and_verify(session[:signed_up_email], purpose: :signed_up_email) rescue nil
+    signed_up_email.present? && signed_up_email == User.normalize_value_for(:email, user_email_param.to_s)
   end
 end
