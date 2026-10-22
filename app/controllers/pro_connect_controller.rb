@@ -36,6 +36,10 @@ class ProConnectController < ApplicationController
     cookies.delete NONCE_COOKIE_NAME
 
     email = santized_email(user_info)
+    mfa = ProConnectService.mfa?(amr:, acr:)
+    mfa_already_forced = cookies.encrypted[MFA_FORCED_COOKIE_NAME] == email
+    cookies.delete MFA_FORCED_COOKIE_NAME
+
     user = User.find_by(email:)
 
     if user.nil?
@@ -52,17 +56,9 @@ class ProConnectController < ApplicationController
 
     ProConnectInformation.record!(user:, user_info:, amr:, acr:)
 
-    mfa = ProConnectService.mfa?(amr:, acr:)
-    mfa_already_forced = cookies.encrypted[MFA_FORCED_COOKIE_NAME] == email
-    cookies.delete MFA_FORCED_COOKIE_NAME
-
     remember_administrateur_device if user.administrateur&.pro_connect_required?
 
-    if !mfa && must_force_mfa?(user, user_info)
-      return redirect_pro_connect_mfa_failed if mfa_already_forced
-
-      return redirect_to_forced_mfa(email)
-    end
+    return enforce_mfa(email, already_forced: mfa_already_forced) if !mfa && must_force_mfa?(user, user_info)
 
     user.instructeur&.update!(pro_connect_id_token: id_token)
 
@@ -87,6 +83,10 @@ class ProConnectController < ApplicationController
   def must_force_mfa?(user, user_info)
     user.administrateur&.pro_connect_required? ||
       (user.instructeur? && user_info['idp_id'] == MON_COMPTE_PRO_IDP_ID)
+  end
+
+  def enforce_mfa(email, already_forced:)
+    already_forced ? redirect_pro_connect_mfa_failed : redirect_to_forced_mfa(email)
   end
 
   def redirect_to_forced_mfa(email)
