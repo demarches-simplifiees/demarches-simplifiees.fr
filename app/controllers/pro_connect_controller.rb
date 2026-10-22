@@ -50,11 +50,7 @@ class ProConnectController < ApplicationController
       user.update!(email_verified_at: Time.current) if user.email_verified_at.nil?
     end
 
-    pro_connect_info = ProConnectInformation.find_or_initialize_by(user:, sub: user_info['sub'])
-    pro_connect_info.update!(
-      user_info.slice('given_name', 'usual_name', 'email', 'sub', 'siret', 'organizational_unit', 'belonging_population', 'phone')
-      .merge(amr:, acr:)
-    )
+    ProConnectInformation.record!(user:, user_info:, amr:, acr:)
 
     mfa = ProConnectService.mfa?(amr:, acr:)
     mfa_already_forced = cookies.encrypted[MFA_FORCED_COOKIE_NAME] == email
