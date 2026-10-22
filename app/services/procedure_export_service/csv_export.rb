@@ -5,6 +5,20 @@
 # (and their champs) is materialized at a time. Mirrors XlsxExport without its
 # secondary sheets — the CSV is single-sheet, établissement columns inline.
 class ProcedureExportService::CsvExport
+  # Spreadsheets read a cell starting with one of these characters as a formula:
+  # a leading apostrophe makes them display the text as typed. Plain numbers
+  # ("-12", "+33 6 12 34 56 78") are kept as is.
+  FORMULA_START = /\A[=+\-@\t\r]/
+  PLAIN_NUMBER = /\A[+\-]?[\d\s.,]+\z/
+
+  def self.as_text(value)
+    if value.is_a?(String) && value.match?(FORMULA_START) && !value.match?(PLAIN_NUMBER)
+      "'#{value}"
+    else
+      value
+    end
+  end
+
   def initialize(procedure:, dossiers:, export_template:)
     @procedure = procedure
     @dossiers = dossiers
@@ -22,11 +36,11 @@ class ProcedureExportService::CsvExport
         columns = dossier.spreadsheet_columns_csv(type_de_champs:, export_template: @export_template)
 
         unless headers_written
-          csv << columns.map(&:first)
+          csv << columns.map { self.class.as_text(it.first) }
           headers_written = true
         end
 
-        csv << columns.map { |(_libelle, value)| resolve(dossier, value) }
+        csv << columns.map { |(_libelle, value)| self.class.as_text(resolve(dossier, value)) }
       end
     end
   end
