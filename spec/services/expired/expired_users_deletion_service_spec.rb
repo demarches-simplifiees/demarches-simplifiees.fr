@@ -58,9 +58,10 @@ describe Expired::UsersDeletionService do
 
         context 'when dossier en_construction' do
           let(:dossier) { create(:dossier, :en_construction, user:, created_at: signed_in_expired) }
-          it 'destroys user and dossier' do
-            expect { subject }.to change { Dossier.count }.by(-1)
-            expect { user.reload }.to raise_error(ActiveRecord::RecordNotFound)
+          it 'keeps the user and the dossier' do
+            subject
+            expect(Dossier.exists?(dossier.id)).to be(true)
+            expect(User.exists?(user.id)).to be(true)
           end
         end
 
@@ -271,7 +272,7 @@ describe Expired::UsersDeletionService do
 
     context 'when user is expired and has a dossier en_construction' do
       let(:dossier) { create(:dossier, :en_construction, user:, created_at: signed_in_expired) }
-      it { is_expected.to include(user) }
+      it { is_expected.not_to include(user) }
     end
 
     context 'when user is expired and has a dossier en_instruction' do
