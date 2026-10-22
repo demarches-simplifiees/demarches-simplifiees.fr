@@ -3,23 +3,43 @@
 require 'csv'
 
 describe ProcedureExportService::CsvExport do
-  let(:procedure) { create(:procedure, :published, public_type_de_champs: [{ type: :text, libelle: "texte" }, { type: :phone, libelle: "tel" }]) }
-  let(:dossier) { create(:dossier, :en_construction, procedure:) }
+  describe 'AS_TEXT' do
+    {
+      '=HYPERLINK("https://example.com","clic")' => %q('=HYPERLINK("https://example.com","clic")),
+      '@SUM(1;2)' => "'@SUM(1;2)",
+      "=1+1\n=A1" => "'=1+1\n=A1",
+      '＝A1' => "'＝A1",
+      '=1+1' => '=1+1',
+      '- point 1' => '- point 1',
+      '+33 6 12 34 56 78' => '+33 6 12 34 56 78',
+      'jean@exemple.fr' => 'jean@exemple.fr',
+    }.each do |value, expected|
+      it "writes #{value.inspect} as #{expected.inspect}" do
+        expect(described_class::AS_TEXT.call(value)).to eq(expected)
+      end
+    end
 
-  subject(:rows) do
-    io = StringIO.new
-    described_class.new(procedure:, dossiers: procedure.dossiers, export_template: nil).write_to(io)
-    CSV.parse(io.string, headers: true)
+    it 'keeps non-string values' do
+      expect(described_class::AS_TEXT.call(12)).to eq(12)
+    end
   end
 
-  before do
-    texte, tel = dossier.root_champs_public
-    texte.update!(value: '=HYPERLINK("https://example.com","clic")')
-    tel.update!(value: '+33 6 12 34 56 78')
-  end
+  describe '#write_to' do
+    let(:procedure) { procedures.individual }
+    let(:dossier) { dossiers.en_construction }
+    let(:champ) { dossier.root_champs_public.find { it.libelle == 'Nom du projet' } }
 
-  it 'exports formulas as text and keeps plain numbers' do
-    expect(rows.first['texte']).to eq(%q('=HYPERLINK("https://example.com","clic")))
-    expect(rows.first['tel']).to eq('+33 6 12 34 56 78')
+    before do
+      champ.type_de_champ.update!(libelle: '=Nom du projet')
+      champ.update!(value: '=HYPERLINK("https://example.com","clic")')
+    end
+
+    it 'writes headers and values as text' do
+      io = StringIO.new
+      described_class.new(procedure:, dossiers: Dossier.where(id: dossier), export_template: nil).write_to(io)
+
+      row = CSV.parse(io.string, headers: true).first
+      expect(row["'=Nom du projet"]).to eq(%q('=HYPERLINK("https://example.com","clic")))
+    end
   end
 end
