@@ -2,7 +2,7 @@
 
 module Expired
   # User is considered inactive after INACTIVE_USER_RETENTION_IN_YEAR years of idleness regarding
-  #   when he does not have a dossier en instruction
+  #   when he does not have a dossier en construction or en instruction
   #   or when his last sign in (or account creation, if he never signed in) is older than INACTIVE_USER_RETENTION_IN_YEAR years
   INACTIVE_USER_RETENTION_IN_YEAR = 2
 

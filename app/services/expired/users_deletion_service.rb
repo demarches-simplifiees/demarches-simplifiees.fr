@@ -35,7 +35,7 @@ class Expired::UsersDeletionService < Expired::MailRateLimiter
   end
 
   def expired_users_with_dossiers
-    expired_users.where.not(owned_by_user(Dossier.state_en_instruction))
+    expired_users.where.not(owned_by_user(Dossier.state_en_construction_ou_instruction))
   end
 
   def expired_users_without_dossiers
