@@ -60,12 +60,7 @@ class ProConnectController < ApplicationController
 
     return enforce_mfa(email, already_forced: mfa_already_forced) if !mfa && must_force_mfa?(user, user_info)
 
-    user.instructeur&.update!(pro_connect_id_token: id_token)
-
-    set_pro_connect_session_info_cookie(user.id, mfa:)
-
-    sign_in(:user, user)
-    user.update_preferred_domain(Current.host)
+    sign_in_with_pro_connect(user, id_token:, mfa:)
     redirect_to stored_location_for(:user) || root_path
 
   rescue Rack::OAuth2::Client::Error => e
