@@ -57,6 +57,80 @@ describe Champs::PieceJustificativeController, type: :controller do
     end
   end
 
+  describe '#update in a repetition with min items' do
+    render_views
+    before do
+      sign_in user
+      procedure.active_revision.public_root_type_de_champs.first.update!(limit_repetitions: '1', min_repetitions: '1')
+    end
+
+    let(:procedure) { create(:procedure, :published, public_type_de_champs: [{ type: :repetition, mandatory: true, children: [{ type: :piece_justificative }] }]) }
+    let(:child) { dossier.root_champs_public.first.rows.first.flat_children.first }
+    let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
+
+    it 'dispatches the limits respected event once the file makes the row filled' do
+      put :update, params: { dossier_id: dossier.id, stable_id: child.stable_id, row_id: child.row_id, blob_signed_id: file }, format: :turbo_stream
+
+      expect(response.body).to include('repetition:limits-respected')
+    end
+  end
+
+  describe 'a row whose repetition became a text in the draft revision' do
+    let(:procedure) { create(:procedure, public_type_de_champs: [{ type: :repetition, children: [{ type: :piece_justificative }] }]) }
+    let(:dossier) { create(:dossier, user:, procedure:) }
+    let!(:child) { dossier.root_champs_public.first.rows.first.flat_children.first }
+
+    before do
+      sign_in user
+      draft = procedure.draft_revision
+      repetition = draft.find_and_ensure_exclusive_use(draft.public_root_type_de_champs.first.stable_id)
+      draft.update_type_de_champ(repetition.becomes_type('text'), type_champ: 'text')
+    end
+
+    it 'still finds the champ' do
+      get :template, params: { dossier_id: dossier.id, stable_id: child.stable_id, row_id: child.row_id }
+
+      expect(response).to have_http_status(:found)
+    end
+  end
+
+  describe '#update in a repetition with min items edited in the user buffer stream' do
+    include Logic
+    render_views
+
+    let(:procedure) do
+      children = [
+        { type: :drop_down_list, libelle: 'type', stable_id: 901, mandatory: false, options: ['oui', 'non'] },
+        { type: :text, libelle: 'detail', stable_id: 902, mandatory: true, condition: ds_eq(champ_value(901), constant('oui')) },
+        { type: :piece_justificative, libelle: 'pj', stable_id: 903, mandatory: false },
+      ]
+      create(:procedure, :published, public_type_de_champs: [{ type: :repetition, mandatory: true, libelle: 'bloc', stable_id: 900, children: }])
+        .tap { it.active_revision.public_root_type_de_champs.first.update!(limit_repetitions: '1', min_repetitions: '1') }
+    end
+    let(:dossier) { create(:dossier, user:, procedure:) }
+    let(:repetition_type_de_champ) { procedure.active_revision.public_root_type_de_champs.first }
+    let(:children) { procedure.active_revision.children_of(repetition_type_de_champ) }
+    let(:row_id) { dossier.repetition_row_ids(repetition_type_de_champ).first }
+    let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
+
+    before do
+      sign_in user
+      dossier.champ_for_update(children.first, row_id:, updated_by: user.email).update!(value: 'non')
+      dossier.champ_for_update(children.second, row_id:, updated_by: user.email).update!(value: '')
+      dossier.update_columns(state: 'en_construction', en_construction_at: Time.zone.now, depose_at: Time.zone.now)
+      buffered = DossierPreloader.load_one(Dossier.find(dossier.id))
+      buffered.with_update_stream(user)
+      buffered.champ_for_update(children.first, row_id:, updated_by: user.email).update!(value: 'oui')
+      buffered.champ_for_update(children.second, row_id:, updated_by: user.email).update!(value: '')
+    end
+
+    it 'evaluates the block on the buffer stream, where the row misses a mandatory value' do
+      put :update, params: { dossier_id: dossier.id, stable_id: 903, row_id:, blob_signed_id: file }, format: :turbo_stream
+
+      expect(response.body).not_to include('repetition:limits-respected')
+    end
+  end
+
   describe '#update' do
     render_views
     before { sign_in user }

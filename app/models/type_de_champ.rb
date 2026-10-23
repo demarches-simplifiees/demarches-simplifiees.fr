@@ -228,6 +228,8 @@ class TypeDeChamp < ApplicationRecord
   # custom refresh logic (RNA, SIRET, etc.)
   def refresh_after_update? = true
 
+  def min_repetitions? = false
+
   def simple_routable? = self.class.simple_routable?
 
   def conditionable? = self.class.conditionable?

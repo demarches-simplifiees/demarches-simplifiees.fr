@@ -609,6 +609,55 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
+  describe '#update a repetition with min items (stream)' do
+    render_views
+
+    let(:procedure) { create(:procedure, :published, :for_individual, public_type_de_champs: [{ type: :repetition, libelle: 'bloc', children: [{ libelle: 'sous champ' }] }]) }
+    let!(:dossier) { create(:dossier, :with_individual, user:, procedure:) }
+    let(:repetition) { dossier.root_champs_public.first }
+    let(:last_row_champ) { repetition.rows.last.flat_children.first }
+
+    subject { patch :update, params: { id: dossier.id, dossier: { champs_public_attributes: { last_row_champ.public_id => { value: 'rempli' } } } }, format: :turbo_stream }
+
+    before do
+      sign_in(user)
+      procedure.active_revision.public_root_type_de_champs.first.update!(limit_repetitions: '1', min_repetitions: '2', max_repetitions:)
+      dossier.champ_for_update(repetition.rows.first.flat_children.first.type_de_champ, row_id: repetition.row_ids.first, updated_by: user.email).update!(value: 'premier')
+      repetition.add_row(updated_by: user.email)
+    end
+
+    context 'when the min is reached' do
+      let(:max_repetitions) { nil }
+
+      it 'dispatches the limits respected event' do
+        subject
+        expect(response.body).to include('repetition:limits-respected')
+      end
+
+      context 'when several champs of the block are rendered' do
+        let(:first_row_champ) { repetition.rows.first.flat_children.first }
+
+        subject { patch :update, params: { id: dossier.id, dossier: { champs_public_attributes: { first_row_champ.public_id => { value: 'premier' }, last_row_champ.public_id => { value: 'rempli' } } } }, format: :turbo_stream }
+
+        before { dossier.champ_for_update(last_row_champ.type_de_champ, row_id: last_row_champ.row_id, updated_by: user.email).update!(value: 'rempli') }
+
+        it 'dispatches the event once' do
+          subject
+          expect(response.body.scan('repetition:limits-respected').size).to eq(1)
+        end
+      end
+    end
+
+    context 'when the min is reached but the max is exceeded' do
+      let(:max_repetitions) { '1' }
+
+      it 'does not dispatch the limits respected event' do
+        subject
+        expect(response.body).not_to include('repetition:limits-respected')
+      end
+    end
+  end
+
   describe '#champ' do
     let(:stable_id) { generate(:stable_id) }
     let(:public_type_de_champs) { [{ type: :text, stable_id: }] }

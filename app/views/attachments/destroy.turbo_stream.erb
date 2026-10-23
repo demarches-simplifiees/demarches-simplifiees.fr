@@ -1,5 +1,6 @@
 <% if @champ %>
   <%= render partial: 'shared/dossiers/update_champ', locals: { full: true, champ: @champ } %>
+  <%= render partial: 'champs/repetition/clear_error', locals: { champs: [@champ] } %>
   <%= render partial: 'shared/dossiers/update_footer', locals: { dossier: @champ.dossier } %>
 <% else %>
   <%= turbo_stream.replace dom_id(@attachment, :persisted_row) do %>

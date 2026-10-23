@@ -1,0 +1,3 @@
+<% repetitions_with_resolved_errors(champs).each do |repetition| %>
+  <%= turbo_stream.dispatch 'repetition:limits-respected', error_id: repetition.error_id(:value) %>
+<% end %>
